@@ -1,5 +1,13 @@
 # PBJ Infra — Technical SEO Plan
 
+## Cinematic hero (`src/components/CinematicHero.astro`)
+GSAP + ScrollTrigger, homepage only — the only page that imports GSAP, so no other route pays for it. Implementation contract:
+- **H1/copy/CTAs/trust strip are plain HTML, always in the DOM, never hidden by default CSS.** A synchronous inline script flags the section `.js-ready` pre-paint; only then, and only under `prefers-reduced-motion: no-preference`, does a CSS rule hide anything — so no-JS and reduced-motion visitors both get the complete static hero immediately. Verified with Playwright: JS disabled, reduced-motion, desktop, and mobile all render the real H1 text and a working CTA (see the launch-day test run for this feature).
+- **Headline reveal is load-triggered, not scroll-gated** — a visitor who never scrolls still sees the full above-fold pitch within ~1.5s. The scroll-pinned image/linework sequence (real PBJ project photos: resort → pool → dome → waterpark construction → finished infinity pool) is a separate, purely decorative background layer (`aria-hidden`) that only affects imagery, never the text.
+- **Failure modes are covered, not assumed away**: the whole script is wrapped in try/catch, plus a 4s timeout, both calling the same `clearEverything()` that clears every inline style GSAP may have set — the same defensive pattern as `RevealScript.astro`'s no-JS/failure fallback.
+- Mobile (<900px) skips `ScrollTrigger.pin` entirely (known jank source on mobile viewports) and instead autoplays a shorter 3-image version once on load. Mouse parallax is gated to `(hover: hover) and (pointer: fine)` and disabled under reduced motion.
+- Animated properties are limited to `opacity`, `transform` (translate/scale), and SVG `stroke-dashoffset` — no `top`/`left`/`width`/`height` animation, no WebGL, no video.
+
 ## Metadata
 Every page passes `title`, `description`, `path` (→ self-referencing canonical), and an `ogImage` into `BaseLayout.astro`. Titles/descriptions come from each content entry's `seo` block (max 60 / 160 chars, enforced by the zod schema in `src/content/config.ts` — a build fails rather than shipping a truncation-prone tag). Open Graph + Twitter Card tags are derived from the same three fields, so there's one source of truth per page, not a second copy to keep in sync.
 

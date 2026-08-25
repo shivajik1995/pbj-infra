@@ -1,6 +1,7 @@
 ---
 import { getCollection, getEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import CinematicHero from '../components/CinematicHero.astro';
 import ServiceCard from '../components/ServiceCard.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import TestimonialCard from '../components/TestimonialCard.astro';
@@ -29,41 +30,7 @@ const faqItems = faqs.filter(Boolean).map((f) => f!.data);
   schema={[faqSchema(faqItems)]}
 >
   <!-- ============ HERO ============ -->
-  <section class="min-h-screen flex flex-col justify-end pt-[150px] relative bg-ink text-paper overflow-hidden">
-    <div class="absolute inset-0">
-      <div class="absolute inset-0 grid grid-cols-2 md:grid-cols-4">
-        <img src="https://pbjinfra.com/assets/images/resort.jpg" alt="" class="w-full h-full object-cover opacity-50 grayscale-[.15] brightness-[.55]" fetchpriority="high" />
-        <img src="https://pbjinfra.com/assets/images/Featured-project3.jpeg" alt="" class="w-full h-full object-cover opacity-50 grayscale-[.15] brightness-[.55]" loading="lazy" />
-        <img src="https://pbjinfra.com/assets/images/Lagoon.jpeg" alt="" class="hidden md:block w-full h-full object-cover opacity-50 grayscale-[.15] brightness-[.55]" loading="lazy" />
-        <img src="https://pbjinfra.com/assets/images/farm-house-new.jpg" alt="" class="hidden md:block w-full h-full object-cover opacity-50 grayscale-[.15] brightness-[.55]" loading="lazy" />
-      </div>
-      <div class="absolute inset-0" style="background:linear-gradient(180deg,rgba(20,23,26,.35) 0%, rgba(20,23,26,.55) 55%, #14171A 96%)"></div>
-    </div>
-    <div class="relative z-[2] pb-[90px]">
-      <div class="wrap grid md:grid-cols-[1fr_auto] gap-10 items-end">
-        <div>
-          <span class="eyebrow text-white">Premier Construction — Pune · Latur · Maharashtra</span>
-          <h1 class="text-[44px] md:text-[clamp(44px,7.2vw,108px)] leading-[.95] -tracking-[.02em] max-w-[14ch] mt-4">Whatever you imagine, we build it.</h1>
-          <p class="text-[17px] max-w-[38ch] text-paper/80 my-6 leading-relaxed">Luxury swimming pools, waterparks, resorts and farmhouses — designed, engineered and built by PBJ Infra since 2009.</p>
-          <div class="flex gap-4 flex-wrap">
-            <a href="/contact/" class="btn btn-solid" data-analytics-event="click_start_project" data-analytics-params={JSON.stringify({ placement: 'hero' })}>Start Your Project →</a>
-            <a href="/projects/" class="btn btn-lt">Explore Our Work →</a>
-          </div>
-        </div>
-        <div class="font-mono text-xs text-left md:text-right text-paper/55 leading-[1.8] mt-5 md:mt-0">
-          N 18.4702° E 73.9758°<br />
-          Phursungi, Pune — HQ<br />
-          Est. 2009
-        </div>
-      </div>
-      <div class="wrap border-t border-paper/[.18] mt-14 pt-[22px] flex flex-wrap gap-9">
-        <div class="font-mono text-[11.5px] tracking-wide uppercase text-paper/70">Since 2009</div>
-        <div class="font-mono text-[11.5px] tracking-wide uppercase text-paper/70">Licensed &amp; Insured</div>
-        <div class="font-mono text-[11.5px] tracking-wide uppercase text-paper/70">5-Yr Structural Warranty</div>
-        <div class="font-mono text-[11.5px] tracking-wide uppercase text-paper/70">GST {SITE.gst}</div>
-      </div>
-    </div>
-  </section>
+  <CinematicHero />
 
   <!-- ============ TRUST STRIP ============ -->
   <div class="bg-ink text-paper border-t border-paper/[.18] py-[26px]">

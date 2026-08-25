@@ -1,0 +1,279 @@
+---
+// Cinematic hero — GSAP + ScrollTrigger, used on the homepage only.
+//
+// SEO / no-JS contract (see docs/technical-seo-plan.md "Cinematic hero"):
+//   - H1, supporting copy, CTAs and the trust strip are plain HTML, always
+//     present in the DOM in reading order. Nothing is hidden by default
+//     CSS — an inline script marks the section `.js-ready` (synchronously,
+//     before paint) and ONLY THEN does a `prefers-reduced-motion:
+//     no-preference` media-gated rule hide anything, so: no JS → visible;
+//     JS present but reduced-motion → visible; JS present + motion OK →
+//     GSAP takes over and animates the reveal.
+//   - The GSAP script is wrapped in try/catch with a timeout safety net
+//     that force-clears every inline style GSAP may have set, so a runtime
+//     error can never leave real content permanently invisible (the same
+//     bug class already fixed once for RevealScript.astro).
+//   - Images are decorative (alt="") — the sequence images beyond the
+//     first are hidden via a plain, unconditional inline style (not JS-
+//     gated), so a no-JS visitor gets a real, complete, single-image
+//     cinematic hero rather than a stack of invisible photos.
+//
+// Real PBJ imagery only, reused from what's already linked elsewhere in
+// this codebase (see docs/website-audit.md) — nothing invented.
+import { SITE } from '../lib/site';
+
+const sequence = [
+  { src: 'https://pbjinfra.com/assets/images/resort.jpg', stage: 'Vision' },
+  { src: 'https://pbjinfra.com/assets/images/swimming-pool.jpg', stage: 'Architecture' },
+  { src: 'https://pbjinfra.com/assets/images/DOM.jpeg', stage: 'Engineering' },
+  { src: 'https://pbjinfra.com/assets/images/waterpark-construction-services.jpg', stage: 'Construction' },
+  { src: 'https://pbjinfra.com/assets/images/Featured-project1.jpeg', stage: 'Reality' },
+];
+---
+<section class="hero-cinematic relative min-h-screen flex flex-col justify-end pt-[150px] bg-ink text-paper overflow-hidden" id="top">
+  <script is:inline>
+    (function (s) {
+      if (s && s.parentElement) s.parentElement.classList.add('js-ready');
+    })(document.currentScript);
+  </script>
+
+  <!-- ============ VISUAL LAYER (decorative) ============ -->
+  <div class="hero-visual absolute inset-0" aria-hidden="true">
+    <div class="hero-img-stack absolute inset-0">
+      {sequence.map((img, i) => (
+        <img
+          src={img.src}
+          alt=""
+          data-stage={img.stage}
+          data-seq={i}
+          class="hero-seq-img absolute inset-0 w-full h-full object-cover grayscale-[.1]"
+          style={i === 0 ? undefined : 'opacity:0'}
+          fetchpriority={i === 0 ? 'high' : undefined}
+          loading={i === 0 ? undefined : 'lazy'}
+        />
+      ))}
+    </div>
+
+    <!-- architectural linework — reuses the site's own corner-cross motif -->
+    <svg class="hero-lines absolute inset-0 w-full h-full" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" focusable="false">
+      <line class="hl-datum" x1="80" y1="760" x2="1520" y2="760" stroke="currentColor" stroke-width="1" opacity="0.5" />
+      <path class="hl-sight-l" d="M80,780 L780,240" fill="none" stroke="currentColor" stroke-width="1" opacity="0.35" />
+      <path class="hl-sight-r" d="M1520,780 L820,240" fill="none" stroke="currentColor" stroke-width="1" opacity="0.35" />
+      <path class="hl-pool" d="M560,520 L1040,520 L1040,700 L560,700 Z" fill="none" stroke="currentColor" stroke-width="1.25" opacity="0.6" />
+      <path class="hl-tick" d="M560,520 L560,505 M560,520 L575,520" fill="none" stroke="currentColor" stroke-width="1.25" />
+      <path class="hl-tick" d="M1040,520 L1040,505 M1040,520 L1025,520" fill="none" stroke="currentColor" stroke-width="1.25" />
+      <path class="hl-tick" d="M560,700 L560,715 M560,700 L575,700" fill="none" stroke="currentColor" stroke-width="1.25" />
+      <path class="hl-tick" d="M1040,700 L1040,715 M1040,700 L1025,700" fill="none" stroke="currentColor" stroke-width="1.25" />
+      <path class="hl-dim" d="M560,745 L1040,745" fill="none" stroke="currentColor" stroke-width="1" opacity="0.5" />
+    </svg>
+
+    <div class="absolute inset-0" style="background:linear-gradient(180deg,rgba(20,23,26,.35) 0%, rgba(20,23,26,.55) 55%, #14171A 96%)"></div>
+  </div>
+
+  <!-- ============ CONTENT LAYER (real HTML, always present) ============ -->
+  <div class="hero-content relative z-[2] pb-[90px]">
+    <div class="wrap grid md:grid-cols-[1fr_auto] gap-10 items-end">
+      <div>
+        <span class="hero-fade eyebrow text-white">Premier Construction — Pune · Latur · Maharashtra</span>
+        <h1 class="text-[44px] md:text-[clamp(44px,7.2vw,108px)] leading-[.95] -tracking-[.02em] max-w-[14ch] mt-4">
+          <span class="mask-line"><span>Whatever you imagine,</span></span>
+          <span class="mask-line"><span>we build it.</span></span>
+        </h1>
+        <p class="hero-fade text-[17px] max-w-[38ch] text-paper/80 my-6 leading-relaxed">Luxury swimming pools, waterparks, resorts and farmhouses — designed, engineered and built by PBJ Infra since 2009.</p>
+        <div class="hero-fade flex gap-4 flex-wrap">
+          <a href="/contact/" class="btn btn-solid" data-analytics-event="click_start_project" data-analytics-params={JSON.stringify({ placement: 'hero' })}>Start Your Project →</a>
+          <a href="/projects/" class="btn btn-lt">Explore Our Work →</a>
+        </div>
+      </div>
+      <div class="hero-fade font-mono text-xs text-left md:text-right text-paper/55 leading-[1.8] mt-5 md:mt-0">
+        N 18.4702° E 73.9758°<br />
+        Phursungi, Pune — HQ<br />
+        Est. 2009
+      </div>
+    </div>
+    <div class="hero-fade wrap border-t border-paper/[.18] mt-14 pt-[22px] flex flex-wrap gap-9">
+      <div class="font-mono text-[11.5px] tracking-wide uppercase text-paper/70">Since 2009</div>
+      <div class="font-mono text-[11.5px] tracking-wide uppercase text-paper/70">Licensed &amp; Insured</div>
+      <div class="font-mono text-[11.5px] tracking-wide uppercase text-paper/70">5-Yr Structural Warranty</div>
+      <div class="font-mono text-[11.5px] tracking-wide uppercase text-paper/70">GST {SITE.gst}</div>
+    </div>
+  </div>
+
+  <div class="hero-fade scroll-cue absolute right-8 bottom-[26px] z-[2] font-mono text-[10.5px] text-paper/55 [writing-mode:vertical-rl] hidden md:flex items-center gap-2.5 tracking-wide" aria-hidden="true">SCROLL</div>
+</section>
+
+<style>
+  /* Sequence images beyond the first: hidden unconditionally (not JS-gated)
+     — a no-JS visitor gets one complete, real, full-bleed image, not a
+     stack of blank layers. This is a static design choice, not an
+     animation, so it doesn't need the .js-ready guard below. */
+
+  .mask-line { display: block; overflow: hidden; }
+
+  /* Nothing is hidden until we know JS ran (.js-ready, set synchronously
+     pre-paint by the inline script above) AND the visitor hasn't asked
+     for reduced motion. Either condition failing = fully visible, static
+     hero, per the SEO/no-JS contract in the frontmatter comment. */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-cinematic.js-ready .mask-line > span {
+      display: block;
+      transform: translateY(110%);
+    }
+    .hero-cinematic.js-ready .hero-fade {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+  }
+
+  .hero-lines {
+    color: theme('colors.accent-lt');
+    opacity: 0;
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  const hero = document.querySelector<HTMLElement>('.hero-cinematic');
+  if (!hero) {
+    // nothing to animate — the static markup already stands on its own
+  } else {
+    const clearEverything = () => {
+      try {
+        ScrollTrigger.getAll().forEach((t) => t.kill());
+        gsap.set(hero.querySelectorAll('.mask-line > span, .hero-fade, .hero-seq-img, .hero-lines, .hero-img-stack'), {
+          clearProps: 'all',
+        });
+      } catch {
+        // last resort: drop the class that gates the hidden CSS state so
+        // everything falls back to plain, visible HTML/CSS regardless.
+        hero.classList.remove('js-ready');
+      }
+    };
+
+    // Absolute safety net: if anything below hangs or throws without being
+    // caught, real content must not stay invisible forever.
+    const safetyTimer = window.setTimeout(clearEverything, 4000);
+
+    try {
+      gsap.registerPlugin(ScrollTrigger);
+
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const isDesktop = window.matchMedia('(min-width: 900px)').matches;
+      const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+      const images = Array.from(hero.querySelectorAll<HTMLImageElement>('.hero-seq-img'));
+      const lines = hero.querySelector<SVGElement>('.hero-lines');
+      const linePaths = lines ? Array.from(lines.querySelectorAll<SVGGeometryElement>('path, line')) : [];
+      const maskLines = Array.from(hero.querySelectorAll<HTMLElement>('.mask-line > span'));
+      const fadeEls = Array.from(hero.querySelectorAll<HTMLElement>('.hero-fade'));
+      const visualStack = hero.querySelector<HTMLElement>('.hero-img-stack');
+
+      // Headline/copy/CTA/trust reveal on LOAD, independent of scroll — a
+      // visitor who never scrolls still gets the full above-fold pitch
+      // within ~1.5s. The scroll-driven sequence below is a separate,
+      // purely decorative background layer that never gates this content.
+      if (!reduceMotion) {
+        gsap.timeline({ delay: 0.15, defaults: { ease: 'power3.out' } })
+          .to(maskLines, { y: 0, duration: 0.9, stagger: 0.1 }, 0)
+          .to(fadeEls, { opacity: 1, y: 0, duration: 0.7, stagger: 0.07 }, 0.2);
+      }
+
+      if (reduceMotion) {
+        // Beautiful, complete, fully static hero — the finished project
+        // photo rather than the establishing shot, everything else as
+        // authored in HTML (no opacity/translate applied, see the media
+        // guard in <style> above which already excludes this state).
+        gsap.set(images[images.length - 1], { opacity: 1 });
+        images.slice(0, -1).forEach((img) => gsap.set(img, { opacity: 0 }));
+        window.clearTimeout(safetyTimer);
+      } else {
+        // Precompute stroke lengths for the "drawing" line effect.
+        const lineLengths = linePaths.map((p) => {
+          try {
+            return p.getTotalLength();
+          } catch {
+            return 0;
+          }
+        });
+        linePaths.forEach((p, i) => {
+          const len = lineLengths[i];
+          if (len) gsap.set(p, { strokeDasharray: len, strokeDashoffset: len });
+        });
+
+        const activeImages = isDesktop ? images : [images[0], images[2], images[4]].filter(Boolean);
+        gsap.set(activeImages, { scale: 1.06 });
+
+        const buildSequenceTl = () => {
+          const tl = gsap.timeline({ defaults: { ease: 'power2.inOut' } });
+
+          tl.to(lines, { opacity: 1, duration: 0.6 }, 0);
+          linePaths.forEach((p, i) => {
+            if (!lineLengths[i]) return;
+            tl.to(p, { strokeDashoffset: 0, duration: 1.4 }, 0.15 + i * 0.12);
+          });
+
+          activeImages.forEach((img, i) => {
+            if (i === 0) return;
+            const at = isDesktop ? [2, 4, 6, 7.5][i - 1] : [3.2, 6.4][i - 1];
+            tl.to(activeImages[i - 1], { opacity: 0, scale: 1.0, duration: 1.2 }, at);
+            tl.fromTo(img, { opacity: 0, scale: 1.06 }, { opacity: 1, scale: 1.0, duration: 1.2 }, at);
+          });
+
+          const settle = isDesktop ? 8.2 : 6.6;
+          tl.to(lines, { opacity: 0, duration: 0.8 }, settle - 0.6);
+
+          return tl;
+        };
+
+        if (isDesktop) {
+          const tl = buildSequenceTl();
+          ScrollTrigger.create({
+            trigger: hero,
+            start: 'top top',
+            end: '+=180%',
+            pin: true,
+            scrub: 0.6,
+            animation: tl,
+          });
+        } else {
+          // Lighter mobile path: no pin (avoids known mobile viewport/pin
+          // jank), plays once as an entrance sequence, then releases
+          // straight into normal scrolling — no added scroll distance.
+          buildSequenceTl().play();
+        }
+
+        if (canHover && isDesktop && visualStack) {
+          // Two depth planes: the image stack drifts a little (background),
+          // the linework drifts a little more (foreground) — a slight
+          // camera-shift feel, kept small enough to stay subtle.
+          const imgX = gsap.quickTo(visualStack, 'x', { duration: 0.6, ease: 'power3.out' });
+          const imgY = gsap.quickTo(visualStack, 'y', { duration: 0.6, ease: 'power3.out' });
+          const lineX = lines ? gsap.quickTo(lines, 'x', { duration: 0.5, ease: 'power3.out' }) : null;
+          const lineY = lines ? gsap.quickTo(lines, 'y', { duration: 0.5, ease: 'power3.out' }) : null;
+          hero.addEventListener('mousemove', (e) => {
+            const r = hero.getBoundingClientRect();
+            const px = (e.clientX - r.left) / r.width - 0.5;
+            const py = (e.clientY - r.top) / r.height - 0.5;
+            imgX(px * 14);
+            imgY(py * 10);
+            lineX?.(px * 26);
+            lineY?.(py * 18);
+          });
+          hero.addEventListener('mouseleave', () => {
+            imgX(0);
+            imgY(0);
+            lineX?.(0);
+            lineY?.(0);
+          });
+        }
+
+        window.clearTimeout(safetyTimer);
+      }
+    } catch (err) {
+      console.warn('[CinematicHero] animation setup failed, falling back to static hero.', err);
+      clearEverything();
+    }
+  }
+</script>
