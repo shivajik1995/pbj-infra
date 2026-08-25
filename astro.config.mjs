@@ -1,0 +1,34 @@
+import { defineConfig } from 'astro/config';
+import tailwind from '@astrojs/tailwind';
+import sitemap from '@astrojs/sitemap';
+import node from '@astrojs/node';
+
+// PBJ Infra — production site config.
+//
+// Rendering strategy: output stays 'static' (every page is prerendered to
+// plain HTML at build time — best possible Core Web Vitals + full
+// crawlability, no server needed to serve the site).
+//
+// The two exceptions are src/pages/api/lead.ts and src/pages/api/reviews.ts,
+// which set `export const prerender = false` so they run on-demand via the
+// Node adapter below. That keeps secrets (Google API key, lead-notification
+// credentials) server-side and out of the shipped JS bundle. See
+// docs/technical-seo-plan.md ("Google Reviews integration") and
+// docs/content-model.md ("Lead form backend") for the operational details.
+export default defineConfig({
+  site: 'https://www.pbjinfra.com',
+  output: 'static',
+  adapter: node({ mode: 'standalone' }),
+  integrations: [
+    tailwind({ applyBaseStyles: false }),
+    sitemap({
+      // Coverage-only location "pages" are just anchors on /locations/, not
+      // real URLs, so there's nothing to exclude here yet. Keep this filter
+      // as the place to exclude any future noindex/thank-you routes.
+      filter: (page) => !page.includes('/thank-you'),
+    }),
+  ],
+  image: {
+    remotePatterns: [{ protocol: 'https', hostname: 'pbjinfra.com' }],
+  },
+});

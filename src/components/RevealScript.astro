@@ -1,0 +1,30 @@
+{/*
+  Shared IntersectionObserver reveal-on-scroll. Include once per page.
+  Content behind .reveal must never depend on this running correctly to
+  become visible (WCAG — don't gate content behind a JS-only mechanism):
+  a <noscript> rule in BaseLayout handles JS-disabled, and the timeout
+  below is a safety net for any other reason the observer doesn't fire
+  (script error elsewhere on the page, an unusual layout the 0.12
+  threshold never satisfies, etc).
+*/}
+<script>
+  const revealAll = () => document.querySelectorAll('.reveal').forEach((el) => el.classList.add('in'));
+
+  if (!('IntersectionObserver' in window)) {
+    revealAll();
+  } else {
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add('in');
+            io.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.12 },
+    );
+    document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+    setTimeout(revealAll, 3000);
+  }
+</script>

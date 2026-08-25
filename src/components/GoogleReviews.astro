@@ -1,0 +1,44 @@
+---
+import { getGoogleReviews } from '../lib/googleReviews';
+const reviews = await getGoogleReviews();
+---
+{reviews.available ? (
+  <div>
+    <div class="flex items-center gap-[18px]">
+      <div>
+        <div class="font-serif text-[56px] leading-none">{reviews.rating?.toFixed(1)}</div>
+        <div class="text-stone text-[15px] tracking-[2px]" aria-hidden="true">{'★'.repeat(Math.round(reviews.rating ?? 0))}{'☆'.repeat(5 - Math.round(reviews.rating ?? 0))}</div>
+        <div class="font-mono text-[11px] text-ink/50 mt-1">{reviews.userRatingCount} Google reviews · updated {new Date(reviews.fetchedAt!).toLocaleDateString('en-IN')}</div>
+      </div>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6 mt-10">
+      {reviews.reviews?.slice(0, 3).map((r) => (
+        <div class="border border-ink/[.14] p-7 bg-paper">
+          <div class="text-stone text-[15px] tracking-[2px] mb-3.5" aria-hidden="true">{'★'.repeat(Math.round(r.rating))}{'☆'.repeat(5 - Math.round(r.rating))}</div>
+          <p class="text-[14.5px] text-ink-soft mb-5 min-h-[96px]">"{r.text}"</p>
+          <div class="flex justify-between items-center font-mono text-[11px] text-ink/50 border-t border-ink/[.14] pt-3.5">
+            <span>{r.authorName}</span>
+            <span>{r.relativeTime}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+    <div class="mt-9">
+      <a href={reviews.profileUrl} target="_blank" rel="noopener" class="btn btn-line" data-analytics-event="click_google_reviews">See All Google Reviews →</a>
+    </div>
+  </div>
+) : (
+  <div>
+    <div class="flex items-center gap-[18px] flex-wrap">
+      <div>
+        <div class="font-serif text-[56px] leading-none text-stone">—.—</div>
+        <div class="text-stone text-[15px] tracking-[2px]" aria-hidden="true">★★★★★</div>
+        <div class="font-mono text-[11px] text-ink/50 mt-1">Google rating · pending connection</div>
+      </div>
+      <span class="font-mono text-[10.5px] tracking-wide uppercase text-warn border border-warn px-3 py-1.5">Integration Pending</span>
+    </div>
+    <p class="font-mono text-[11px] text-ink/45 mt-6 max-w-[62ch]">
+      Once GOOGLE_PLACE_ID and GOOGLE_PLACES_API_KEY are configured (see .env.example), this section pulls PBJ Infra's real Google rating, review count and a sample of actual reviews — with Google attribution and a link to the live profile. No rating, count or review is shown here in the meantime.
+    </p>
+  </div>
+)}

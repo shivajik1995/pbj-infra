@@ -1,0 +1,39 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import RevealScript from '../../components/RevealScript.astro';
+import { breadcrumbSchema } from '../../lib/schema';
+
+const projects = await getCollection('projects');
+const order = ['adventure-waterpark-latur', 'luxury-infinity-pool', 'rabbit-dome-house', 'natural-lagoon-pool', 'farm-house-latur'];
+const ordered = order.map((slug) => projects.find((p) => p.slug === slug)!).filter(Boolean);
+const crumbs = [{ name: 'Home', url: '/' }, { name: 'Projects', url: '/projects/' }];
+---
+<BaseLayout
+  title="Construction Projects | Pools, Waterparks, Domes & More | PBJ Infra"
+  description="PBJ Infra's signature projects — from an Adventure Waterpark in the Pune–Latur corridor to a ferrocement dome house in Pune. Real, verified project work."
+  path="/projects/"
+  schema={[breadcrumbSchema(crumbs)]}
+>
+  <Breadcrumbs items={crumbs} />
+  <div class="wrap pt-8 pb-14">
+    <h1 class="text-[32px] md:text-[48px] max-w-[20ch]">We don't just show projects. We show what we've built.</h1>
+    <p class="mt-5 max-w-[62ch] text-ink-soft">Five signature projects verified from PBJ Infra's own portfolio. One has a full, detailed case study so far — the rest are shown honestly as verified project references while their case studies are written.</p>
+  </div>
+  <div class="wrap pb-20">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {ordered.map((p) => (
+        <ProjectCard
+          name={p.data.name}
+          projectType={p.data.projectType}
+          location={p.data.location}
+          href={p.data.status === 'published' ? `/projects/${p.slug}/` : null}
+          image={p.data.heroImage}
+        />
+      ))}
+    </div>
+  </div>
+  <RevealScript />
+</BaseLayout>

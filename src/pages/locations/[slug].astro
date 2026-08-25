@@ -1,0 +1,100 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import FAQAccordion from '../../components/FAQAccordion.astro';
+import RevealScript from '../../components/RevealScript.astro';
+import { breadcrumbSchema, localBusinessSchema, faqSchema } from '../../lib/schema';
+import { whatsappLink } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const locations = await getCollection('locations', ({ data }) => data.status === 'published');
+  return locations.map((l) => ({ params: { slug: l.slug }, props: { entry: l } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+
+const services = await Promise.all(d.servicesOffered.map((s) => getEntry(s)));
+const faqs = d.faq ? (await Promise.all(d.faq.map((r) => getEntry(r)))).map((f) => f!.data) : [];
+
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Locations', url: '/locations/' },
+  { name: d.name, url: `/locations/${entry.slug}/` },
+];
+---
+<BaseLayout
+  title={d.seo.title}
+  description={d.seo.description}
+  path={`/locations/${entry.slug}/`}
+  schema={[
+    breadcrumbSchema(crumbs),
+    ...(d.address ? [localBusinessSchema()] : []),
+    ...(faqs.length ? [faqSchema(faqs)] : []),
+  ]}
+>
+  <Breadcrumbs items={crumbs} />
+
+  <section class="wrap pt-8 pb-12">
+    <span class="font-mono text-[11px] text-accent tracking-wide uppercase">{d.role}</span>
+    <h1 class="text-[32px] md:text-[48px] max-w-[22ch] mt-3">Construction Company in {d.name}</h1>
+    <p class="mt-5 max-w-[62ch] text-ink-soft">{d.intro}</p>
+    {d.address && <p class="mt-4 font-mono text-[13px] text-ink-soft">{d.address}</p>}
+    <div class="flex gap-4 flex-wrap mt-8">
+      <a href="/contact/" class="btn btn-solid" data-analytics-event="click_start_project" data-analytics-params={JSON.stringify({ placement: 'location_hero', location: entry.slug })}>Start Your Project →</a>
+      <a href={whatsappLink(`Hi PBJ Infra, I'm looking to discuss a project in ${d.name}.`)} target="_blank" rel="noopener" class="btn btn-line" data-analytics-event="click_whatsapp">WhatsApp Us →</a>
+    </div>
+  </section>
+
+  <section class="wrap pb-16 prose-content max-w-[74ch]">
+    <Content />
+  </section>
+
+  <section class="py-16 bg-paper-dim">
+    <div class="wrap grid md:grid-cols-2 gap-12">
+      <div>
+        <h2 class="font-serif text-2xl mb-6">Services offered in {d.name}</h2>
+        <ul class="flex flex-col gap-3">
+          {services.map((s) => s && (
+            <li><a href={s.data.status === 'published' ? `/services/${s.slug}/` : '/services/'} class="font-mono text-sm text-accent hover:underline">{s.data.name} →</a></li>
+          ))}
+        </ul>
+      </div>
+      {d.localNotes.length > 0 && (
+        <div>
+          <h2 class="font-serif text-2xl mb-6">Verified local notes</h2>
+          <ul class="flex flex-col gap-4">
+            {d.localNotes.map((n) => <li class="text-[14px] text-ink-soft border-l-2 border-accent pl-4">{n}</li>)}
+          </ul>
+        </div>
+      )}
+    </div>
+  </section>
+
+  {faqs.length > 0 && (
+    <section class="wrap py-16 max-w-[880px]">
+      <h2 class="font-serif text-3xl mb-4">FAQ</h2>
+      <FAQAccordion items={faqs} idPrefix={`loc-${entry.slug}`} />
+    </section>
+  )}
+
+  <section class="bg-ink text-paper py-20 text-center">
+    <div class="wrap">
+      <h2 class="font-serif text-3xl md:text-4xl">Building in {d.name}?</h2>
+      <div class="flex gap-4 justify-center flex-wrap mt-8">
+        <a href="/contact/" class="btn btn-solid" data-analytics-event="click_start_project" data-analytics-params={JSON.stringify({ placement: 'location_cta', location: entry.slug })}>Start Your Project →</a>
+        <a href={whatsappLink(`Hi PBJ Infra, I'm looking to discuss a project in ${d.name}.`)} target="_blank" rel="noopener" class="btn btn-lt" data-analytics-event="click_whatsapp">WhatsApp Us →</a>
+      </div>
+    </div>
+  </section>
+
+  <RevealScript />
+</BaseLayout>
+
+<style>
+  .prose-content :global(h2) { font-family: theme('fontFamily.serif'); font-size: 26px; margin: 1.75rem 0 0.75rem; }
+  .prose-content :global(p) { color: theme('colors.ink-soft'); margin-bottom: 1rem; line-height: 1.7; }
+  .prose-content :global(a) { color: theme('colors.accent'); text-decoration: underline; }
+</style>

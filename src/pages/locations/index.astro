@@ -1,0 +1,67 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import RevealScript from '../../components/RevealScript.astro';
+import { breadcrumbSchema } from '../../lib/schema';
+
+const locations = await getCollection('locations');
+const published = locations.filter((l) => l.data.status === 'published');
+const withEvidence = locations.filter((l) => l.data.status === 'draft' && l.data.role !== 'Service Coverage');
+const coverageOnly = locations.filter((l) => l.data.status === 'draft' && l.data.role === 'Service Coverage');
+const crumbs = [{ name: 'Home', url: '/' }, { name: 'Locations', url: '/locations/' }];
+---
+<BaseLayout
+  title="Where PBJ Infra Builds | Pune, Latur & Maharashtra | PBJ Infra"
+  description="PBJ Infra is headquartered in Pune with a major hub in Latur, and project coverage across Maharashtra and India. See verified location pages and service coverage."
+  path="/locations/"
+  schema={[breadcrumbSchema(crumbs)]}
+>
+  <Breadcrumbs items={crumbs} />
+  <div class="wrap pt-8 pb-14">
+    <h1 class="text-[32px] md:text-[48px] max-w-[20ch]">From Pune to projects across India.</h1>
+    <p class="mt-5 max-w-[62ch] text-ink-soft">Dedicated location pages are only published where PBJ has verified, on-the-ground project or HQ evidence — not generated for every city PBJ could theoretically serve. See docs/seo-architecture.md for the policy behind this.</p>
+  </div>
+
+  <div class="wrap pb-12">
+    <h2 class="font-serif text-2xl mb-6">Verified locations</h2>
+    <div class="grid sm:grid-cols-2 gap-5">
+      {published.map((l) => (
+        <a href={`/locations/${l.slug}/`} class="block border border-ink/[.14] hover:border-accent transition-colors p-7">
+          <span class="font-mono text-[11px] text-accent tracking-wide uppercase">{l.data.role}</span>
+          <h3 class="font-serif text-2xl mt-2 mb-2">{l.data.name}</h3>
+          <p class="text-[13.5px] text-ink-soft">{l.data.intro.slice(0, 140)}…</p>
+          <span class="inline-block mt-4 font-mono text-xs tracking-wide uppercase text-accent">View {l.data.name} →</span>
+        </a>
+      ))}
+    </div>
+  </div>
+
+  {withEvidence.length > 0 && (
+    <div class="wrap pb-12">
+      <h2 class="font-serif text-2xl mb-6">In progress — has verified project evidence</h2>
+      <div class="grid sm:grid-cols-2 gap-5">
+        {withEvidence.map((l) => (
+          <div class="border border-dashed border-ink/[.14] p-7">
+            <span class="font-mono text-[11px] text-warn tracking-wide uppercase">{l.data.role} · page in development</span>
+            <h3 class="font-serif text-2xl mt-2 mb-2">{l.data.name}</h3>
+            <p class="text-[13.5px] text-ink-soft">{l.data.intro}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+
+  <div class="wrap pb-20">
+    <h2 class="font-serif text-2xl mb-4">Broader service coverage</h2>
+    <p class="text-ink-soft text-[14px] max-w-[68ch] mb-6">These regions are listed as coverage areas on pbjinfra.com but don't yet have project-level or address-level evidence published — shown here as a coverage table, not as individual pages, to avoid thin or duplicate content.</p>
+    <div class="flex flex-wrap gap-3">
+      {coverageOnly.map((l) => (
+        <span class="font-mono text-xs border border-ink/[.14] px-3.5 py-2 text-ink-soft">{l.data.name} <span class="text-ink/40">· {l.data.role}</span></span>
+      ))}
+    </div>
+    <p class="font-mono text-[11px] text-ink/45 mt-6">Illustrative coverage list — reflects the regions stated on pbjinfra.com. Individual pages will be added once PBJ can supply project or office evidence for a given city.</p>
+  </div>
+
+  <RevealScript />
+</BaseLayout>

@@ -1,0 +1,25 @@
+---
+import { whatsappLink } from '../lib/site';
+---
+<div class="md:hidden flex fixed bottom-0 left-0 right-0 z-[88] bg-ink border-t border-paper/[.18]">
+  <a
+    href={whatsappLink("Hi PBJ Infra, I'd like to discuss a project.")}
+    class="flex-1 text-center py-4 font-mono text-[11.5px] tracking-wide uppercase text-paper bg-accent"
+    data-analytics-event="click_whatsapp"
+    data-analytics-params={JSON.stringify({ placement: 'mobile_sticky' })}
+    target="_blank"
+    rel="noopener"
+  >WhatsApp</a>
+  <a
+    href="/contact/"
+    class="flex-1 text-center py-4 font-mono text-[11.5px] tracking-wide uppercase text-paper"
+    data-analytics-event="click_start_project"
+    data-analytics-params={JSON.stringify({ placement: 'mobile_sticky' })}
+  >Get Quote</a>
+</div>
+<style>
+  body { padding-bottom: 0; }
+  @media (max-width: 767px) {
+    body { padding-bottom: 54px; }
+  }
+</style>

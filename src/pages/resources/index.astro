@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import RevealScript from '../../components/RevealScript.astro';
+import { breadcrumbSchema } from '../../lib/schema';
+
+const articles = (await getCollection('articles', ({ data }) => data.status === 'published')).sort(
+  (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf(),
+);
+const crumbs = [{ name: 'Home', url: '/' }, { name: 'Resources', url: '/resources/' }];
+---
+<BaseLayout
+  title="Construction Guides & Resources | PBJ Infra"
+  description="Practical guides on pool construction timelines, planning and more from PBJ Infra — answers to real questions, not marketing filler."
+  path="/resources/"
+  schema={[breadcrumbSchema(crumbs)]}
+>
+  <Breadcrumbs items={crumbs} />
+  <div class="wrap pt-8 pb-14">
+    <h1 class="text-[32px] md:text-[48px] max-w-[20ch]">Guides worth reading before you build.</h1>
+    <p class="mt-5 max-w-[62ch] text-ink-soft">A small, growing set of articles answering real questions PBJ hears at consultation — not dozens of thin, auto-generated posts. Each one links to the service and project it's actually about.</p>
+  </div>
+  <div class="wrap pb-20 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {articles.map((a) => (
+      <a href={`/resources/${a.slug}/`} class="block border border-ink/[.14] hover:border-accent transition-colors">
+        <img src={a.data.heroImage.src} alt={a.data.heroImage.alt} width={a.data.heroImage.width} height={a.data.heroImage.height} loading="lazy" class="w-full aspect-[16/10] object-cover" />
+        <div class="p-6">
+          <h2 class="font-serif text-xl mb-2">{a.data.title}</h2>
+          <p class="text-[13.5px] text-ink-soft">{a.data.dek}</p>
+        </div>
+      </a>
+    ))}
+  </div>
+  <RevealScript />
+</BaseLayout>

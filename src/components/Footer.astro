@@ -1,0 +1,48 @@
+---
+import { SITE } from '../lib/site';
+const year = new Date().getFullYear();
+---
+<footer class="bg-ink text-paper/70 pt-[70px] pb-[26px] border-t border-paper/[.18]">
+  <div class="wrap">
+    <div class="grid grid-cols-2 md:grid-cols-[1.4fr_1fr_1fr_1fr] gap-10 pb-[50px] border-b border-paper/[.18]">
+      <div>
+        <div class="font-serif text-paper text-[22px] mb-4">PBJ INFRA</div>
+        <p class="text-[13.5px] max-w-[34ch] text-paper/55">Construction and infrastructure company based in Pune, serving Latur and locations across Maharashtra and India since 2009.</p>
+      </div>
+      <div>
+        <h5 class="font-mono text-[11px] tracking-wide uppercase text-paper mb-5">Services</h5>
+        <ul class="flex flex-col gap-[11px] text-[13.5px]">
+          <li><a href="/services/swimming-pool-construction/" class="hover:text-paper">Swimming Pool Construction</a></li>
+          <li><a href="/services/waterpark-construction/" class="hover:text-paper">Waterpark Construction</a></li>
+          <li><a href="/services/resort-construction/" class="hover:text-paper">Resort Construction</a></li>
+          <li><a href="/services/farmhouse-construction/" class="hover:text-paper">Farmhouse Construction</a></li>
+          <li><a href="/services/ferrocement-dome/" class="hover:text-paper">Ferrocement Dome</a></li>
+          <li><a href="/services/" class="hover:text-paper">All Services →</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5 class="font-mono text-[11px] tracking-wide uppercase text-paper mb-5">Company</h5>
+        <ul class="flex flex-col gap-[11px] text-[13.5px]">
+          <li><a href="/about/" class="hover:text-paper">About Us</a></li>
+          <li><a href="/projects/" class="hover:text-paper">Projects</a></li>
+          <li><a href="/locations/" class="hover:text-paper">Locations</a></li>
+          <li><a href="/resources/" class="hover:text-paper">Resources</a></li>
+          <li><a href="/contact/" class="hover:text-paper">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5 class="font-mono text-[11px] tracking-wide uppercase text-paper mb-5">Get in Touch</h5>
+        <ul class="flex flex-col gap-[11px] text-[13.5px]">
+          <li>{SITE.address.streetAddress}, {SITE.address.addressLocality} {SITE.address.postalCode}</li>
+          <li><a href={`tel:${SITE.phone}`} data-analytics-event="click_phone" class="hover:text-paper">{SITE.phoneDisplay}</a></li>
+          <li><a href={`mailto:${SITE.email}`} data-analytics-event="click_email" class="hover:text-paper">{SITE.email}</a></li>
+          <li>{SITE.hours}</li>
+        </ul>
+      </div>
+    </div>
+    <div class="pt-6 flex justify-between flex-wrap gap-3.5 font-mono text-[11px]">
+      <span>© {year} PBJ Infra. GST {SITE.gst}.</span>
+      <span>Privacy Policy · Terms of Service</span>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,19 @@
+---
+// Visible breadcrumb trail. The matching BreadcrumbList JSON-LD is built
+// from the same `items` array by the calling page (src/lib/schema.ts
+// breadcrumbSchema) so the two never drift apart.
+interface Props { items: { name: string; url: string }[] }
+const { items } = Astro.props;
+---
+<nav aria-label="Breadcrumb" class="wrap pt-[110px] md:pt-[130px]">
+  <ol class="flex flex-wrap items-center gap-2 font-mono text-[11px] text-ink-soft/70">
+    {items.map((item, i) => (
+      <li class="flex items-center gap-2">
+        {i > 0 && <span aria-hidden="true">/</span>}
+        {i === items.length - 1
+          ? <span aria-current="page" class="text-ink">{item.name}</span>
+          : <a href={item.url} class="hover:text-accent">{item.name}</a>}
+      </li>
+    ))}
+  </ol>
+</nav>

@@ -1,0 +1,46 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import RevealScript from '../../components/RevealScript.astro';
+import { breadcrumbSchema } from '../../lib/schema';
+
+const services = await getCollection('services');
+const categories = ['Aquatic', 'Hospitality & Leisure', 'Residential', 'Specialized'] as const;
+const crumbs = [{ name: 'Home', url: '/' }, { name: 'Services', url: '/services/' }];
+---
+<BaseLayout
+  title="Construction Services | Pools, Waterparks, Resorts & More | PBJ Infra"
+  description="All PBJ Infra construction services — swimming pools, waterparks, resorts, farmhouses, ferrocement domes and land development — across Pune, Latur and Maharashtra."
+  path="/services/"
+  schema={[breadcrumbSchema(crumbs)]}
+>
+  <Breadcrumbs items={crumbs} />
+  <div class="wrap pt-8 pb-14">
+    <h1 class="text-[32px] md:text-[48px] max-w-[18ch]">What PBJ Infra builds.</h1>
+    <p class="mt-5 max-w-[62ch] text-ink-soft">Four disciplines, one in-house site team: aquatic construction, hospitality &amp; leisure, residential builds, and specialized structural work. Every service below is genuinely offered by PBJ — pages marked "in development" are real, verified service lines that don't yet have a fully written page on this site.</p>
+  </div>
+
+  {categories.map((cat) => {
+    const inCat = services.filter((s) => s.data.category === cat);
+    return (
+      <section class="wrap pb-16">
+        <h2 class="font-serif text-2xl mb-6 border-b border-ink/[.14] pb-4">{cat}</h2>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {inCat.map((s) => (
+            <ServiceCard
+              name={s.data.name}
+              category={s.data.category}
+              shortDescription={s.data.shortDescription}
+              href={s.data.status === 'published' ? `/services/${s.slug}/` : null}
+              image={s.data.heroImage}
+            />
+          ))}
+        </div>
+      </section>
+    );
+  })}
+
+  <RevealScript />
+</BaseLayout>

@@ -1,0 +1,190 @@
+---
+// Multi-step project enquiry form. Progressive enhancement: the entire
+// <form> is real, native HTML that POSTs to /api/lead and works with JS
+// disabled (single page, native `required` validation, real submit). With
+// JS enabled, script.client.ts below layers step-by-step navigation, a
+// progress indicator, and inline accessible error messages on top of the
+// same markup — nothing about the underlying form changes.
+const projectTypes = ['Swimming Pool', 'Waterpark', 'Resort', 'Farmhouse', 'Specialized Structure', 'Other'];
+---
+<form id="lead-form" class="planner-box spec-frame bg-ink text-paper p-8 md:p-16 relative" method="POST" action="/api/lead" novalidate>
+  <span class="cA"></span><span class="cB"></span>
+
+  {/* Honeypot — hidden from real users via CSS/off-screen, bots that
+      auto-fill every field will trip this. Never shown, never required. */}
+  <div class="absolute -left-[9999px]" aria-hidden="true">
+    <label for="company">Company</label>
+    <input type="text" id="company" name="company" tabindex="-1" autocomplete="off" />
+  </div>
+  <input type="hidden" name="renderedAt" id="renderedAt" value="" />
+
+  <div id="form-progress" class="font-mono text-[11px] tracking-wide uppercase text-paper/50 mb-6" role="status" aria-live="polite">Step 1 of 7</div>
+
+  <fieldset data-step="1" class="form-step">
+    <legend class="font-mono text-[10.5px] tracking-wide uppercase text-paper/55 mb-4">What are you planning?</legend>
+    <div class="chip-row flex flex-wrap gap-2.5" role="radiogroup" aria-label="Project type">
+      {projectTypes.map((t, i) => (
+        <label class="chip cursor-pointer font-mono text-xs px-4 py-2.5 border border-paper/[.18] text-paper/75 has-[:checked]:bg-accent has-[:checked]:border-accent has-[:checked]:text-paper transition-colors">
+          <input type="radio" name="projectType" value={t} class="sr-only" required checked={i === 0} />
+          {t}
+        </label>
+      ))}
+    </div>
+  </fieldset>
+
+  <fieldset data-step="2" class="form-step" hidden>
+    <legend class="font-mono text-[10.5px] tracking-wide uppercase text-paper/55 mb-4">Project location</legend>
+    <label for="location" class="sr-only">City / region</label>
+    <input id="location" name="location" type="text" placeholder="City / region" required class="w-full bg-transparent border border-paper/[.18] text-paper px-3.5 py-3 text-sm" />
+  </fieldset>
+
+  <fieldset data-step="3" class="form-step" hidden>
+    <legend class="font-mono text-[10.5px] tracking-wide uppercase text-paper/55 mb-4">Approximate size</legend>
+    <label for="size" class="sr-only">Approximate size</label>
+    <input id="size" name="size" type="text" placeholder="e.g. 30x15 ft, or plot size" required class="w-full bg-transparent border border-paper/[.18] text-paper px-3.5 py-3 text-sm" />
+  </fieldset>
+
+  <fieldset data-step="4" class="form-step" hidden>
+    <legend class="font-mono text-[10.5px] tracking-wide uppercase text-paper/55 mb-4">Budget range <span class="normal-case text-paper/40">(optional)</span></legend>
+    <label for="budget" class="sr-only">Budget range</label>
+    <select id="budget" name="budget" class="w-full bg-ink border border-paper/[.18] text-paper px-3.5 py-3 text-sm">
+      <option value="">Prefer not to say</option>
+      <option>Under ₹10 Lakhs</option>
+      <option>₹10–25 Lakhs</option>
+      <option>₹25–50 Lakhs</option>
+      <option>₹50 Lakhs – 1 Crore</option>
+      <option>Above ₹1 Crore</option>
+    </select>
+  </fieldset>
+
+  <fieldset data-step="5" class="form-step" hidden>
+    <legend class="font-mono text-[10.5px] tracking-wide uppercase text-paper/55 mb-4">Timeline</legend>
+    <label for="timeline" class="sr-only">Timeline</label>
+    <select id="timeline" name="timeline" required class="w-full bg-ink border border-paper/[.18] text-paper px-3.5 py-3 text-sm">
+      <option>Flexible</option>
+      <option>Within 3 months</option>
+      <option>3–6 months</option>
+      <option>6+ months</option>
+    </select>
+  </fieldset>
+
+  <fieldset data-step="6" class="form-step" hidden>
+    <legend class="font-mono text-[10.5px] tracking-wide uppercase text-paper/55 mb-4">Contact details</legend>
+    <div class="grid gap-4">
+      <div>
+        <label for="name" class="sr-only">Full name</label>
+        <input id="name" name="name" type="text" placeholder="Full name" required autocomplete="name" class="w-full bg-transparent border border-paper/[.18] text-paper px-3.5 py-3 text-sm" />
+      </div>
+      <div>
+        <label for="phone" class="sr-only">Phone number</label>
+        <input id="phone" name="phone" type="tel" placeholder="Phone number" required autocomplete="tel" pattern="[0-9+\-\s]{7,15}" class="w-full bg-transparent border border-paper/[.18] text-paper px-3.5 py-3 text-sm" />
+        <p class="field-error hidden text-warn text-xs font-mono mt-1.5" role="alert"></p>
+      </div>
+      <div>
+        <label for="email" class="sr-only">Email address</label>
+        <input id="email" name="email" type="email" placeholder="Email address" required autocomplete="email" class="w-full bg-transparent border border-paper/[.18] text-paper px-3.5 py-3 text-sm" />
+        <p class="field-error hidden text-warn text-xs font-mono mt-1.5" role="alert"></p>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset data-step="7" class="form-step" hidden>
+    <legend class="font-mono text-[10.5px] tracking-wide uppercase text-paper/55 mb-4">Project details</legend>
+    <label for="details" class="sr-only">Tell us more about the project</label>
+    <textarea id="details" name="details" rows="4" placeholder="Anything else that helps us prepare for the call" class="w-full bg-transparent border border-paper/[.18] text-paper px-3.5 py-3 text-sm"></textarea>
+  </fieldset>
+
+  <div class="flex items-center justify-between gap-4 mt-8">
+    <button type="button" id="form-back" class="btn btn-lt" hidden>← Back</button>
+    <div class="flex-1"></div>
+    <button type="button" id="form-next" class="btn btn-solid">Next →</button>
+    <button type="submit" id="form-submit" class="btn btn-solid" hidden data-analytics-event="form_submit">Request a Consultation →</button>
+  </div>
+
+  <p id="form-status" class="font-mono text-[11px] text-paper/45 mt-4" role="status" aria-live="polite"></p>
+</form>
+
+<script>
+  const form = document.getElementById('lead-form') as HTMLFormElement;
+  (document.getElementById('renderedAt') as HTMLInputElement).value = String(Date.now());
+
+  const steps = Array.from(form.querySelectorAll<HTMLFieldSetElement>('.form-step'));
+  const progress = document.getElementById('form-progress')!;
+  const backBtn = document.getElementById('form-back') as HTMLButtonElement;
+  const nextBtn = document.getElementById('form-next') as HTMLButtonElement;
+  const submitBtn = document.getElementById('form-submit') as HTMLButtonElement;
+  const status = document.getElementById('form-status')!;
+  let current = 0;
+  let started = false;
+
+  function markStarted() {
+    if (started) return;
+    started = true;
+    document.dispatchEvent(new CustomEvent('pbj:form_start'));
+  }
+  form.addEventListener('input', markStarted, { once: true });
+
+  function showStep(i: number) {
+    steps.forEach((s, idx) => (s.hidden = idx !== i));
+    progress.textContent = `Step ${i + 1} of ${steps.length}`;
+    backBtn.hidden = i === 0;
+    nextBtn.hidden = i === steps.length - 1;
+    submitBtn.hidden = i !== steps.length - 1;
+    steps[i].querySelector<HTMLElement>('input, select, textarea')?.focus();
+  }
+
+  function validateStep(i: number): boolean {
+    const fields = Array.from(steps[i].querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>('input, select, textarea'));
+    let valid = true;
+    for (const f of fields) {
+      const errorEl = f.closest('div')?.querySelector<HTMLElement>('.field-error');
+      if (!f.checkValidity()) {
+        valid = false;
+        if (errorEl) {
+          errorEl.textContent = f.validationMessage;
+          errorEl.hidden = false;
+        } else {
+          f.reportValidity();
+        }
+      } else if (errorEl) {
+        errorEl.hidden = true;
+      }
+    }
+    return valid;
+  }
+
+  nextBtn.addEventListener('click', () => {
+    if (!validateStep(current)) return;
+    current = Math.min(current + 1, steps.length - 1);
+    showStep(current);
+  });
+  backBtn.addEventListener('click', () => {
+    current = Math.max(current - 1, 0);
+    showStep(current);
+  });
+
+  window.addEventListener('beforeunload', () => {
+    if (started && form.dataset.submitted !== 'true') {
+      document.dispatchEvent(new CustomEvent('pbj:form_abandon', { detail: { atStep: current + 1 } }));
+    }
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!validateStep(current)) return;
+    submitBtn.disabled = true;
+    status.textContent = 'Sending…';
+    try {
+      const res = await fetch('/api/lead', { method: 'POST', body: new FormData(form) });
+      const data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data.error ?? 'Submission failed');
+      form.dataset.submitted = 'true';
+      form.innerHTML = '<p class="font-serif text-2xl">Thanks — we\'ve received your project details.</p><p class="font-mono text-sm text-paper/60 mt-3">PBJ Infra will be in touch shortly. For anything urgent, WhatsApp us directly.</p>';
+    } catch (err) {
+      status.textContent = "Something went wrong sending this — please WhatsApp or call us directly using the details below.";
+      submitBtn.disabled = false;
+    }
+  });
+
+  showStep(0);
+</script>

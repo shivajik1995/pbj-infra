@@ -1,0 +1,5 @@
+{
+  "question": "Which locations do you serve?",
+  "answer": "Headquartered in Pune with a major operational hub in Latur, and project coverage extending across Maharashtra and other regions of India, including coastal and island projects.",
+  "appliesTo": ["home", "about", "location", "contact"]
+}

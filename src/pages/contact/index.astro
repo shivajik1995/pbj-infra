@@ -1,0 +1,63 @@
+---
+import { getEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import FAQAccordion from '../../components/FAQAccordion.astro';
+import LeadForm from '../../components/LeadForm.astro';
+import RevealScript from '../../components/RevealScript.astro';
+import { breadcrumbSchema, faqSchema } from '../../lib/schema';
+import { SITE, whatsappLink, telLink, mailtoLink } from '../../lib/site';
+
+const faqSlugs = ['cost', 'pool-timeline', 'permits', 'warranty', 'locations-served', 'design-and-build', 'specialized-structures'];
+const faqs = (await Promise.all(faqSlugs.map((id) => getEntry('faq', id)))).map((f) => f!.data);
+const crumbs = [{ name: 'Home', url: '/' }, { name: 'Contact', url: '/contact/' }];
+
+const mapQuery = encodeURIComponent(`${SITE.address.streetAddress}, ${SITE.address.addressLocality} ${SITE.address.postalCode}`);
+---
+<BaseLayout
+  title="Contact PBJ Infra | Start Your Construction Project"
+  description="Get in touch with PBJ Infra — call, WhatsApp or send your project details for a free consultation. Based in Phursungi, Pune."
+  path="/contact/"
+  schema={[breadcrumbSchema(crumbs), faqSchema(faqs)]}
+>
+  <Breadcrumbs items={crumbs} />
+
+  <section class="wrap pt-8 pb-16">
+    <h1 class="text-[32px] md:text-[48px] max-w-[18ch]">Have a project in mind? Let's build it.</h1>
+    <p class="mt-5 max-w-[62ch] text-ink-soft">Tell us what you're planning and our team will help you understand the next steps. No fixed pricing is published — every project gets a consultation and a project-specific quote.</p>
+  </section>
+
+  <section class="wrap pb-20 grid lg:grid-cols-[1fr_1fr] gap-12 items-start">
+    <div>
+      <LeadForm />
+    </div>
+    <div class="flex flex-col gap-8">
+      <div class="border border-ink/[.14] p-7">
+        <h2 class="font-serif text-xl mb-5">Direct contact</h2>
+        <ul class="flex flex-col gap-3.5 font-mono text-sm">
+          <li><a href={telLink()} data-analytics-event="click_phone" class="hover:text-accent">{SITE.phoneDisplay}</a></li>
+          <li><a href={mailtoLink()} data-analytics-event="click_email" class="hover:text-accent">{SITE.email}</a></li>
+          <li><a href={whatsappLink('Hi PBJ Infra, I would like to discuss a project.')} target="_blank" rel="noopener" data-analytics-event="click_whatsapp" data-analytics-params={JSON.stringify({ placement: 'contact_page' })} class="hover:text-accent">WhatsApp →</a></li>
+        </ul>
+        <p class="text-[13px] text-ink-soft mt-5">{SITE.address.streetAddress}, {SITE.address.addressLocality} {SITE.address.postalCode}</p>
+        <p class="font-mono text-xs text-ink/50 mt-2">{SITE.hours}</p>
+      </div>
+      <div class="border border-ink/[.14] overflow-hidden aspect-[4/3]">
+        <iframe
+          title="PBJ Infra location — Phursungi, Pune"
+          src={`https://www.google.com/maps?q=${mapQuery}&output=embed`}
+          class="w-full h-full border-0"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap py-16 max-w-[880px]" id="faq">
+    <h2 class="font-serif text-3xl mb-4">FAQ</h2>
+    <FAQAccordion items={faqs} idPrefix="contact-faq" />
+  </section>
+
+  <RevealScript />
+</BaseLayout>

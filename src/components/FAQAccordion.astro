@@ -1,0 +1,57 @@
+---
+interface Props { items: { question: string; answer: string }[]; idPrefix?: string }
+const { items, idPrefix = 'faq' } = Astro.props;
+---
+<div class="faq-list">
+  {items.map((item, i) => (
+    <div class="border-b border-ink/[.14]">
+      <h3>
+        <button
+          class="faq-q w-full text-left py-[26px] flex justify-between items-center gap-4 font-serif text-lg md:text-[19px]"
+          aria-expanded={i === 0 ? 'true' : 'false'}
+          aria-controls={`${idPrefix}-a-${i}`}
+          id={`${idPrefix}-q-${i}`}
+        >
+          <span>{item.question}</span>
+          <span class="plus font-mono text-lg text-accent shrink-0 transition-transform duration-200" aria-hidden="true">+</span>
+        </button>
+      </h3>
+      <div
+        id={`${idPrefix}-a-${i}`}
+        role="region"
+        aria-labelledby={`${idPrefix}-q-${i}`}
+        class="faq-a overflow-hidden transition-[grid-template-rows] duration-300 grid"
+        style={i === 0 ? undefined : 'grid-template-rows:0fr'}
+      >
+        <div class="min-h-0 overflow-hidden">
+          <p class="pb-6 text-ink-soft max-w-[62ch] text-[14.5px]">{item.answer}</p>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.faq-list').forEach((list) => {
+    const buttons = list.querySelectorAll<HTMLButtonElement>('.faq-q');
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        const panel = document.getElementById(btn.getAttribute('aria-controls')!)!;
+        const plus = btn.querySelector('.plus') as HTMLElement;
+        // close all in this list
+        buttons.forEach((b) => {
+          b.setAttribute('aria-expanded', 'false');
+          const p = document.getElementById(b.getAttribute('aria-controls')!)!;
+          p.style.gridTemplateRows = '0fr';
+          (b.querySelector('.plus') as HTMLElement).style.transform = 'rotate(0deg)';
+        });
+        if (!expanded) {
+          btn.setAttribute('aria-expanded', 'true');
+          panel.style.gridTemplateRows = '1fr';
+          plus.style.transform = 'rotate(45deg)';
+        }
+      });
+    });
+  });
+</script>

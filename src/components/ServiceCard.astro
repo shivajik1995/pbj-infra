@@ -1,0 +1,23 @@
+---
+interface Props {
+  name: string;
+  category: string;
+  shortDescription: string;
+  href: string | null; // null = draft, not yet linked
+  image: { src: string; alt: string; width: number; height: number };
+}
+const { name, category, shortDescription, href, image } = Astro.props;
+const Tag = href ? 'a' : 'div';
+---
+<Tag href={href ?? undefined} class="group block border border-ink/[.14] bg-paper hover:border-accent transition-colors">
+  <div class="aspect-[4/3] overflow-hidden relative">
+    <img src={image.src} alt={image.alt} width={image.width} height={image.height} loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+    {!href && <span class="absolute top-3 right-3 font-mono text-[10px] tracking-wide uppercase bg-ink/85 text-paper px-2.5 py-1">Page in development</span>}
+  </div>
+  <div class="p-6">
+    <span class="font-mono text-[11px] text-accent tracking-wide uppercase">{category}</span>
+    <h3 class="font-serif text-xl mt-2 mb-2">{name}</h3>
+    <p class="text-[13.5px] text-ink-soft">{shortDescription}</p>
+    {href && <span class="inline-block mt-4 font-mono text-xs tracking-wide uppercase text-ink group-hover:text-accent">View Service →</span>}
+  </div>
+</Tag>

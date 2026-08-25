@@ -1,0 +1,269 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import TestimonialCard from '../components/TestimonialCard.astro';
+import GoogleReviews from '../components/GoogleReviews.astro';
+import FAQAccordion from '../components/FAQAccordion.astro';
+import RevealScript from '../components/RevealScript.astro';
+import { SITE, whatsappLink } from '../lib/site';
+import { faqSchema } from '../lib/schema';
+
+const services = (await getCollection('services')).sort((a) => (a.data.status === 'published' ? -1 : 1));
+
+const projects = await getCollection('projects');
+const projectOrder = ['adventure-waterpark-latur', 'luxury-infinity-pool', 'rabbit-dome-house', 'natural-lagoon-pool', 'farm-house-latur'];
+const orderedProjects = projectOrder.map((slug) => projects.find((p) => p.slug === slug)!).filter(Boolean);
+
+const testimonials = await getCollection('testimonials');
+
+const faqSlugs = ['pool-timeline', 'warranty', 'permits', 'design-and-build', 'cost'];
+const faqs = await Promise.all(faqSlugs.map((id) => getEntry('faq', id)));
+const faqItems = faqs.filter(Boolean).map((f) => f!.data);
+---
+<BaseLayout
+  title="PBJ Infra | Construction Company for Pools, Resorts & Farmhouses — Pune, Latur, Maharashtra"
+  description="PBJ Infra builds swimming pools, waterparks, resorts, farmhouses and specialized structures across Pune, Latur and Maharashtra since 2009. 5-year structural warranty."
+  path="/"
+  schema={[faqSchema(faqItems)]}
+>
+  <!-- ============ HERO ============ -->
+  <section class="min-h-screen flex flex-col justify-end pt-[150px] relative bg-ink text-paper overflow-hidden">
+    <div class="absolute inset-0">
+      <div class="absolute inset-0 grid grid-cols-2 md:grid-cols-4">
+        <img src="https://pbjinfra.com/assets/images/resort.jpg" alt="" class="w-full h-full object-cover opacity-50 grayscale-[.15] brightness-[.55]" fetchpriority="high" />
+        <img src="https://pbjinfra.com/assets/images/Featured-project3.jpeg" alt="" class="w-full h-full object-cover opacity-50 grayscale-[.15] brightness-[.55]" loading="lazy" />
+        <img src="https://pbjinfra.com/assets/images/Lagoon.jpeg" alt="" class="hidden md:block w-full h-full object-cover opacity-50 grayscale-[.15] brightness-[.55]" loading="lazy" />
+        <img src="https://pbjinfra.com/assets/images/farm-house-new.jpg" alt="" class="hidden md:block w-full h-full object-cover opacity-50 grayscale-[.15] brightness-[.55]" loading="lazy" />
+      </div>
+      <div class="absolute inset-0" style="background:linear-gradient(180deg,rgba(20,23,26,.35) 0%, rgba(20,23,26,.55) 55%, #14171A 96%)"></div>
+    </div>
+    <div class="relative z-[2] pb-[90px]">
+      <div class="wrap grid md:grid-cols-[1fr_auto] gap-10 items-end">
+        <div>
+          <span class="eyebrow text-white">Premier Construction — Pune · Latur · Maharashtra</span>
+          <h1 class="text-[44px] md:text-[clamp(44px,7.2vw,108px)] leading-[.95] -tracking-[.02em] max-w-[14ch] mt-4">Whatever you imagine, we build it.</h1>
+          <p class="text-[17px] max-w-[38ch] text-paper/80 my-6 leading-relaxed">Luxury swimming pools, waterparks, resorts and farmhouses — designed, engineered and built by PBJ Infra since 2009.</p>
+          <div class="flex gap-4 flex-wrap">
+            <a href="/contact/" class="btn btn-solid" data-analytics-event="click_start_project" data-analytics-params={JSON.stringify({ placement: 'hero' })}>Start Your Project →</a>
+            <a href="/projects/" class="btn btn-lt">Explore Our Work →</a>
+          </div>
+        </div>
+        <div class="font-mono text-xs text-left md:text-right text-paper/55 leading-[1.8] mt-5 md:mt-0">
+          N 18.4702° E 73.9758°<br />
+          Phursungi, Pune — HQ<br />
+          Est. 2009
+        </div>
+      </div>
+      <div class="wrap border-t border-paper/[.18] mt-14 pt-[22px] flex flex-wrap gap-9">
+        <div class="font-mono text-[11.5px] tracking-wide uppercase text-paper/70">Since 2009</div>
+        <div class="font-mono text-[11.5px] tracking-wide uppercase text-paper/70">Licensed &amp; Insured</div>
+        <div class="font-mono text-[11.5px] tracking-wide uppercase text-paper/70">5-Yr Structural Warranty</div>
+        <div class="font-mono text-[11.5px] tracking-wide uppercase text-paper/70">GST {SITE.gst}</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TRUST STRIP ============ -->
+  <div class="bg-ink text-paper border-t border-paper/[.18] py-[26px]">
+    <div class="wrap flex flex-wrap justify-between">
+      <div class="flex-1 min-w-[150px] px-5 first:pl-0 first:border-l-0 border-l border-paper/[.18]" style="border-left:none">
+        <div class="font-serif text-xl">2009</div><div class="font-mono text-[10px] tracking-wide uppercase text-paper/55 mt-1">Operating Since</div>
+      </div>
+      <div class="flex-1 min-w-[150px] px-5 border-l border-paper/[.18]">
+        <div class="font-serif text-xl">5 / 2 Yrs</div><div class="font-mono text-[10px] tracking-wide uppercase text-paper/55 mt-1">Structural / Equipment Warranty</div>
+      </div>
+      <div class="flex-1 min-w-[150px] px-5 border-l border-paper/[.18]">
+        <div class="font-serif text-xl">Registered</div><div class="font-mono text-[10px] tracking-wide uppercase text-paper/55 mt-1">GST · {SITE.udyam}</div>
+      </div>
+      <div class="flex-1 min-w-[150px] px-5 border-l border-paper/[.18]">
+        <div class="font-serif text-xl">Pune → India</div><div class="font-mono text-[10px] tracking-wide uppercase text-paper/55 mt-1">Project Coverage</div>
+      </div>
+      <div class="flex-1 min-w-[150px] px-5 border-l border-paper/[.18]">
+        <div class="font-serif text-xl text-stone">— · —</div><div class="font-mono text-[10px] tracking-wide uppercase text-paper/55 mt-1">Google Rating <span class="text-warn">· pending integration</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ WHAT WE BUILD ============ -->
+  <section class="py-20 md:py-[130px]" id="build">
+    <div class="wrap">
+      <div class="section-head reveal max-w-[760px] mb-14">
+        <span class="section-num">01 / What We Build</span>
+        <h2 class="text-[32px] md:text-[44px]">Four disciplines. One site team.</h2>
+      </div>
+      <div class="reveal grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {['Aquatic', 'Hospitality & Leisure', 'Residential', 'Specialized'].map((cat) => {
+          const svc = services.find((s) => s.data.category === cat && s.data.status === 'published') ?? services.find((s) => s.data.category === cat)!;
+          return (
+            <ServiceCard
+              name={svc.data.name}
+              category={svc.data.category}
+              shortDescription={svc.data.shortDescription}
+              href={svc.data.status === 'published' ? `/services/${svc.slug}/` : null}
+              image={svc.data.heroImage}
+            />
+          );
+        })}
+      </div>
+      <div class="reveal mt-10"><a href="/services/" class="btn btn-line">Explore All Services →</a></div>
+    </div>
+  </section>
+
+  <!-- ============ SIGNATURE PROJECTS ============ -->
+  <section class="py-20 md:py-[130px] bg-paper-dim" id="projects">
+    <div class="wrap">
+      <div class="section-head reveal max-w-[760px] mb-14">
+        <span class="section-num">02 / Signature Projects</span>
+        <h2 class="text-[32px] md:text-[44px]">We don't just show projects. We show what we've built.</h2>
+      </div>
+      <div class="reveal grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {orderedProjects.map((p, i) => (
+          <div class={i === 0 ? 'sm:col-span-2 lg:col-span-2' : ''}>
+            <ProjectCard
+              name={p.data.name}
+              projectType={p.data.projectType}
+              location={p.data.location}
+              href={p.data.status === 'published' ? `/projects/${p.slug}/` : null}
+              image={p.data.heroImage}
+            />
+          </div>
+        ))}
+      </div>
+      <div class="reveal mt-10"><a href="/projects/" class="btn btn-line">Explore All Projects →</a></div>
+    </div>
+  </section>
+
+  <!-- ============ SITE TO SIGNATURE ============ -->
+  <section class="py-20 md:py-[130px]">
+    <div class="wrap">
+      <div class="section-head reveal max-w-[760px] mb-4">
+        <span class="section-num">03 / See How It's Built</span>
+        <h2 class="text-[32px] md:text-[44px]">From site to signature.</h2>
+        <p class="mt-4 text-ink-soft">Site preparation, structure, systems and finish — the stages a PBJ project actually passes through.</p>
+      </div>
+      <div class="reveal grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-ink/[.14] border border-ink/[.14] mt-10">
+        {[
+          { n: '01', h: 'Site', p: 'Land survey, excavation and preparation before structural work begins.', img: null },
+          { n: '02', h: 'Structure', p: 'Ferro-concrete shell, dome forms or foundation work depending on project type.', img: null },
+          { n: '03', h: 'Systems', p: 'Filtration, waterproofing and mechanical systems installed and pressure-tested.', img: null },
+          { n: '04', h: 'Signature', p: "Tiling, landscaping and final detailing — the result the client sees.", img: 'https://pbjinfra.com/assets/images/Featured-project1.jpeg' },
+        ].map((s) => (
+          <div class="bg-paper p-6 pb-[30px] flex flex-col min-h-[300px]">
+            <span class="font-mono text-[11px] text-accent">{s.n}</span>
+            <h3 class="font-serif text-lg mt-3 mb-2">{s.h}</h3>
+            <p class="text-[13.5px] text-ink-soft mb-4">{s.p}</p>
+            <div class="mt-auto aspect-square border border-dashed border-ink/[.14] flex items-center justify-center text-center p-3 overflow-hidden">
+              {s.img
+                ? <img src={s.img} alt="Finished infinity pool by PBJ Infra" width="600" height="600" loading="lazy" class="w-full h-full object-cover" />
+                : <span class="font-mono text-[10.5px] text-ink/45 leading-relaxed">Photography required from PBJ project archive</span>}
+            </div>
+          </div>
+        ))}
+      </div>
+      <p class="reveal font-mono text-[11.5px] text-warn mt-5">Content requirement: PBJ Infra does not currently publish before/during-construction photography. Requesting stage photography from active or recent sites would let this section run as a full progress timeline rather than a single finished shot.</p>
+    </div>
+  </section>
+
+  <!-- ============ TRUST ARCHITECTURE ============ -->
+  <section class="py-20 md:py-[130px] bg-ink text-paper">
+    <div class="wrap">
+      <div class="section-head reveal max-w-[760px] mb-14">
+        <span class="section-num" style="color:rgba(246,243,236,.4)">04 / Trust Architecture</span>
+        <h2 class="text-[32px] md:text-[44px]">Evidence, not adjectives.</h2>
+      </div>
+      <div class="reveal grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-paper/[.18] border border-paper/[.18]">
+        {[
+          ['EXPERIENCE', 'Operating since 2009', 'PBJ Infra has been executing construction and infrastructure projects continuously since 2009.'],
+          ['REGISTRATIONS', 'Fully registered business', `GST: ${SITE.gst} · UDYAM: ${SITE.udyam}`],
+          ['WARRANTY', '5-yr structural, 2-yr equipment', 'Comprehensive warranty covering defects in materials or workmanship under normal use.'],
+          ['COMPLIANCE', 'Licensed & insured', 'Handles permits, approvals and regulatory compliance directly with local building authorities.'],
+          ['ENGINEERING', 'Specialized structural work', 'Ferro-concrete and ferrocement dome construction — technical capability beyond standard contracting.'],
+          ['PEOPLE', 'Founder-led', 'Led by Padmasinha Bapurao Jadhav, Founder — directly reachable, not a call-center front.'],
+        ].map(([icon, h, p]) => (
+          <div class="bg-ink p-8 min-h-[190px]">
+            <span class="font-mono text-[11px] text-accent tracking-wide">{icon}</span>
+            <h3 class="font-serif text-xl mt-3.5 mb-2.5">{h}</h3>
+            <p class="text-[13.5px] text-paper/65">{p}</p>
+          </div>
+        ))}
+      </div>
+      <div class="reveal mt-[70px] pt-11 border-t border-paper/[.18]">
+        <div class="font-mono text-[11px] tracking-wide uppercase text-paper/50 mb-7">Clients PBJ Infra has worked with</div>
+        <div class="flex flex-wrap gap-11 items-center">
+          {['Majestique-Landmarks.png','ajmera-estates-logo.png','panchshil-logo.png','nyati_logo.png','godrej-properties-logo.png','mahindra_logo.png','dy-patil.jpg','kolte-patil-logo.jpg'].map((logo) => (
+            <img src={`https://pbjinfra.com/assets/images/client-logo/${logo}`} alt="" loading="lazy" class="h-[34px] w-auto grayscale invert brightness-[1.6] opacity-70 hover:opacity-100 transition-opacity" />
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SOCIAL PROOF ============ -->
+  <section class="py-20 md:py-[130px]" id="reviews">
+    <div class="wrap">
+      <div class="section-head reveal max-w-[760px] mb-10">
+        <span class="section-num">05 / Social Proof</span>
+        <h2 class="text-[32px] md:text-[40px]">Don't take our word for it.</h2>
+      </div>
+      <div class="reveal"><GoogleReviews /></div>
+
+      <div class="reveal grid sm:grid-cols-2 gap-6 mt-16">
+        {testimonials.map((t) => <TestimonialCard author={t.data.author} context={t.data.context} quote={t.data.quote} />)}
+      </div>
+      <p class="reveal font-mono text-[11px] text-ink/45 mt-5 max-w-[70ch]">Note: the two testimonials above are published on pbjinfra.com's own portfolio page — they are real site content, but are not confirmed Google reviews, so they're labeled separately rather than styled as verified Google social proof.</p>
+    </div>
+  </section>
+
+  <!-- ============ PROCESS ============ -->
+  <section class="py-20 md:py-[130px] bg-paper-dim" id="process">
+    <div class="wrap">
+      <div class="section-head reveal max-w-[760px] mb-10">
+        <span class="section-num">06 / Process</span>
+        <h2 class="text-[32px] md:text-[44px]">What happens after you contact us.</h2>
+      </div>
+      <div class="reveal">
+        {[
+          ['01', 'Consultation', 'Free consultation to understand your vision, requirements and budget.'],
+          ['02', 'Design & Planning', '3D visualization, detailed planning and transparent cost estimation.'],
+          ['03', 'Construction', 'Expert execution with regular progress updates and quality checks.'],
+          ['04', 'Handover', 'Final inspection, training and comprehensive warranty coverage.'],
+        ].map(([n, h, p]) => (
+          <div class="grid sm:grid-cols-[70px_1fr] md:grid-cols-[70px_1fr_1.3fr] gap-4 md:gap-9 py-9 border-t border-ink/[.14] items-center last:border-b">
+            <span class="font-mono text-[15px] text-accent">{n}</span>
+            <h3 class="font-serif text-2xl">{h}</h3>
+            <p class="text-ink-soft text-[14.5px] max-w-[52ch]">{p}</p>
+          </div>
+        ))}
+      </div>
+      <p class="reveal font-mono text-[11.5px] text-ink/45 mt-5">Typical residential pool timeline: 4–8 weeks depending on design complexity, size and weather — confirmed at consultation. <a href="/resources/how-long-does-swimming-pool-construction-take/" class="text-accent underline">Read the full breakdown →</a></p>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="py-20 md:py-[130px]" id="faq">
+    <div class="wrap max-w-[880px]">
+      <div class="section-head reveal mb-10">
+        <span class="section-num">07 / FAQ</span>
+        <h2 class="text-[32px] md:text-[44px]">Questions worth answering upfront.</h2>
+      </div>
+      <div class="reveal"><FAQAccordion items={faqItems} idPrefix="home-faq" /></div>
+    </div>
+  </section>
+
+  <!-- ============ FINAL CTA ============ -->
+  <section class="bg-ink text-paper py-24 md:py-[150px] text-center">
+    <div class="wrap">
+      <span class="eyebrow text-white">08 / Let's Talk</span>
+      <h2 class="font-serif text-[38px] md:text-[clamp(38px,6vw,72px)] leading-tight mt-5">Have a project in mind?<br />Let's build it.</h2>
+      <p class="max-w-[44ch] mx-auto my-6 text-paper/70">Tell us what you're planning and our team will help you understand the next steps.</p>
+      <div class="flex gap-4 justify-center flex-wrap">
+        <a href="/contact/" class="btn btn-solid" data-analytics-event="click_start_project" data-analytics-params={JSON.stringify({ placement: 'final_cta' })}>Start Your Project →</a>
+        <a href={whatsappLink('Hi PBJ Infra, I have a project in mind.')} target="_blank" rel="noopener" class="btn btn-lt" data-analytics-event="click_whatsapp" data-analytics-params={JSON.stringify({ placement: 'final_cta' })}>Chat on WhatsApp →</a>
+      </div>
+    </div>
+  </section>
+
+  <RevealScript />
+</BaseLayout>

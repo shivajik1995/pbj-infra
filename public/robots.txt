@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Nothing to disallow yet — there are no admin, thank-you, or duplicate-
+# parameter routes in this build. Add Disallow lines here if/when a
+# genuinely non-indexable path (e.g. /thank-you/) is introduced; never
+# block /_astro/ or any CSS/JS path required to render the page.
+
+Sitemap: https://www.pbjinfra.com/sitemap-index.xml
