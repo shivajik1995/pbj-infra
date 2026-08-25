@@ -8,40 +8,84 @@ const nav = [
   { href: '/contact/#faq', label: 'FAQ' },
 ];
 ---
-<header id="site-header" class="fixed top-0 left-0 right-0 z-[100] py-[22px] transition-[padding,background,backdrop-filter] duration-300 data-[scrolled=true]:py-3.5 data-[scrolled=true]:bg-paper/90 data-[scrolled=true]:backdrop-blur-md data-[scrolled=true]:border-b data-[scrolled=true]:border-ink/[.14]">
-  <div class="wrap flex items-center justify-between">
-    <a class="font-serif font-semibold text-xl -tracking-[0.01em]" href="/">PBJ <span class="text-accent">INFRA</span></a>
-    <nav class="hidden md:flex gap-9 font-mono text-xs tracking-wide uppercase" aria-label="Primary">
-      {nav.map((item) => (
-        <a href={item.href} class="relative pb-[3px] hover:text-accent transition-colors">{item.label}</a>
-      ))}
-    </nav>
-    <div class="flex items-center gap-[18px]">
-      <a href="/contact/" class="btn btn-line hidden md:inline-flex">Start Your Project →</a>
-      <button id="menu-btn" class="flex md:hidden flex-col gap-[5px] w-[26px]" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">
-        <span class="h-[1.5px] bg-ink block"></span>
-        <span class="h-[1.5px] bg-ink block"></span>
-        <span class="h-[1.5px] bg-ink block"></span>
-      </button>
+<header id="site-header" class="fixed top-0 left-0 right-0 z-[100] px-4 pt-4 md:px-6 md:pt-5 transition-[padding] duration-300 data-[scrolled=true]:pt-2.5 data-[scrolled=true]:md:pt-3">
+  <!-- Glass at every scroll position (not just on scroll) — this is chrome
+       floating over the page, not a bar that becomes glass; it always has
+       real content underneath it to frost. -->
+  <div class="wrap !px-0">
+    <div class="glass-strong rounded-full flex items-center justify-between pl-6 pr-2.5 py-2.5 md:pl-7 md:pr-3 md:py-3 text-paper transition-[background,border-color] duration-300 data-[onlight=true]:!bg-paper/70 data-[onlight=true]:!border-ink/[.12] data-[onlight=true]:!text-ink" id="nav-pill">
+      <a class="font-serif font-semibold text-lg md:text-xl -tracking-[0.01em]" href="/">PBJ <span class="text-accent">INFRA</span></a>
+      <nav class="hidden md:flex gap-8 font-mono text-xs tracking-wide uppercase" aria-label="Primary">
+        {nav.map((item) => (
+          <a href={item.href} class="relative pb-[3px] hover:text-accent transition-colors">{item.label}</a>
+        ))}
+      </nav>
+      <div class="flex items-center gap-2.5 md:gap-3">
+        <a href="/contact/" class="btn btn-solid !rounded-full !py-2.5 !px-5 hidden md:inline-flex">Start Your Project →</a>
+        <button id="menu-btn" class="flex md:hidden flex-col gap-[5px] w-9 h-9 items-center justify-center rounded-full" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">
+          <span class="h-[1.5px] w-[18px] bg-current block"></span>
+          <span class="h-[1.5px] w-[18px] bg-current block"></span>
+          <span class="h-[1.5px] w-[18px] bg-current block"></span>
+        </button>
+      </div>
     </div>
   </div>
 </header>
 
-<div id="mobile-nav" class="fixed inset-0 bg-ink text-paper z-[99] flex flex-col justify-center p-10 gap-6 -translate-y-full transition-transform duration-[400ms] [transition-timing-function:cubic-bezier(.16,1,.3,1)]" role="dialog" aria-modal="true" aria-label="Mobile navigation" hidden>
+<div id="mobile-nav" class="fixed inset-0 bg-ink/80 backdrop-blur-2xl [-webkit-backdrop-filter:blur(40px)] text-paper z-[99] flex flex-col justify-center p-10 gap-6 -translate-y-full transition-transform duration-[400ms] [transition-timing-function:cubic-bezier(.16,1,.3,1)]" role="dialog" aria-modal="true" aria-label="Mobile navigation" hidden>
   {nav.map((item) => (
     <a href={item.href} class="font-serif text-3xl">{item.label}</a>
   ))}
-  <a href="/contact/" class="font-serif text-3xl text-accent">Start Your Project →</a>
+  <a href="/contact/" class="btn btn-solid !rounded-full w-fit mt-2">Start Your Project →</a>
 </div>
 
 <script>
   const header = document.getElementById('site-header')!;
+  const pill = document.getElementById('nav-pill')!;
   const menuBtn = document.getElementById('menu-btn')!;
   const mobileNav = document.getElementById('mobile-nav')!;
 
+  // The glass pill is fixed and floats over every section on every page —
+  // dark (bg-ink) hero/CTA sections and light (bg-paper/bg-paper-dim)
+  // content sections alike. Rather than hardcode section order per page,
+  // sample the resolved background colour of whatever is actually behind
+  // the pill and flip to a light-glass/dark-text variant when it's light
+  // enough, so this keeps working if a page's section order changes.
+  function updatePillContrast() {
+    const rect = pill.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.bottom + 14;
+    const el = document.elementFromPoint(x, y);
+    let node: Element | null = el;
+    let bg: string | null = null;
+    while (node && node !== document.body) {
+      const c = getComputedStyle(node).backgroundColor;
+      if (c && c !== 'rgba(0, 0, 0, 0)' && c !== 'transparent') {
+        bg = c;
+        break;
+      }
+      node = node.parentElement;
+    }
+    if (!bg) bg = getComputedStyle(document.body).backgroundColor;
+    const rgb = bg.match(/\d+/g)?.map(Number);
+    if (!rgb || rgb.length < 3) return;
+    const luminance = (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) / 255;
+    pill.dataset.onlight = String(luminance > 0.6);
+  }
+
+  let ticking = false;
   window.addEventListener('scroll', () => {
     header.dataset.scrolled = String(window.scrollY > 40);
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(() => {
+        updatePillContrast();
+        ticking = false;
+      });
+    }
   });
+  window.addEventListener('resize', updatePillContrast);
+  updatePillContrast();
 
   function toggleNav(open: boolean) {
     mobileNav.hidden = !open;
@@ -51,6 +95,15 @@ const nav = [
     });
     menuBtn.setAttribute('aria-expanded', String(open));
     document.body.style.overflow = open ? 'hidden' : '';
+
+    // The mobile nav is a translucent glass sheet (not solid), so the
+    // fixed bottom WhatsApp/Get Quote bar would otherwise show through
+    // it at reduced opacity instead of being cleanly hidden underneath.
+    const stickyCta = document.getElementById('mobile-sticky-cta');
+    if (stickyCta) {
+      stickyCta.style.opacity = open ? '0' : '1';
+      stickyCta.style.pointerEvents = open ? 'none' : '';
+    }
   }
 
   menuBtn.addEventListener('click', () => toggleNav(mobileNav.hidden));

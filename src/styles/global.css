@@ -157,4 +157,52 @@
     display: block;
     margin-bottom: 14px;
   }
+
+  /* ---- Glass surfaces --------------------------------------------------
+     Frosted-panel treatment for the header, hero badge/stats and cards —
+     same ink/paper/accent tokens as the rest of the site, no new palette.
+     Two variants: `.glass` / `.glass-strong` read as frosted-dark (use on
+     the hero image or any bg-ink section); `.glass-paper` reads as
+     frosted-light (use on bg-paper / bg-paper-dim sections). The
+     `@supports` fallback raises background opacity for the ~3% of
+     browsers with no backdrop-filter support, so panels stay legible
+     instead of rendering as near-invisible outlines. */
+  .glass {
+    background: rgba(246, 243, 236, 0.1);
+    border: 1px solid rgba(246, 243, 236, 0.22);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+  }
+  .glass-strong {
+    background: rgba(246, 243, 236, 0.16);
+    border: 1px solid rgba(246, 243, 236, 0.3);
+    backdrop-filter: blur(22px) saturate(150%);
+    -webkit-backdrop-filter: blur(22px) saturate(150%);
+  }
+  .glass-paper {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(20, 23, 26, 0.13);
+    backdrop-filter: blur(14px) saturate(120%);
+    -webkit-backdrop-filter: blur(14px) saturate(120%);
+    /* over a flat paper background there's nothing behind the card for
+       backdrop-filter to actually blur, so a soft shadow carries the
+       "lifted glass panel" read instead — still cheap, no image needed */
+    box-shadow: 0 1px 2px rgba(20, 23, 26, 0.04), 0 16px 32px -12px rgba(20, 23, 26, 0.16);
+  }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass { background: rgba(20, 23, 26, 0.72); }
+    .glass-strong { background: rgba(20, 23, 26, 0.82); }
+    .glass-paper { background: rgba(255, 255, 255, 0.92); }
+  }
+
+  .btn-glass {
+    border-color: rgba(246, 243, 236, 0.3);
+    background: rgba(246, 243, 236, 0.08);
+    color: theme('colors.paper');
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+  }
+  .btn-glass:hover {
+    background: rgba(246, 243, 236, 0.2);
+  }
 }

@@ -32,23 +32,27 @@ const faqItems = faqs.filter(Boolean).map((f) => f!.data);
   <!-- ============ HERO ============ -->
   <CinematicHero />
 
-  <!-- ============ TRUST STRIP ============ -->
-  <div class="bg-ink text-paper border-t border-paper/[.18] py-[26px]">
-    <div class="wrap flex flex-wrap justify-between">
-      <div class="flex-1 min-w-[150px] px-5 first:pl-0 first:border-l-0 border-l border-paper/[.18]" style="border-left:none">
-        <div class="font-serif text-xl">2009</div><div class="font-mono text-[10px] tracking-wide uppercase text-paper/55 mt-1">Operating Since</div>
-      </div>
-      <div class="flex-1 min-w-[150px] px-5 border-l border-paper/[.18]">
-        <div class="font-serif text-xl">5 / 2 Yrs</div><div class="font-mono text-[10px] tracking-wide uppercase text-paper/55 mt-1">Structural / Equipment Warranty</div>
-      </div>
-      <div class="flex-1 min-w-[150px] px-5 border-l border-paper/[.18]">
-        <div class="font-serif text-xl">Registered</div><div class="font-mono text-[10px] tracking-wide uppercase text-paper/55 mt-1">GST · {SITE.udyam}</div>
-      </div>
-      <div class="flex-1 min-w-[150px] px-5 border-l border-paper/[.18]">
-        <div class="font-serif text-xl">Pune → India</div><div class="font-mono text-[10px] tracking-wide uppercase text-paper/55 mt-1">Project Coverage</div>
-      </div>
-      <div class="flex-1 min-w-[150px] px-5 border-l border-paper/[.18]">
-        <div class="font-serif text-xl text-stone">— · —</div><div class="font-mono text-[10px] tracking-wide uppercase text-paper/55 mt-1">Google Rating <span class="text-warn">· pending integration</span></div>
+  <!-- ============ TRUST STRIP (glass — floats over the hero's own
+       dark base, not the paper section below, so paper-coloured text
+       keeps reliable contrast at every scroll position) ============ -->
+  <div class="relative z-[3] -mt-16 md:-mt-20 px-4 md:px-0">
+    <div class="wrap">
+      <div class="glass-strong text-paper rounded-[28px] flex flex-wrap justify-between px-2 py-1.5 md:px-3 md:py-2">
+        <div class="flex-1 min-w-[130px] px-3.5 py-3.5 md:px-5">
+          <div class="font-serif text-lg md:text-xl">2009</div><div class="font-mono text-[10px] tracking-wide uppercase text-paper/60 mt-1">Operating Since</div>
+        </div>
+        <div class="flex-1 min-w-[130px] px-3.5 py-3.5 md:px-5 border-l border-paper/[.16]">
+          <div class="font-serif text-lg md:text-xl">5 / 2 Yrs</div><div class="font-mono text-[10px] tracking-wide uppercase text-paper/60 mt-1">Structural / Equipment Warranty</div>
+        </div>
+        <div class="flex-1 min-w-[130px] px-3.5 py-3.5 md:px-5 border-l border-paper/[.16]">
+          <div class="font-serif text-lg md:text-xl">Registered</div><div class="font-mono text-[10px] tracking-wide uppercase text-paper/60 mt-1">GST · {SITE.udyam}</div>
+        </div>
+        <div class="flex-1 min-w-[130px] px-3.5 py-3.5 md:px-5 border-l border-paper/[.16]">
+          <div class="font-serif text-lg md:text-xl">Pune → India</div><div class="font-mono text-[10px] tracking-wide uppercase text-paper/60 mt-1">Project Coverage</div>
+        </div>
+        <div class="flex-1 min-w-[130px] px-3.5 py-3.5 md:px-5 border-l border-paper/[.16]">
+          <div class="font-serif text-lg md:text-xl text-stone">— · —</div><div class="font-mono text-[10px] tracking-wide uppercase text-paper/60 mt-1">Google Rating <span class="text-warn">· pending</span></div>
+        </div>
       </div>
     </div>
   </div>

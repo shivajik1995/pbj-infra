@@ -20,8 +20,6 @@
 //
 // Real PBJ imagery only, reused from what's already linked elsewhere in
 // this codebase (see docs/website-audit.md) — nothing invented.
-import { SITE } from '../lib/site';
-
 const sequence = [
   { src: 'https://pbjinfra.com/assets/images/resort.jpg', stage: 'Vision' },
   { src: 'https://pbjinfra.com/assets/images/swimming-pool.jpg', stage: 'Architecture' },
@@ -74,7 +72,10 @@ const sequence = [
   <div class="hero-content relative z-[2] pb-[90px]">
     <div class="wrap grid md:grid-cols-[1fr_auto] gap-10 items-end">
       <div>
-        <span class="hero-fade eyebrow text-white">Premier Construction — Pune · Latur · Maharashtra</span>
+        <span class="hero-fade inline-flex items-center gap-2.5 glass rounded-full pl-2 pr-4 py-2 mb-5 font-mono text-[11.5px] tracking-wide uppercase text-paper">
+          <span class="w-6 h-6 rounded-full bg-accent/30 border border-accent/50 flex items-center justify-center text-[11px]" aria-hidden="true">✓</span>
+          Licensed &amp; Insured — Pune · Latur · Maharashtra
+        </span>
         <h1 class="text-[44px] md:text-[clamp(44px,7.2vw,108px)] leading-[.95] -tracking-[.02em] max-w-[14ch] mt-4">
           <span class="mask-line"><span>Whatever you imagine,</span></span>
           <span class="mask-line"><span>we build it.</span></span>
@@ -82,7 +83,7 @@ const sequence = [
         <p class="hero-fade text-[17px] max-w-[38ch] text-paper/80 my-6 leading-relaxed">Luxury swimming pools, waterparks, resorts and farmhouses — designed, engineered and built by PBJ Infra since 2009.</p>
         <div class="hero-fade flex gap-4 flex-wrap">
           <a href="/contact/" class="btn btn-solid" data-analytics-event="click_start_project" data-analytics-params={JSON.stringify({ placement: 'hero' })}>Start Your Project →</a>
-          <a href="/projects/" class="btn btn-lt">Explore Our Work →</a>
+          <a href="/projects/" class="btn btn-glass">Explore Our Work →</a>
         </div>
       </div>
       <div class="hero-fade font-mono text-xs text-left md:text-right text-paper/55 leading-[1.8] mt-5 md:mt-0">
@@ -90,12 +91,6 @@ const sequence = [
         Phursungi, Pune — HQ<br />
         Est. 2009
       </div>
-    </div>
-    <div class="hero-fade wrap border-t border-paper/[.18] mt-14 pt-[22px] flex flex-wrap gap-9">
-      <div class="font-mono text-[11.5px] tracking-wide uppercase text-paper/70">Since 2009</div>
-      <div class="font-mono text-[11.5px] tracking-wide uppercase text-paper/70">Licensed &amp; Insured</div>
-      <div class="font-mono text-[11.5px] tracking-wide uppercase text-paper/70">5-Yr Structural Warranty</div>
-      <div class="font-mono text-[11.5px] tracking-wide uppercase text-paper/70">GST {SITE.gst}</div>
     </div>
   </div>
 
