@@ -2,239 +2,4645 @@
 import { getCollection, getEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CinematicHero from '../components/CinematicHero.astro';
-import ServiceCard from '../components/ServiceCard.astro';
-import ProjectCard from '../components/ProjectCard.astro';
-import TestimonialCard from '../components/TestimonialCard.astro';
-import GoogleReviews from '../components/GoogleReviews.astro';
 import FAQAccordion from '../components/FAQAccordion.astro';
-import RevealScript from '../components/RevealScript.astro';
-import { SITE, whatsappLink } from '../lib/site';
-import { faqSchema } from '../lib/schema';
+import { whatsappLink, telLink, mailtoLink } from '../lib/site';
+import { faqSchema, serviceItemListSchema } from '../lib/schema';
+import { getGoogleReviews } from '../lib/googleReviews';
 
-const services = (await getCollection('services')).sort((a) => (a.data.status === 'published' ? -1 : 1));
+// Primary service pages — drives the homepage "What We Build" links and the
+// ItemList structured data. Keep in sync with src/content/services/.
+const primaryServices = [
+  { name: 'Swimming Pool Construction', url: '/services/swimming-pool-construction/' },
+  { name: 'Pool Filtration Systems', url: '/services/pool-filtration-systems/' },
+  { name: 'Pool Tiling & Finishing', url: '/services/swimming-pool-tiles/' },
+  { name: 'Lagoon Pool Construction', url: '/services/lagoon-pool-construction/' },
+  { name: 'Waterpark Construction', url: '/services/waterpark-construction/' },
+  { name: 'Resort Construction', url: '/services/resort-construction/' },
+  { name: 'Farmhouse Construction', url: '/services/farmhouse-construction/' },
+  { name: 'Cob House Construction', url: '/services/cob-house-construction/' },
+  { name: 'Ferro Concrete Design', url: '/services/ferro-concrete-design/' },
+  { name: 'Ferrocement Dome', url: '/services/ferrocement-dome/' },
+  { name: 'Land Development', url: '/services/land-development/' },
+];
+
+// Developers whose projects PBJ Infra has worked with, per pbjinfra.com's
+// own clients section. Names only — not styled as endorsements or reviews.
+const developers = [
+  'Panchshil Realty',
+  'Godrej Properties',
+  'Nyati Group',
+  'Kolte Patil Developers',
+  'Majestique Landmarks',
+  'Ajmera Group',
+  'Mahindra Lifespaces',
+  'D.Y. Patil',
+];
 
 const projects = await getCollection('projects');
-const projectOrder = ['adventure-waterpark-latur', 'luxury-infinity-pool', 'rabbit-dome-house', 'natural-lagoon-pool', 'farm-house-latur'];
+const projectOrder = ['adventure-waterpark-latur', 'luxury-infinity-pool', 'rabbit-dome-house', 'natural-lagoon-pool',
+'farm-house-latur'];
 const orderedProjects = projectOrder.map((slug) => projects.find((p) => p.slug === slug)!).filter(Boolean);
-
-const testimonials = await getCollection('testimonials');
 
 const faqSlugs = ['pool-timeline', 'warranty', 'permits', 'design-and-build', 'cost'];
 const faqs = await Promise.all(faqSlugs.map((id) => getEntry('faq', id)));
 const faqItems = faqs.filter(Boolean).map((f) => f!.data);
+
+// Google reviews — real, build-time data only (see lib/googleReviews.ts).
+// `available: false` (unset API env vars, or a failed fetch) renders the
+// honest "pending connection" state below — never a fabricated rating or
+// invented review text.
+const googleReviews = await getGoogleReviews();
+const gRatingDisplay = googleReviews.available && googleReviews.rating != null ? googleReviews.rating.toFixed(1) : '—.—';
+const gRoundedRating = Math.round(googleReviews.rating ?? 0);
+const gStars = googleReviews.available ? '★'.repeat(gRoundedRating) + '☆'.repeat(5 - gRoundedRating) : '★★★★★';
+const gCountDisplay = googleReviews.available
+  ? `${googleReviews.userRatingCount ?? 0} Google reviews`
+  : 'Google rating · pending connection';
+const gProfileUrl = googleReviews.profileUrl ?? 'https://www.google.com/maps/search/?api=1&query=PBJ+Infra';
+const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0, 3) : [];
 ---
-<BaseLayout
-  title="PBJ Infra | Construction Company for Pools, Resorts & Farmhouses — Pune, Latur, Maharashtra"
-  description="PBJ Infra builds swimming pools, waterparks, resorts, farmhouses and specialized structures across Pune, Latur and Maharashtra since 2009. 5-year structural warranty."
-  path="/"
-  schema={[faqSchema(faqItems)]}
->
+<BaseLayout title="Construction Company in Pune & Latur | PBJ Infra"
+  description="PBJ Infra builds swimming pools, waterparks, resorts, farmhouses and specialised structures across Pune, Latur and Maharashtra. Operating since 2009."
+  path="/" schema={[serviceItemListSchema(primaryServices), faqSchema(faqItems)]}>
   <!-- ============ HERO ============ -->
   <CinematicHero />
 
-  <!-- ============ TRUST STRIP (glass — floats over the hero's own
-       dark base, not the paper section below, so paper-coloured text
-       keeps reliable contrast at every scroll position) ============ -->
-  <div class="relative z-[3] -mt-16 md:-mt-20 px-4 md:px-0">
-    <div class="wrap">
-      <div class="glass-strong text-paper rounded-[28px] flex flex-wrap justify-between px-2 py-1.5 md:px-3 md:py-2">
-        <div class="flex-1 min-w-[130px] px-3.5 py-3.5 md:px-5">
-          <div class="font-serif text-lg md:text-xl">2009</div><div class="font-mono text-[10px] tracking-wide uppercase text-paper/60 mt-1">Operating Since</div>
-        </div>
-        <div class="flex-1 min-w-[130px] px-3.5 py-3.5 md:px-5 border-l border-paper/[.16]">
-          <div class="font-serif text-lg md:text-xl">5 / 2 Yrs</div><div class="font-mono text-[10px] tracking-wide uppercase text-paper/60 mt-1">Structural / Equipment Warranty</div>
-        </div>
-        <div class="flex-1 min-w-[130px] px-3.5 py-3.5 md:px-5 border-l border-paper/[.16]">
-          <div class="font-serif text-lg md:text-xl">Registered</div><div class="font-mono text-[10px] tracking-wide uppercase text-paper/60 mt-1">GST · {SITE.udyam}</div>
-        </div>
-        <div class="flex-1 min-w-[130px] px-3.5 py-3.5 md:px-5 border-l border-paper/[.16]">
-          <div class="font-serif text-lg md:text-xl">Pune → India</div><div class="font-mono text-[10px] tracking-wide uppercase text-paper/60 mt-1">Project Coverage</div>
-        </div>
-        <div class="flex-1 min-w-[130px] px-3.5 py-3.5 md:px-5 border-l border-paper/[.16]">
-          <div class="font-serif text-lg md:text-xl text-stone">— · —</div><div class="font-mono text-[10px] tracking-wide uppercase text-paper/60 mt-1">Google Rating <span class="text-warn">· pending</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============ WHAT WE BUILD ============ -->
-  <section class="py-20 md:py-[130px]" id="build">
-    <div class="wrap">
-      <div class="section-head reveal max-w-[760px] mb-14">
-        <span class="section-num">01 / What We Build</span>
-        <h2 class="text-[32px] md:text-[44px]">Four disciplines. One site team.</h2>
-      </div>
-      <div class="reveal grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {['Aquatic', 'Hospitality & Leisure', 'Residential', 'Specialized'].map((cat) => {
-          const svc = services.find((s) => s.data.category === cat && s.data.status === 'published') ?? services.find((s) => s.data.category === cat)!;
-          return (
-            <ServiceCard
-              name={svc.data.name}
-              category={svc.data.category}
-              shortDescription={svc.data.shortDescription}
-              href={svc.data.status === 'published' ? `/services/${svc.slug}/` : null}
-              image={svc.data.heroImage}
-            />
-          );
-        })}
-      </div>
-      <div class="reveal mt-10"><a href="/services/" class="btn btn-line">Explore All Services →</a></div>
-    </div>
-  </section>
 
   <!-- ============ SIGNATURE PROJECTS ============ -->
-  <section class="py-20 md:py-[130px] bg-paper-dim" id="projects">
-    <div class="wrap">
-      <div class="section-head reveal max-w-[760px] mb-14">
-        <span class="section-num">02 / Signature Projects</span>
-        <h2 class="text-[32px] md:text-[44px]">We don't just show projects. We show what we've built.</h2>
-      </div>
-      <div class="reveal grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {orderedProjects.map((p, i) => (
-          <div class={i === 0 ? 'sm:col-span-2 lg:col-span-2' : ''}>
-            <ProjectCard
-              name={p.data.name}
-              projectType={p.data.projectType}
-              location={p.data.location}
-              href={p.data.status === 'published' ? `/projects/${p.slug}/` : null}
-              image={p.data.heroImage}
-            />
-          </div>
-        ))}
-      </div>
-      <div class="reveal mt-10"><a href="/projects/" class="btn btn-line">Explore All Projects →</a></div>
-    </div>
-  </section>
 
-  <!-- ============ SITE TO SIGNATURE ============ -->
-  <section class="py-20 md:py-[130px]">
-    <div class="wrap">
-      <div class="section-head reveal max-w-[760px] mb-4">
-        <span class="section-num">03 / See How It's Built</span>
-        <h2 class="text-[32px] md:text-[44px]">From site to signature.</h2>
-        <p class="mt-4 text-ink-soft">Site preparation, structure, systems and finish — the stages a PBJ project actually passes through.</p>
-      </div>
-      <div class="reveal grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-ink/[.14] border border-ink/[.14] mt-10">
-        {[
-          { n: '01', h: 'Site', p: 'Land survey, excavation and preparation before structural work begins.', img: null },
-          { n: '02', h: 'Structure', p: 'Ferro-concrete shell, dome forms or foundation work depending on project type.', img: null },
-          { n: '03', h: 'Systems', p: 'Filtration, waterproofing and mechanical systems installed and pressure-tested.', img: null },
-          { n: '04', h: 'Signature', p: "Tiling, landscaping and final detailing — the result the client sees.", img: 'https://pbjinfra.com/assets/images/Featured-project1.jpeg' },
-        ].map((s) => (
-          <div class="bg-paper p-6 pb-[30px] flex flex-col min-h-[300px]">
-            <span class="font-mono text-[11px] text-accent">{s.n}</span>
-            <h3 class="font-serif text-lg mt-3 mb-2">{s.h}</h3>
-            <p class="text-[13.5px] text-ink-soft mb-4">{s.p}</p>
-            <div class="mt-auto aspect-square border border-dashed border-ink/[.14] flex items-center justify-center text-center p-3 overflow-hidden">
-              {s.img
-                ? <img src={s.img} alt="Finished infinity pool by PBJ Infra" width="600" height="600" loading="lazy" class="w-full h-full object-cover" />
-                : <span class="font-mono text-[10.5px] text-ink/45 leading-relaxed">Photography required from PBJ project archive</span>}
-            </div>
-          </div>
-        ))}
-      </div>
-      <p class="reveal font-mono text-[11.5px] text-warn mt-5">Content requirement: PBJ Infra does not currently publish before/during-construction photography. Requesting stage photography from active or recent sites would let this section run as a full progress timeline rather than a single finished shot.</p>
-    </div>
-  </section>
+  <section id="projects" class="projects-showcase relative overflow-hidden bg-ink text-paper py-24 md:py-36"
+    aria-labelledby="projects-title">
 
-  <!-- ============ TRUST ARCHITECTURE ============ -->
-  <section class="py-20 md:py-[130px] bg-ink text-paper">
-    <div class="wrap">
-      <div class="section-head reveal max-w-[760px] mb-14">
-        <span class="section-num" style="color:rgba(246,243,236,.4)">04 / Trust Architecture</span>
-        <h2 class="text-[32px] md:text-[44px]">Evidence, not adjectives.</h2>
-      </div>
-      <div class="reveal grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-paper/[.18] border border-paper/[.18]">
-        {[
-          ['EXPERIENCE', 'Operating since 2009', 'PBJ Infra has been executing construction and infrastructure projects continuously since 2009.'],
-          ['REGISTRATIONS', 'Fully registered business', `GST: ${SITE.gst} · UDYAM: ${SITE.udyam}`],
-          ['WARRANTY', '5-yr structural, 2-yr equipment', 'Comprehensive warranty covering defects in materials or workmanship under normal use.'],
-          ['COMPLIANCE', 'Licensed & insured', 'Handles permits, approvals and regulatory compliance directly with local building authorities.'],
-          ['ENGINEERING', 'Specialized structural work', 'Ferro-concrete and ferrocement dome construction — technical capability beyond standard contracting.'],
-          ['PEOPLE', 'Founder-led', 'Led by Padmasinha Bapurao Jadhav, Founder — directly reachable, not a call-center front.'],
-        ].map(([icon, h, p]) => (
-          <div class="bg-ink p-8 min-h-[190px]">
-            <span class="font-mono text-[11px] text-accent tracking-wide">{icon}</span>
-            <h3 class="font-serif text-xl mt-3.5 mb-2.5">{h}</h3>
-            <p class="text-[13.5px] text-paper/65">{p}</p>
+    <!-- Background technical grid -->
+
+    <div class="projects-grid absolute inset-0" aria-hidden="true"></div>
+
+
+    <!-- Ambient glow -->
+
+    <div class="projects-glow absolute inset-0" aria-hidden="true"></div>
+
+
+    <div class="wrap relative z-[2]">
+
+
+      <!-- =====================================================
+         SECTION HEADER
+    ====================================================== -->
+
+      <div class="projects-header grid gap-8 md:grid-cols-[.7fr_2fr] md:items-end">
+
+        <div class="projects-eyebrow">
+
+          <div class="flex items-center gap-3">
+
+            <span class="h-px w-8 bg-accent"></span>
+
+            <span class="font-mono text-[9px] uppercase tracking-[.2em] text-paper/45">
+              02 / Signature Projects
+            </span>
+
           </div>
-        ))}
-      </div>
-      <div class="reveal mt-[70px] pt-11 border-t border-paper/[.18]">
-        <div class="font-mono text-[11px] tracking-wide uppercase text-paper/50 mb-7">Clients PBJ Infra has worked with</div>
-        <div class="flex flex-wrap gap-11 items-center">
-          {['Majestique-Landmarks.png','ajmera-estates-logo.png','panchshil-logo.png','nyati_logo.png','godrej-properties-logo.png','mahindra_logo.png','dy-patil.jpg','kolte-patil-logo.jpg'].map((logo) => (
-            <img src={`https://pbjinfra.com/assets/images/client-logo/${logo}`} alt="" loading="lazy" class="h-[34px] w-auto grayscale invert brightness-[1.6] opacity-70 hover:opacity-100 transition-opacity" />
-          ))}
+
         </div>
+
+
+        <div>
+
+          <h2 id="projects-title"
+            class="projects-title max-w-[850px] font-serif text-[clamp(42px,6vw,82px)] leading-[.9] tracking-[-.04em]">
+            Built environments,
+            <span class="text-paper/45">
+              not just structures.
+            </span>
+          </h2>
+
+
+          <p class="projects-intro mt-7 max-w-[620px] text-[14px] leading-[1.75] text-paper/55 md:text-[15px]">
+            From immersive aquatic spaces to destination hospitality and
+            one-of-a-kind residential structures, every PBJ project is
+            engineered around the way it will actually be experienced.
+          </p>
+
+        </div>
+
       </div>
+
+
+      <!-- =====================================================
+         PROJECT LIST
+    ====================================================== -->
+
+      <div class="projects-list mt-20 md:mt-28">
+
+        {orderedProjects.map((p, i) => {
+          const isPublished = p.data.status === 'published';
+          const href = isPublished ? `/projects/${p.slug}/` : '/projects/';
+          return (
+            <a href={href}
+              class="project-item group grid gap-7 border-t border-paper/[.14] py-10 md:grid-cols-[80px_1fr_1.2fr_100px] md:items-center md:py-14">
+
+              <div class="project-number font-mono text-[10px] text-paper/30">
+                {String(i + 1).padStart(2, '0')}
+              </div>
+
+              <div>
+
+                <span class="project-category font-mono text-[9px] uppercase tracking-[.16em] text-accent">
+                  {p.data.projectType}
+                </span>
+
+                <h3 class="project-name mt-3 font-serif text-[30px] leading-none tracking-[-.025em] md:text-[40px]">
+                  {p.data.name}
+                </h3>
+
+                <p class="project-location mt-3 font-mono text-[9px] uppercase tracking-[.12em] text-paper/35">
+                  {p.data.location}
+                </p>
+
+              </div>
+
+              <!-- Image -->
+
+              <div class="project-image-wrap relative aspect-[16/9] overflow-hidden bg-paper/5">
+
+                <img src={p.data.heroImage.src} alt={p.data.heroImage.alt}
+                  loading="lazy" decoding="async" width="1200" height="675" class="project-image h-full w-full object-cover" />
+
+                <div class="absolute inset-0 bg-black/10 transition duration-700 group-hover:bg-black/0"></div>
+
+                <!-- technical frame -->
+
+                <div class="project-frame absolute inset-4 border border-paper/20"></div>
+
+                <!-- Hover label -->
+
+                <div class="project-hover absolute bottom-5 left-5 flex items-center gap-3">
+
+                  <span
+                    class="flex h-9 w-9 items-center justify-center rounded-full border border-paper/35 bg-black/20 backdrop-blur-sm">
+                    →
+                  </span>
+
+                  <span class="font-mono text-[9px] uppercase tracking-[.15em]">
+                    {isPublished ? 'View project' : 'Case study in development'}
+                  </span>
+
+                </div>
+
+              </div>
+
+              <div class="hidden justify-self-end md:block">
+
+                <span class="project-arrow font-mono text-xl text-paper/30">
+                  ↗
+                </span>
+
+              </div>
+
+            </a>
+          );
+        })}
+
+      </div>
+
+
+      <!-- =====================================================
+         ALL PROJECTS CTA
+    ====================================================== -->
+
+      <div class="projects-footer flex justify-between items-center pt-10">
+
+        <span class="font-mono text-[9px] uppercase tracking-[.16em] text-paper/30">
+          Selected PBJ work
+        </span>
+
+        <a href="/projects/"
+          class="projects-all group flex items-center gap-3 font-mono text-[10px] uppercase tracking-[.15em]">
+
+          <span>
+            Explore all projects
+          </span>
+
+          <span class="transition-transform duration-300 group-hover:translate-x-1">
+            →
+          </span>
+
+        </a>
+
+      </div>
+
     </div>
+
   </section>
 
-  <!-- ============ SOCIAL PROOF ============ -->
-  <section class="py-20 md:py-[130px]" id="reviews">
-    <div class="wrap">
-      <div class="section-head reveal max-w-[760px] mb-10">
-        <span class="section-num">05 / Social Proof</span>
-        <h2 class="text-[32px] md:text-[40px]">Don't take our word for it.</h2>
-      </div>
-      <div class="reveal"><GoogleReviews /></div>
 
-      <div class="reveal grid sm:grid-cols-2 gap-6 mt-16">
-        {testimonials.map((t) => <TestimonialCard author={t.data.author} context={t.data.context} quote={t.data.quote} />)}
+  <style>
+    /* ==========================================================
+     BACKGROUND
+  ========================================================== */
+
+    .projects-showcase {
+      isolation: isolate;
+    }
+
+
+    .projects-grid {
+
+      opacity: .045;
+
+      background-image:
+        linear-gradient(rgba(246, 243, 236, .35) 1px,
+          transparent 1px),
+        linear-gradient(90deg,
+          rgba(246, 243, 236, .35) 1px,
+          transparent 1px);
+
+      background-size:
+        80px 80px;
+
+      mask-image:
+        linear-gradient(to bottom,
+          transparent,
+          black 15%,
+          black 80%,
+          transparent);
+    }
+
+
+    .projects-glow {
+
+      background:
+        radial-gradient(circle at 75% 30%,
+          rgba(30, 110, 100, .12),
+          transparent 30%);
+    }
+
+
+    /* ==========================================================
+     PROJECT IMAGE
+  ========================================================== */
+
+    .project-image-wrap {
+
+      transform:
+        translateZ(0);
+
+      overflow:
+        hidden;
+    }
+
+
+    .project-image {
+
+      transform:
+        scale(1.04);
+
+      filter:
+        saturate(.78) contrast(1.04);
+
+      transition:
+        transform 1s cubic-bezier(.2, .7, .2, 1),
+        filter 700ms ease;
+
+      will-change:
+        transform;
+    }
+
+
+    .project-item:hover .project-image {
+
+      transform:
+        scale(1.09);
+
+      filter:
+        saturate(.95) contrast(1.02);
+    }
+
+
+    /* ==========================================================
+     FRAME
+  ========================================================== */
+
+    .project-frame {
+
+      transform:
+        scale(.96);
+
+      opacity:
+        .35;
+
+      transition:
+        transform .8s cubic-bezier(.2, .7, .2, 1),
+        opacity .5s ease;
+    }
+
+
+    .project-item:hover .project-frame {
+
+      transform:
+        scale(1);
+
+      opacity:
+        .75;
+    }
+
+
+    /* ==========================================================
+     HOVER ARROW
+  ========================================================== */
+
+    .project-arrow {
+
+      transition:
+        transform .4s cubic-bezier(.2, .7, .2, 1),
+        color .3s ease;
+    }
+
+
+    .project-item:hover .project-arrow {
+
+      transform:
+        translate(4px, -4px);
+
+      color:
+        rgba(246, 243, 236, .9);
+    }
+
+
+    /* ==========================================================
+     PROJECT TEXT
+  ========================================================== */
+
+    .project-name {
+
+      transition:
+        transform .45s cubic-bezier(.2, .7, .2, 1);
+    }
+
+
+    .project-item:hover .project-name {
+
+      transform:
+        translateX(7px);
+    }
+
+
+    .project-hover {
+
+      opacity:
+        .75;
+
+      transition:
+        opacity .35s ease,
+        transform .45s cubic-bezier(.2, .7, .2, 1);
+
+      transform:
+        translateY(5px);
+    }
+
+
+    .project-item:hover .project-hover {
+
+      opacity:
+        1;
+
+      transform:
+        translateY(0);
+    }
+
+
+    /* ==========================================================
+     MOBILE
+  ========================================================== */
+
+    @media (max-width: 768px) {
+
+      .projects-grid {
+
+        background-size:
+          55px 55px;
+      }
+
+      .project-image-wrap {
+
+        aspect-ratio:
+          16 / 10;
+      }
+
+    }
+
+
+    /* ==========================================================
+     REDUCED MOTION
+  ========================================================== */
+
+    @media (prefers-reduced-motion: reduce) {
+
+      .project-image,
+      .project-frame,
+      .project-name,
+      .project-hover {
+
+        transition:
+          none !important;
+
+        transform:
+          none !important;
+      }
+
+    }
+  </style>
+
+
+  <!-- ============ WHAT WE BUILD ============ -->
+  <!-- =========================================================
+     SECTION 03 — WHAT WE BUILD
+========================================================== -->
+
+<section
+  id="services"
+  class="build-section relative overflow-hidden bg-paper text-ink py-24 md:py-36"
+  aria-labelledby="build-title"
+>
+
+  <div class="build-bg-grid absolute inset-0" aria-hidden="true"></div>
+
+
+  <div class="wrap relative z-[2]">
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <div class="grid gap-10 md:grid-cols-[.65fr_1.8fr] md:items-end">
+
+      <div class="build-eyebrow">
+
+        <div class="flex items-center gap-3">
+
+          <span class="h-px w-8 bg-accent"></span>
+
+          <span class="font-mono text-[9px] uppercase tracking-[.2em] text-ink/45">
+            03 / What We Build
+          </span>
+
+        </div>
+
       </div>
-      <p class="reveal font-mono text-[11px] text-ink/45 mt-5 max-w-[70ch]">Note: the two testimonials above are published on pbjinfra.com's own portfolio page — they are real site content, but are not confirmed Google reviews, so they're labeled separately rather than styled as verified Google social proof.</p>
+
+
+      <div>
+
+        <h2
+          id="build-title"
+          class="build-title max-w-[850px] font-serif text-[clamp(44px,6vw,82px)] leading-[.9] tracking-[-.045em]"
+        >
+          Spaces with a purpose.
+          <span class="text-ink/35">
+            Built with precision.
+          </span>
+        </h2>
+
+
+        <p class="build-intro mt-7 max-w-[600px] text-[14px] leading-[1.75] text-ink/55 md:text-[15px]">
+          PBJ combines construction expertise, engineering discipline and
+          practical execution to create environments that are made to last.
+        </p>
+
+      </div>
+
     </div>
-  </section>
 
-  <!-- ============ PROCESS ============ -->
-  <section class="py-20 md:py-[130px] bg-paper-dim" id="process">
-    <div class="wrap">
-      <div class="section-head reveal max-w-[760px] mb-10">
-        <span class="section-num">06 / Process</span>
-        <h2 class="text-[32px] md:text-[44px]">What happens after you contact us.</h2>
+
+    <!-- =====================================================
+         INTERACTIVE BUILD INDEX
+    ====================================================== -->
+
+    <div
+      class="build-interface mt-20 grid gap-10 lg:grid-cols-[.8fr_1.5fr]"
+    >
+
+
+      <!-- ===================================================
+           CATEGORY LIST
+      ==================================================== -->
+
+      <div
+        class="build-list"
+        role="list"
+      >
+
+
+        <!-- ITEM 01 -->
+
+        <button
+          type="button"
+          class="build-item is-active group"
+          data-build="aquatic"
+          role="listitem"
+          aria-pressed="true"
+        >
+
+          <span class="build-number">
+            01
+          </span>
+
+
+          <span class="build-item-content">
+
+            <span class="build-category">
+              Aquatic
+            </span>
+
+            <span class="build-name">
+              Swimming Pools
+            </span>
+
+            <span class="build-description">
+              From private pools to destination-scale aquatic environments.
+            </span>
+
+          </span>
+
+
+          <span class="build-item-arrow">
+            ↗
+          </span>
+
+        </button>
+
+
+        <!-- ITEM 02 -->
+
+        <button
+          type="button"
+          class="build-item group"
+          data-build="hospitality"
+          role="listitem"
+          aria-pressed="false"
+        >
+
+          <span class="build-number">
+            02
+          </span>
+
+
+          <span class="build-item-content">
+
+            <span class="build-category">
+              Hospitality
+            </span>
+
+            <span class="build-name">
+              Resorts & Destinations
+            </span>
+
+            <span class="build-description">
+              Built environments designed around experience, flow and place.
+            </span>
+
+          </span>
+
+
+          <span class="build-item-arrow">
+            ↗
+          </span>
+
+        </button>
+
+
+        <!-- ITEM 03 -->
+
+        <button
+          type="button"
+          class="build-item group"
+          data-build="recreation"
+          role="listitem"
+          aria-pressed="false"
+        >
+
+          <span class="build-number">
+            03
+          </span>
+
+
+          <span class="build-item-content">
+
+            <span class="build-category">
+              Recreation
+            </span>
+
+            <span class="build-name">
+              Waterparks
+            </span>
+
+            <span class="build-description">
+              Complex aquatic infrastructure engineered for high-use environments.
+            </span>
+
+          </span>
+
+
+          <span class="build-item-arrow">
+            ↗
+          </span>
+
+        </button>
+
+
+        <!-- ITEM 04 -->
+
+        <button
+          type="button"
+          class="build-item group"
+          data-build="specialized"
+          role="listitem"
+          aria-pressed="false"
+        >
+
+          <span class="build-number">
+            04
+          </span>
+
+
+          <span class="build-item-content">
+
+            <span class="build-category">
+              Specialized
+            </span>
+
+            <span class="build-name">
+              Bespoke Structures
+            </span>
+
+            <span class="build-description">
+              Custom structural solutions for projects that don't fit a template.
+            </span>
+
+          </span>
+
+
+          <span class="build-item-arrow">
+            ↗
+          </span>
+
+        </button>
+
+
       </div>
-      <div class="reveal">
-        {[
-          ['01', 'Consultation', 'Free consultation to understand your vision, requirements and budget.'],
-          ['02', 'Design & Planning', '3D visualization, detailed planning and transparent cost estimation.'],
-          ['03', 'Construction', 'Expert execution with regular progress updates and quality checks.'],
-          ['04', 'Handover', 'Final inspection, training and comprehensive warranty coverage.'],
-        ].map(([n, h, p]) => (
-          <div class="grid sm:grid-cols-[70px_1fr] md:grid-cols-[70px_1fr_1.3fr] gap-4 md:gap-9 py-9 border-t border-ink/[.14] items-center last:border-b">
-            <span class="font-mono text-[15px] text-accent">{n}</span>
-            <h3 class="font-serif text-2xl">{h}</h3>
-            <p class="text-ink-soft text-[14.5px] max-w-[52ch]">{p}</p>
+
+
+      <!-- ===================================================
+           VISUAL STAGE
+      ==================================================== -->
+
+      <div class="build-stage relative min-h-[460px] overflow-hidden bg-ink md:min-h-[600px]">
+
+        <!-- IMAGE 01 -->
+
+        <div
+          class="build-visual is-active"
+          data-visual="aquatic"
+        >
+
+          <img
+            src="https://pbjinfra.com/assets/images/swimming-pool.jpg"
+            alt="A completed swimming pool with mosaic tiling, built by PBJ Infra"
+            loading="lazy"
+            decoding="async"
+            width="1400"
+            height="1000"
+          />
+
+        </div>
+
+
+        <!-- IMAGE 02 -->
+
+        <div
+          class="build-visual"
+          data-visual="hospitality"
+        >
+
+          <img
+            src="https://pbjinfra.com/assets/images/resort.jpg"
+            alt="A resort building beside a landscaped pool, built by PBJ Infra"
+            loading="lazy"
+            decoding="async"
+            width="1400"
+            height="1000"
+          />
+
+        </div>
+
+
+        <!-- IMAGE 03 -->
+
+        <div
+          class="build-visual"
+          data-visual="recreation"
+        >
+
+          <img
+            src="https://pbjinfra.com/assets/images/waterpark-construction-services.jpg"
+            alt="Waterpark slides and attraction pools built by PBJ Infra"
+            loading="lazy"
+            decoding="async"
+            width="1400"
+            height="1000"
+          />
+
+        </div>
+
+
+        <!-- IMAGE 04 -->
+
+        <div
+          class="build-visual"
+          data-visual="specialized"
+        >
+
+          <img
+            src="https://pbjinfra.com/assets/images/DOM.jpeg"
+            alt="A curved ferrocement dome structure built by PBJ Infra"
+            loading="lazy"
+            decoding="async"
+            width="1400"
+            height="1000"
+          />
+
+        </div>
+
+
+        <!-- Visual overlay -->
+
+        <div class="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-black/10"></div>
+
+
+        <!-- Technical frame -->
+
+        <div class="build-frame absolute inset-5 border border-paper/25 md:inset-7"></div>
+
+
+        <!-- Image metadata -->
+
+        <div class="absolute left-7 top-7 z-[4]">
+
+          <span class="font-mono text-[8px] uppercase tracking-[.2em] text-paper/50">
+            PBJ INFRA / BUILT ENVIRONMENT
+          </span>
+
+        </div>
+
+
+        <!-- Bottom label -->
+
+        <div class="build-stage-label absolute bottom-7 left-7 right-7 z-[4] flex items-end justify-between">
+
+          <div>
+
+            <span
+              id="build-stage-category"
+              class="font-mono text-[9px] uppercase tracking-[.2em] text-accent"
+            >
+              Aquatic
+            </span>
+
+            <div
+              id="build-stage-title"
+              class="mt-2 font-serif text-[34px] leading-none text-paper md:text-[48px]"
+            >
+              Swimming Pools
+            </div>
+
           </div>
+
+
+          <div class="font-mono text-[9px] text-paper/45">
+            01 / 04
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         BOTTOM STATEMENT
+    ====================================================== -->
+
+    <div
+      class="build-footer mt-16 flex flex-col gap-5 border-t border-ink/15 pt-7 md:flex-row md:items-center md:justify-between"
+    >
+
+      <p class="max-w-[650px] font-serif text-[22px] leading-[1.15] tracking-[-.02em] md:text-[28px]">
+        One team from the first idea
+        <span class="text-ink/35">to the finished environment.</span>
+      </p>
+
+
+      <a
+        href="/services/"
+        class="group flex items-center gap-3 font-mono text-[9px] uppercase tracking-[.16em]"
+      >
+
+        <span>
+          Explore our capabilities
+        </span>
+
+        <span class="transition-transform duration-300 group-hover:translate-x-1">
+          →
+        </span>
+
+      </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         FULL SERVICE INDEX — crawlable links to every service page
+    ====================================================== -->
+
+    <nav aria-label="All construction services" class="build-services mt-14 border-t border-ink/15 pt-8">
+
+      <span class="font-mono text-[9px] uppercase tracking-[.2em] text-ink/40">
+        Every service PBJ Infra offers
+      </span>
+
+      <ul class="mt-6 grid gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
+        {primaryServices.map((s) => (
+          <li>
+            <a href={s.url} class="group inline-flex items-center gap-2 font-serif text-[17px] tracking-[-.01em] text-ink/80 hover:text-ink">
+              {s.name}
+              <span class="font-mono text-accent transition-transform duration-300 group-hover:translate-x-1">→</span>
+            </a>
+          </li>
         ))}
-      </div>
-      <p class="reveal font-mono text-[11.5px] text-ink/45 mt-5">Typical residential pool timeline: 4–8 weeks depending on design complexity, size and weather — confirmed at consultation. <a href="/resources/how-long-does-swimming-pool-construction-take/" class="text-accent underline">Read the full breakdown →</a></p>
-    </div>
-  </section>
+      </ul>
 
-  <!-- ============ FAQ ============ -->
-  <section class="py-20 md:py-[130px]" id="faq">
-    <div class="wrap max-w-[880px]">
-      <div class="section-head reveal mb-10">
-        <span class="section-num">07 / FAQ</span>
-        <h2 class="text-[32px] md:text-[44px]">Questions worth answering upfront.</h2>
-      </div>
-      <div class="reveal"><FAQAccordion items={faqItems} idPrefix="home-faq" /></div>
-    </div>
-  </section>
+    </nav>
 
-  <!-- ============ FINAL CTA ============ -->
-  <section class="bg-ink text-paper py-24 md:py-[150px] text-center">
-    <div class="wrap">
-      <span class="eyebrow text-white">08 / Let's Talk</span>
-      <h2 class="font-serif text-[38px] md:text-[clamp(38px,6vw,72px)] leading-tight mt-5">Have a project in mind?<br />Let's build it.</h2>
-      <p class="max-w-[44ch] mx-auto my-6 text-paper/70">Tell us what you're planning and our team will help you understand the next steps.</p>
-      <div class="flex gap-4 justify-center flex-wrap">
-        <a href="/contact/" class="btn btn-solid" data-analytics-event="click_start_project" data-analytics-params={JSON.stringify({ placement: 'final_cta' })}>Start Your Project →</a>
-        <a href={whatsappLink('Hi PBJ Infra, I have a project in mind.')} target="_blank" rel="noopener" class="btn btn-lt" data-analytics-event="click_whatsapp" data-analytics-params={JSON.stringify({ placement: 'final_cta' })}>Chat on WhatsApp →</a>
-      </div>
-    </div>
-  </section>
+  </div>
 
-  <RevealScript />
+</section>
+
+
+<style>
+
+  /* ==========================================================
+     BACKGROUND
+  ========================================================== */
+
+  .build-section {
+    isolation: isolate;
+  }
+
+  .build-bg-grid {
+
+    opacity: .045;
+
+    background-image:
+      linear-gradient(
+        rgba(20,23,26,.5) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        rgba(20,23,26,.5) 1px,
+        transparent 1px
+      );
+
+    background-size:
+      80px 80px;
+
+    mask-image:
+      linear-gradient(
+        to bottom,
+        transparent,
+        black 20%,
+        black 80%,
+        transparent
+      );
+  }
+
+
+  /* ==========================================================
+     BUILD ITEMS
+  ========================================================== */
+
+  .build-item {
+
+    position: relative;
+
+    display: grid;
+
+    grid-template-columns:
+      35px 1fr 25px;
+
+    gap: 18px;
+
+    width: 100%;
+
+    padding:
+      25px 0;
+
+    text-align: left;
+
+    border-top:
+      1px solid rgba(20,23,26,.14);
+
+    cursor: pointer;
+
+    transition:
+      opacity .3s ease;
+  }
+
+
+  .build-item:last-child {
+
+    border-bottom:
+      1px solid rgba(20,23,26,.14);
+  }
+
+
+  .build-item:not(.is-active) {
+
+    opacity:
+      .42;
+  }
+
+
+  .build-item:hover,
+  .build-item.is-active {
+
+    opacity:
+      1;
+  }
+
+
+  .build-number {
+
+    padding-top:
+      4px;
+
+    font-family:
+      ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      monospace;
+
+    font-size:
+      9px;
+
+    color:
+      rgba(20,23,26,.35);
+  }
+
+
+  .build-item-content {
+
+    display:
+      flex;
+
+    flex-direction:
+      column;
+  }
+
+
+  .build-category {
+
+    font-family:
+      ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      monospace;
+
+    font-size:
+      8px;
+
+    text-transform:
+      uppercase;
+
+    letter-spacing:
+      .18em;
+
+    color:
+      rgb(30,110,100);
+  }
+
+
+  .build-name {
+
+    margin-top:
+      7px;
+
+    font-family:
+      Georgia,
+      serif;
+
+    font-size:
+      clamp(24px,3vw,36px);
+
+    line-height:
+      .95;
+
+    letter-spacing:
+      -.025em;
+  }
+
+
+  .build-description {
+
+    max-width:
+      430px;
+
+    margin-top:
+      9px;
+
+    font-size:
+      12px;
+
+    line-height:
+      1.6;
+
+    color:
+      rgba(20,23,26,.48);
+  }
+
+
+  .build-item-arrow {
+
+    align-self:
+      center;
+
+    font-size:
+      18px;
+
+    color:
+      rgba(20,23,26,.3);
+
+    transition:
+      transform .4s cubic-bezier(.2,.7,.2,1),
+      color .3s ease;
+  }
+
+
+  .build-item:hover
+  .build-item-arrow,
+  .build-item.is-active
+  .build-item-arrow {
+
+    transform:
+      translate(3px,-3px);
+
+    color:
+      rgb(30,110,100);
+  }
+
+
+  /* ==========================================================
+     VISUAL STAGE
+  ========================================================== */
+
+  .build-stage {
+
+    isolation: isolate;
+  }
+
+
+  .build-visual {
+
+    position:
+      absolute;
+
+    inset:
+      0;
+
+    opacity:
+      0;
+
+    visibility:
+      hidden;
+  }
+
+
+  .build-visual.is-active {
+
+    opacity:
+      1;
+
+    visibility:
+      visible;
+  }
+
+
+  .build-visual img {
+
+    width:
+      100%;
+
+    height:
+      100%;
+
+    object-fit:
+      cover;
+
+    filter:
+      saturate(.78)
+      contrast(1.05);
+
+    transform:
+      scale(1.04);
+
+    transition:
+      transform 1.2s cubic-bezier(.2,.7,.2,1);
+  }
+
+
+  .build-visual.is-active img {
+
+    transform:
+      scale(1);
+  }
+
+
+  .build-frame {
+
+    z-index:
+      3;
+
+    pointer-events:
+      none;
+  }
+
+
+  /* ==========================================================
+     MOBILE
+  ========================================================== */
+
+  @media (max-width: 1023px) {
+
+    .build-interface {
+
+      grid-template-columns:
+        1fr;
+    }
+
+    .build-stage {
+
+      min-height:
+        480px;
+    }
+
+  }
+
+
+  @media (max-width: 640px) {
+
+    .build-bg-grid {
+
+      background-size:
+        55px 55px;
+    }
+
+    .build-item {
+
+      padding:
+        20px 0;
+    }
+
+    .build-description {
+
+      max-width:
+        300px;
+    }
+
+    .build-stage {
+
+      min-height:
+        390px;
+    }
+
+    .build-frame {
+
+      inset:
+        15px;
+    }
+
+  }
+
+
+  @media (prefers-reduced-motion: reduce) {
+
+    .build-visual img,
+    .build-item-arrow {
+
+      transition:
+        none !important;
+
+      transform:
+        none !important;
+    }
+
+  }
+
+</style>
+
+
+<script>
+
+  const buildSection =
+    document.querySelector<HTMLElement>(
+      '.build-section'
+    );
+
+
+  if (buildSection) {
+
+    const items =
+      Array.from(
+        buildSection.querySelectorAll<HTMLButtonElement>(
+          '.build-item'
+        )
+      );
+
+
+    const visuals =
+      Array.from(
+        buildSection.querySelectorAll<HTMLElement>(
+          '.build-visual'
+        )
+      );
+
+
+    const stageCategory =
+      buildSection.querySelector<HTMLElement>(
+        '#build-stage-category'
+      );
+
+
+    const stageTitle =
+      buildSection.querySelector<HTMLElement>(
+        '#build-stage-title'
+      );
+
+
+    const stageNumber =
+      buildSection.querySelector<HTMLElement>(
+        '.build-stage-label .font-mono:last-child'
+      );
+
+
+    const content = {
+
+      aquatic: {
+        category: 'Aquatic',
+        title: 'Swimming Pools',
+        number: '01 / 04'
+      },
+
+      hospitality: {
+        category: 'Hospitality',
+        title: 'Resorts & Destinations',
+        number: '02 / 04'
+      },
+
+      recreation: {
+        category: 'Recreation',
+        title: 'Waterparks',
+        number: '03 / 04'
+      },
+
+      specialized: {
+        category: 'Specialized',
+        title: 'Bespoke Structures',
+        number: '04 / 04'
+      }
+
+    };
+
+
+    const activate =
+      (key: string) => {
+
+        items.forEach(
+          (item) => {
+
+            const active =
+              item.dataset.build === key;
+
+            item.classList.toggle(
+              'is-active',
+              active
+            );
+
+            item.setAttribute(
+              'aria-pressed',
+              String(active)
+            );
+
+          }
+        );
+
+
+        visuals.forEach(
+          (visual) => {
+
+            visual.classList.toggle(
+              'is-active',
+              visual.dataset.visual === key
+            );
+
+          }
+        );
+
+
+        const data =
+          content[key as keyof typeof content];
+
+        if (!data) return;
+
+
+        if (stageCategory) {
+
+          stageCategory.textContent =
+            data.category;
+
+        }
+
+
+        if (stageTitle) {
+
+          stageTitle.textContent =
+            data.title;
+
+        }
+
+
+        if (stageNumber) {
+
+          stageNumber.textContent =
+            data.number;
+
+        }
+
+      };
+
+
+    items.forEach(
+      (item) => {
+
+        item.addEventListener(
+          'mouseenter',
+          () => {
+
+            if (
+              window.matchMedia(
+                '(hover: hover)'
+              ).matches
+            ) {
+
+              activate(
+                item.dataset.build || 'aquatic'
+              );
+
+            }
+
+          }
+        );
+
+
+        item.addEventListener(
+          'focus',
+          () => {
+
+            activate(
+              item.dataset.build || 'aquatic'
+            );
+
+          }
+        );
+
+
+        item.addEventListener(
+          'click',
+          () => {
+
+            activate(
+              item.dataset.build || 'aquatic'
+            );
+
+          }
+        );
+
+      }
+    );
+
+  }
+
+</script>
+
+<!-- =========================================================
+     SECTION 04 — CLIENT TRUST / GOOGLE REVIEWS
+========================================================== -->
+
+<section
+  id="reviews"
+  class="trust-section relative overflow-hidden bg-paper text-ink py-24 md:py-36"
+  aria-labelledby="trust-title"
+>
+
+  <!-- Architectural grid -->
+
+  <div
+    class="trust-grid absolute inset-0"
+    aria-hidden="true"
+  ></div>
+
+
+  <div class="wrap relative z-[2]">
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <div class="grid gap-10 md:grid-cols-[.65fr_1.8fr] md:items-end">
+
+      <div>
+
+        <div class="flex items-center gap-3">
+
+          <span class="h-px w-8 bg-accent"></span>
+
+          <span class="font-mono text-[9px] uppercase tracking-[.2em] text-ink/45">
+            04 / Client Trust
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div>
+
+        <h2
+          id="trust-title"
+          class="trust-title max-w-[850px] font-serif text-[clamp(44px,6vw,82px)] leading-[.9] tracking-[-.045em]"
+        >
+          Built right.
+          <span class="text-ink/35">
+            Trusted by clients.
+          </span>
+        </h2>
+
+      </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MAIN TRUST PANEL
+    ====================================================== -->
+
+    <div
+      class="trust-panel mt-20 grid border-y border-ink/15 lg:grid-cols-[.75fr_1.7fr]"
+    >
+
+
+      <!-- ===================================================
+           GOOGLE SCORE
+      ==================================================== -->
+
+      <div
+        class="trust-score relative flex min-h-[360px] flex-col justify-between border-b border-ink/15 py-10 lg:border-b-0 lg:border-r lg:py-14"
+      >
+
+        <div>
+
+          <div class="flex items-center gap-2">
+
+            <!-- Google-style G mark -->
+
+            <span
+              class="google-mark"
+              aria-hidden="true"
+            >
+              G
+            </span>
+
+            <span class="font-mono text-[9px] uppercase tracking-[.16em] text-ink/50">
+              Google Reviews
+            </span>
+
+          </div>
+
+
+          <div class="mt-10">
+
+            <span
+              id="google-rating"
+              class:list={["block font-serif text-[clamp(76px,10vw,130px)] leading-[.75] tracking-[-.06em]", { 'text-stone': !googleReviews.available }]}
+            >
+              {gRatingDisplay}
+            </span>
+
+
+            <div
+              id="google-stars"
+              class:list={["mt-7 text-[19px] tracking-[.22em]", { 'text-stone': !googleReviews.available }]}
+              aria-label="Google rating"
+            >
+              {gStars}
+            </div>
+
+
+            <p
+              id="google-review-count"
+              class="mt-4 font-mono text-[9px] uppercase tracking-[.14em] text-ink/40"
+            >
+              {gCountDisplay}
+            </p>
+
+            {!googleReviews.available && (
+              <span class="mt-3 inline-block font-mono text-[9px] uppercase tracking-[.14em] text-warn border border-warn px-2.5 py-1">
+                Integration Pending
+              </span>
+            )}
+
+          </div>
+
+        </div>
+
+
+        <a
+          href={gProfileUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="group mt-10 flex w-fit items-center gap-3 border-b border-ink/25 pb-2 font-mono text-[9px] uppercase tracking-[.15em]"
+        >
+
+          <span>
+            View on Google
+          </span>
+
+          <span class="transition-transform duration-300 group-hover:translate-x-1">
+            ↗
+          </span>
+
+        </a>
+
+      </div>
+
+
+      <!-- ===================================================
+           FEATURED REVIEW
+      ==================================================== -->
+
+      <div
+        class="trust-review relative flex min-h-[360px] flex-col justify-between py-10 lg:px-14 lg:py-14"
+      >
+
+        <div class="flex items-center justify-between">
+
+          <span class="font-mono text-[9px] uppercase tracking-[.16em] text-ink/35">
+            Client voice
+          </span>
+
+
+          <span
+            id="review-counter"
+            class="font-mono text-[9px] text-ink/30"
+          >
+            {gReviews.length > 0 ? `01 / ${String(gReviews.length).padStart(2, '0')}` : ''}
+          </span>
+
+        </div>
+
+
+        <div class="review-content max-w-[760px]">
+
+          <div
+            class="review-quote-mark font-serif text-[70px] leading-none text-accent/50"
+            aria-hidden="true"
+          >
+            “
+          </div>
+
+
+          <blockquote
+            id="review-text"
+            class="font-serif text-[clamp(25px,3.2vw,43px)] leading-[1.08] tracking-[-.025em]"
+          >
+            {gReviews[0]?.text ?? "Real client reviews will appear here once PBJ's Google Business Profile is connected."}
+          </blockquote>
+
+
+          <div class="mt-8">
+
+            <div
+              id="review-author"
+              class="font-mono text-[10px] uppercase tracking-[.14em]"
+            >
+              {gReviews[0]?.authorName ?? 'Awaiting connection'}
+            </div>
+
+            <div
+              id="review-source"
+              class="mt-2 font-mono text-[9px] uppercase tracking-[.12em] text-ink/35"
+            >
+              {gReviews[0] ? 'Google Review' : ''}
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- Review controls (only meaningful with more than one real review) -->
+
+        {gReviews.length > 1 && (
+          <div class="mt-10 flex items-center gap-2">
+            {gReviews.map((_, i) => (
+              <button
+                type="button"
+                class:list={['review-dot', { 'is-active': i === 0 }]}
+                data-review={i}
+                aria-label={`Show review ${i + 1}`}
+              ></button>
+            ))}
+          </div>
+        )}
+
+      </div>
+
+    </div>
+
+    <script type="application/json" id="google-reviews-data" is:inline set:html={JSON.stringify(gReviews)} />
+
+
+    <!-- =====================================================
+         TRUST STRIP
+    ====================================================== -->
+
+    <div class="trust-strip grid border-b border-ink/15 md:grid-cols-3">
+
+      <div class="trust-stat border-b border-ink/15 py-7 md:border-b-0 md:border-r md:pr-8">
+
+        <span class="font-mono text-[9px] uppercase tracking-[.15em] text-ink/35">
+          Experience
+        </span>
+
+        <strong class="mt-2 block font-serif text-[27px]">
+          Since 2009
+        </strong>
+
+      </div>
+
+
+      <div class="trust-stat border-b border-ink/15 py-7 md:border-b-0 md:px-8 md:border-r">
+
+        <span class="font-mono text-[9px] uppercase tracking-[.15em] text-ink/35">
+          Coverage
+        </span>
+
+        <strong class="mt-2 block font-serif text-[27px]">
+          Pune → India
+        </strong>
+
+      </div>
+
+
+      <div class="trust-stat py-7 md:pl-8">
+
+        <span class="font-mono text-[9px] uppercase tracking-[.15em] text-ink/35">
+          Approach
+        </span>
+
+        <strong class="mt-2 block font-serif text-[27px]">
+          Design → Build
+        </strong>
+
+      </div>
+
+    </div>
+
+
+  </div>
+
+</section>
+
+
+<style>
+
+  /* ==========================================================
+     BACKGROUND
+  ========================================================== */
+
+  .trust-section {
+    isolation: isolate;
+  }
+
+
+  .trust-grid {
+
+    opacity: .045;
+
+    background-image:
+      linear-gradient(
+        rgba(20,23,26,.5) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        rgba(20,23,26,.5) 1px,
+        transparent 1px
+      );
+
+    background-size:
+      80px 80px;
+
+    mask-image:
+      linear-gradient(
+        to bottom,
+        transparent,
+        black 20%,
+        black 80%,
+        transparent
+      );
+  }
+
+
+  /* ==========================================================
+     GOOGLE MARK
+  ========================================================== */
+
+  .google-mark {
+
+    font-family:
+      Arial,
+      sans-serif;
+
+    font-size:
+      19px;
+
+    font-weight:
+      700;
+
+    line-height:
+      1;
+
+  }
+
+
+  /* ==========================================================
+     REVIEW DOTS
+  ========================================================== */
+
+  .review-dot {
+
+    width:
+      24px;
+
+    height:
+      2px;
+
+    background:
+      rgba(20,23,26,.18);
+
+    transition:
+      width .35s ease,
+      background .35s ease;
+  }
+
+
+  .review-dot.is-active {
+
+    width:
+      42px;
+
+    background:
+      rgb(30,110,100);
+  }
+
+
+  .review-dot:hover {
+
+    background:
+      rgb(30,110,100);
+  }
+
+
+  /* ==========================================================
+     REVIEW TRANSITION
+  ========================================================== */
+
+  .review-content {
+
+    transition:
+      opacity .25s ease,
+      transform .35s cubic-bezier(.2,.7,.2,1);
+  }
+
+
+  .review-content.is-changing {
+
+    opacity:
+      0;
+
+    transform:
+      translateY(8px);
+  }
+
+
+  /* ==========================================================
+     MOBILE
+  ========================================================== */
+
+  @media (max-width: 768px) {
+
+    .trust-grid {
+
+      background-size:
+        55px 55px;
+    }
+
+    .trust-score {
+
+      min-height:
+        300px;
+    }
+
+    .trust-review {
+
+      min-height:
+        430px;
+    }
+
+  }
+
+
+  @media (prefers-reduced-motion: reduce) {
+
+    .review-content,
+    .review-dot {
+
+      transition:
+        none !important;
+    }
+
+  }
+
+</style>
+
+
+<script>
+
+  /*
+   * Real Google reviews, fetched build-time in the page frontmatter
+   * (see lib/googleReviews.ts) and handed to this script via the
+   * `#google-reviews-data` JSON island below — never hardcoded/fabricated
+   * here. Empty array = not connected yet, or zero reviews returned; the
+   * static HTML already renders the honest "pending connection" state for
+   * that case, so this script simply does nothing.
+   */
+
+  const dataEl = document.getElementById('google-reviews-data');
+  const reviews = dataEl?.textContent ? JSON.parse(dataEl.textContent) : [];
+
+  const reviewText =
+    document.querySelector<HTMLElement>(
+      '#review-text'
+    );
+
+  const reviewAuthor =
+    document.querySelector<HTMLElement>(
+      '#review-author'
+    );
+
+  const reviewSource =
+    document.querySelector<HTMLElement>(
+      '#review-source'
+    );
+
+  const reviewCounter =
+    document.querySelector<HTMLElement>(
+      '#review-counter'
+    );
+
+  const reviewContent =
+    document.querySelector<HTMLElement>(
+      '.review-content'
+    );
+
+  const dots =
+    Array.from(
+      document.querySelectorAll<HTMLButtonElement>(
+        '.review-dot'
+      )
+    );
+
+
+  let currentReview = 0;
+
+
+  const showReview =
+    (index: number) => {
+
+      const review =
+        reviews[index];
+
+      if (!review) return;
+
+
+      reviewContent?.classList.add(
+        'is-changing'
+      );
+
+
+      window.setTimeout(
+        () => {
+
+          if (reviewText)
+            reviewText.textContent =
+              review.text;
+
+          if (reviewAuthor)
+            reviewAuthor.textContent =
+              review.authorName;
+
+          if (reviewSource)
+            reviewSource.textContent =
+              'Google Review';
+
+          if (reviewCounter)
+            reviewCounter.textContent =
+              `${String(index + 1).padStart(2, '0')} / ${String(reviews.length).padStart(2, '0')}`;
+
+
+          dots.forEach(
+            (dot, dotIndex) => {
+
+              dot.classList.toggle(
+                'is-active',
+                dotIndex === index
+              );
+
+            }
+          );
+
+
+          reviewContent?.classList.remove(
+            'is-changing'
+          );
+
+        },
+        250
+      );
+
+
+      currentReview =
+        index;
+
+    };
+
+
+  // Auto-rotation and dot navigation only make sense with more than one
+  // real review — with 0 or 1, the static markup already shows everything
+  // there is to show, so skip wiring up interactivity entirely.
+  if (reviews.length > 1) {
+
+    dots.forEach(
+      (dot) => {
+
+        dot.addEventListener(
+          'click',
+          () => {
+
+            const index =
+              Number(
+                dot.dataset.review
+              );
+
+            showReview(index);
+
+          }
+        );
+
+      }
+    );
+
+
+    /*
+     * Slow auto rotation.
+     *
+     * We intentionally keep this subtle.
+     */
+
+    const reduceMotion =
+      window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+      ).matches;
+
+
+    if (!reduceMotion) {
+
+      window.setInterval(
+        () => {
+
+          showReview(
+            (currentReview + 1) % reviews.length
+          );
+
+        },
+        7000
+      );
+
+    }
+
+  }
+
+</script>
+
+<!-- =========================================================
+     SECTION 04B — DEVELOPERS / CLIENT PROOF
+========================================================== -->
+
+<section
+  class="developers-section relative overflow-hidden bg-paper text-ink pb-24 md:pb-32"
+  aria-labelledby="developers-title"
+>
+
+  <div class="wrap relative z-[2]">
+
+    <div class="border-t border-ink/15 pt-14 md:pt-20">
+
+      <div class="flex items-center gap-3">
+        <span class="h-px w-8 bg-accent"></span>
+        <span class="font-mono text-[9px] uppercase tracking-[.2em] text-ink/45">
+          Trusted on real projects
+        </span>
+      </div>
+
+      <h2
+        id="developers-title"
+        class="mt-7 max-w-[820px] font-serif text-[clamp(30px,4vw,52px)] leading-[1.02] tracking-[-.03em]"
+      >
+        Developers PBJ Infra has built for.
+      </h2>
+
+      <p class="mt-6 max-w-[600px] text-[14px] leading-[1.7] text-ink/55">
+        Alongside private clients, PBJ Infra has worked on projects for
+        established Pune-region property developers — the names below appear
+        in PBJ's own client list on pbjinfra.com.
+      </p>
+
+      <ul class="mt-10 grid grid-cols-2 gap-x-8 gap-y-4 sm:grid-cols-3 lg:grid-cols-4">
+        {developers.map((name) => (
+          <li class="border-l border-accent/60 pl-4 font-serif text-[18px] tracking-[-.01em] text-ink/80">
+            {name}
+          </li>
+        ))}
+      </ul>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- =========================================================
+     SECTION 05 — HOW WE BUILD
+========================================================== -->
+
+<section
+  id="process"
+  class="process-section relative overflow-hidden bg-ink text-paper py-24 md:py-36"
+  aria-labelledby="process-title"
+>
+
+  <!-- Technical background -->
+
+  <div
+    class="process-grid absolute inset-0"
+    aria-hidden="true"
+  ></div>
+
+
+  <div class="wrap relative z-[2]">
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <div class="grid gap-10 md:grid-cols-[.65fr_1.8fr] md:items-end">
+
+      <div>
+
+        <div class="flex items-center gap-3">
+
+          <span class="h-px w-8 bg-accent"></span>
+
+          <span class="font-mono text-[9px] uppercase tracking-[.2em] text-paper/40">
+            05 / How We Build
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div>
+
+        <h2
+          id="process-title"
+          class="process-title max-w-[900px] font-serif text-[clamp(44px,6vw,82px)] leading-[.9] tracking-[-.045em]"
+        >
+          From first idea
+          <span class="text-paper/35">
+            to finished environment.
+          </span>
+        </h2>
+
+
+        <p class="process-intro mt-7 max-w-[610px] text-[14px] leading-[1.75] text-paper/50 md:text-[15px]">
+          A structured approach keeps every project moving with clarity —
+          from understanding the requirement to delivering the finished build.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         PROCESS TIMELINE
+    ====================================================== -->
+
+    <div class="process-timeline relative mt-20 md:mt-28">
+
+
+      <!-- Timeline rail -->
+
+      <div
+        class="process-rail absolute left-[17px] top-0 bottom-0 w-px bg-paper/[.14] md:left-1/2 md:-translate-x-1/2"
+        aria-hidden="true"
+      >
+
+        <div
+          class="process-progress absolute left-0 top-0 h-0 w-full bg-accent"
+        ></div>
+
+      </div>
+
+
+      <!-- ===================================================
+           STEP 01
+      ==================================================== -->
+
+      <article
+        class="process-step relative grid gap-8 pb-20 md:grid-cols-2 md:gap-20 md:pb-28"
+        data-step="01"
+      >
+
+        <div class="pl-14 md:pr-20 md:pl-0 md:text-right">
+
+          <span class="process-step-label font-mono text-[9px] uppercase tracking-[.2em] text-accent">
+            01 / Discovery
+          </span>
+
+          <h3 class="mt-4 font-serif text-[clamp(32px,4vw,52px)] leading-[.92] tracking-[-.035em]">
+            Understand
+          </h3>
+
+          <p class="mt-5 text-[13px] leading-[1.7] text-paper/45">
+            We begin with the brief, site conditions, requirements,
+            expectations and intended experience of the project.
+          </p>
+
+        </div>
+
+
+        <div class="process-marker absolute left-[17px] top-0 flex h-[35px] w-[35px] -translate-x-1/2 items-center justify-center rounded-full border border-paper/25 bg-ink md:left-1/2">
+
+          <span class="font-mono text-[8px]">
+            01
+          </span>
+
+        </div>
+
+
+        <div class="process-visual md:pl-20">
+
+          <div class="process-diagram">
+
+            <span class="diagram-line line-a"></span>
+            <span class="diagram-line line-b"></span>
+            <span class="diagram-line line-c"></span>
+
+            <span class="diagram-node node-a"></span>
+            <span class="diagram-node node-b"></span>
+
+            <span class="diagram-label label-a">
+              SITE
+            </span>
+
+            <span class="diagram-label label-b">
+              BRIEF
+            </span>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+      <!-- ===================================================
+           STEP 02
+      ==================================================== -->
+
+      <article
+        class="process-step relative grid gap-8 pb-20 md:grid-cols-2 md:gap-20 md:pb-28"
+        data-step="02"
+      >
+
+        <div class="order-2 pl-14 md:order-1 md:pr-20 md:pl-0">
+
+          <div class="process-visual process-visual-right">
+
+            <div class="process-diagram blueprint">
+
+              <span class="blueprint-box box-a"></span>
+              <span class="blueprint-box box-b"></span>
+              <span class="blueprint-box box-c"></span>
+
+              <span class="blueprint-dimension dimension-a">
+                ───── 12.4m ─────
+              </span>
+
+              <span class="blueprint-dimension dimension-b">
+                8.2m
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="order-1 pl-14 md:order-2 md:pl-20">
+
+          <span class="process-step-label font-mono text-[9px] uppercase tracking-[.2em] text-accent">
+            02 / Planning
+          </span>
+
+          <h3 class="mt-4 font-serif text-[clamp(32px,4vw,52px)] leading-[.92] tracking-[-.035em]">
+            Engineer
+          </h3>
+
+          <p class="mt-5 text-[13px] leading-[1.7] text-paper/45">
+            Design decisions are translated into practical planning,
+            technical coordination, material selection and execution strategy.
+          </p>
+
+        </div>
+
+
+        <div class="process-marker absolute left-[17px] top-0 flex h-[35px] w-[35px] -translate-x-1/2 items-center justify-center rounded-full border border-paper/25 bg-ink md:left-1/2">
+
+          <span class="font-mono text-[8px]">
+            02
+          </span>
+
+        </div>
+
+      </article>
+
+
+      <!-- ===================================================
+           STEP 03
+      ==================================================== -->
+
+      <article
+        class="process-step relative grid gap-8 pb-20 md:grid-cols-2 md:gap-20 md:pb-28"
+        data-step="03"
+      >
+
+        <div class="pl-14 md:pr-20 md:pl-0 md:text-right">
+
+          <span class="process-step-label font-mono text-[9px] uppercase tracking-[.2em] text-accent">
+            03 / Construction
+          </span>
+
+          <h3 class="mt-4 font-serif text-[clamp(32px,4vw,52px)] leading-[.92] tracking-[-.035em]">
+            Build
+          </h3>
+
+          <p class="mt-5 text-[13px] leading-[1.7] text-paper/45">
+            Our team coordinates execution on site with attention to
+            workmanship, sequencing, quality and project requirements.
+          </p>
+
+        </div>
+
+
+        <div class="process-marker absolute left-[17px] top-0 flex h-[35px] w-[35px] -translate-x-1/2 items-center justify-center rounded-full border border-paper/25 bg-ink md:left-1/2">
+
+          <span class="font-mono text-[8px]">
+            03
+          </span>
+
+        </div>
+
+
+        <div class="process-visual md:pl-20">
+
+          <div class="process-diagram construction">
+
+            <span class="building-floor floor-1"></span>
+            <span class="building-floor floor-2"></span>
+            <span class="building-floor floor-3"></span>
+
+            <span class="building-column column-1"></span>
+            <span class="building-column column-2"></span>
+            <span class="building-column column-3"></span>
+
+            <span class="construction-label">
+              STRUCTURE
+            </span>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+      <!-- ===================================================
+           STEP 04
+      ==================================================== -->
+
+      <article
+        class="process-step relative grid gap-8 md:grid-cols-2 md:gap-20"
+        data-step="04"
+      >
+
+        <div class="order-2 pl-14 md:order-1 md:pr-20 md:pl-0">
+
+          <div class="process-visual process-visual-right">
+
+            <div class="process-diagram completion">
+
+              <span class="completion-ring"></span>
+
+              <span class="completion-check">
+                ✓
+              </span>
+
+              <span class="completion-label">
+                COMPLETE
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="order-1 pl-14 md:order-2 md:pl-20">
+
+          <span class="process-step-label font-mono text-[9px] uppercase tracking-[.2em] text-accent">
+            04 / Handover
+          </span>
+
+          <h3 class="mt-4 font-serif text-[clamp(32px,4vw,52px)] leading-[.92] tracking-[-.035em]">
+            Deliver
+          </h3>
+
+          <p class="mt-5 text-[13px] leading-[1.7] text-paper/45">
+            The finished environment is reviewed, completed and handed
+            over with the details that matter.
+          </p>
+
+        </div>
+
+
+        <div class="process-marker absolute left-[17px] top-0 flex h-[35px] w-[35px] -translate-x-1/2 items-center justify-center rounded-full border border-paper/25 bg-ink md:left-1/2">
+
+          <span class="font-mono text-[8px]">
+            04
+          </span>
+
+        </div>
+
+      </article>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         BOTTOM STATEMENT
+    ====================================================== -->
+
+    <div class="mt-24 border-t border-paper/[.14] pt-8">
+
+      <p class="max-w-[800px] font-serif text-[25px] leading-[1.15] tracking-[-.025em] md:text-[36px]">
+
+        Good construction isn't only about
+        <span class="text-paper/35">
+          what's built.
+        </span>
+
+        It's about
+        <span class="text-accent">
+          how it's built.
+        </span>
+
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<style>
+
+  /* ==========================================================
+     BACKGROUND
+  ========================================================== */
+
+  .process-section {
+    isolation: isolate;
+  }
+
+
+  .process-grid {
+
+    opacity: .035;
+
+    background-image:
+      linear-gradient(
+        rgba(246,243,236,.4) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        rgba(246,243,236,.4) 1px,
+        transparent 1px
+      );
+
+    background-size:
+      80px 80px;
+
+    mask-image:
+      linear-gradient(
+        to bottom,
+        transparent,
+        black 10%,
+        black 90%,
+        transparent
+      );
+  }
+
+
+  /* ==========================================================
+     TIMELINE
+  ========================================================== */
+
+  .process-progress {
+
+    box-shadow:
+      0 0 14px rgba(30,110,100,.55);
+
+  }
+
+
+  .process-marker {
+
+    z-index:
+      4;
+
+    transition:
+      border-color .4s ease,
+      background-color .4s ease,
+      transform .5s cubic-bezier(.2,.7,.2,1);
+  }
+
+
+  .process-step.is-active
+  .process-marker {
+
+    border-color:
+      rgb(30,110,100);
+
+    background:
+      rgb(30,110,100);
+
+    transform:
+      translateX(-50%)
+      scale(1.12);
+  }
+
+
+  /* ==========================================================
+     DIAGRAM SYSTEM
+  ========================================================== */
+
+  .process-diagram {
+
+    position:
+      relative;
+
+    width:
+      100%;
+
+    min-height:
+      300px;
+
+    border:
+      1px solid rgba(246,243,236,.13);
+
+    background:
+      rgba(246,243,236,.025);
+
+    overflow:
+      hidden;
+  }
+
+
+  .process-diagram::before {
+
+    content:
+      '';
+
+    position:
+      absolute;
+
+    inset:
+      0;
+
+    background-image:
+      linear-gradient(
+        rgba(246,243,236,.08) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        rgba(246,243,236,.08) 1px,
+        transparent 1px
+      );
+
+    background-size:
+      40px 40px;
+
+    opacity:
+      .45;
+  }
+
+
+  .diagram-line {
+
+    position:
+      absolute;
+
+    height:
+      1px;
+
+    background:
+      rgba(30,110,100,.75);
+
+    transform-origin:
+      left center;
+
+    transform:
+      scaleX(0);
+  }
+
+
+  .line-a {
+
+    left:
+      15%;
+
+    top:
+      35%;
+
+    width:
+      55%;
+  }
+
+
+  .line-b {
+
+    left:
+      30%;
+
+    top:
+      60%;
+
+    width:
+      45%;
+
+    transform:
+      rotate(90deg)
+      scaleX(0);
+  }
+
+
+  .line-c {
+
+    left:
+      45%;
+
+    top:
+      35%;
+
+    width:
+      30%;
+
+    transform:
+      rotate(35deg)
+      scaleX(0);
+  }
+
+
+  .diagram-node {
+
+    position:
+      absolute;
+
+    width:
+      8px;
+
+    height:
+      8px;
+
+    border:
+      1px solid rgb(30,110,100);
+
+    border-radius:
+      50%;
+
+    background:
+      rgb(20,23,26);
+
+    opacity:
+      0;
+  }
+
+
+  .node-a {
+
+    left:
+      15%;
+
+    top:
+      calc(35% - 4px);
+  }
+
+
+  .node-b {
+
+    left:
+      70%;
+
+    top:
+      calc(35% - 4px);
+  }
+
+
+  .diagram-label {
+
+    position:
+      absolute;
+
+    font-family:
+      ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      monospace;
+
+    font-size:
+      8px;
+
+    letter-spacing:
+      .16em;
+
+    color:
+      rgba(246,243,236,.35);
+
+    opacity:
+      0;
+  }
+
+
+  .label-a {
+
+    left:
+      14%;
+
+    top:
+      40%;
+  }
+
+
+  .label-b {
+
+    right:
+      25%;
+
+    top:
+      40%;
+  }
+
+
+  /* ==========================================================
+     BLUEPRINT
+  ========================================================== */
+
+  .blueprint-box {
+
+    position:
+      absolute;
+
+    border:
+      1px solid rgba(30,110,100,.65);
+
+    opacity:
+      0;
+
+    transform:
+      scale(.85);
+  }
+
+
+  .box-a {
+
+    left:
+      12%;
+
+    top:
+      20%;
+
+    width:
+      38%;
+
+    height:
+      50%;
+  }
+
+
+  .box-b {
+
+    left:
+      50%;
+
+    top:
+      35%;
+
+    width:
+      30%;
+
+    height:
+      35%;
+  }
+
+
+  .box-c {
+
+    left:
+      25%;
+
+    top:
+      70%;
+
+    width:
+      55%;
+
+    height:
+      12%;
+  }
+
+
+  .blueprint-dimension {
+
+    position:
+      absolute;
+
+    font-family:
+      ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      monospace;
+
+    font-size:
+      8px;
+
+    color:
+      rgba(246,243,236,.35);
+
+    opacity:
+      0;
+  }
+
+
+  .dimension-a {
+
+    left:
+      12%;
+
+    top:
+      13%;
+  }
+
+
+  .dimension-b {
+
+    left:
+      86%;
+
+    top:
+      36%;
+
+    writing-mode:
+      vertical-rl;
+  }
+
+
+  /* ==========================================================
+     CONSTRUCTION
+  ========================================================== */
+
+  .building-floor {
+
+    position:
+      absolute;
+
+    left:
+      18%;
+
+    width:
+      64%;
+
+    height:
+      1px;
+
+    background:
+      rgba(30,110,100,.7);
+
+    transform:
+      scaleX(0);
+
+    transform-origin:
+      center;
+  }
+
+
+  .floor-1 {
+    top:
+      68%;
+  }
+
+
+  .floor-2 {
+    top:
+      50%;
+  }
+
+
+  .floor-3 {
+    top:
+      32%;
+  }
+
+
+  .building-column {
+
+    position:
+      absolute;
+
+    top:
+      30%;
+
+    height:
+      40%;
+
+    width:
+      1px;
+
+    background:
+      rgba(246,243,236,.3);
+
+    transform:
+      scaleY(0);
+
+    transform-origin:
+      bottom;
+  }
+
+
+  .column-1 {
+    left:
+      18%;
+  }
+
+
+  .column-2 {
+    left:
+      50%;
+  }
+
+
+  .column-3 {
+    left:
+      82%;
+  }
+
+
+  .construction-label {
+
+    position:
+      absolute;
+
+    bottom:
+      15%;
+
+    left:
+      18%;
+
+    font-family:
+      ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      monospace;
+
+    font-size:
+      8px;
+
+    letter-spacing:
+      .18em;
+
+    color:
+      rgba(246,243,236,.35);
+
+    opacity:
+      0;
+  }
+
+
+  /* ==========================================================
+     COMPLETION
+  ========================================================== */
+
+  .completion-ring {
+
+    position:
+      absolute;
+
+    width:
+      120px;
+
+    height:
+      120px;
+
+    left:
+      50%;
+
+    top:
+      50%;
+
+    border:
+      1px solid rgb(30,110,100);
+
+    border-radius:
+      50%;
+
+    transform:
+      translate(-50%,-50%)
+      scale(.5);
+
+    opacity:
+      0;
+  }
+
+
+  .completion-check {
+
+    position:
+      absolute;
+
+    left:
+      50%;
+
+    top:
+      50%;
+
+    transform:
+      translate(-50%,-50%)
+      scale(.5);
+
+    font-size:
+      34px;
+
+    color:
+      rgb(30,110,100);
+
+    opacity:
+      0;
+  }
+
+
+  .completion-label {
+
+    position:
+      absolute;
+
+    left:
+      50%;
+
+    top:
+      calc(50% + 85px);
+
+    transform:
+      translateX(-50%);
+
+    font-family:
+      ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      monospace;
+
+    font-size:
+      8px;
+
+    letter-spacing:
+      .2em;
+
+    color:
+      rgba(246,243,236,.4);
+
+    opacity:
+      0;
+  }
+
+
+  /* ==========================================================
+     ACTIVE ANIMATION
+  ========================================================== */
+
+  .process-step.is-active
+  .diagram-line {
+
+    transform:
+      scaleX(1);
+
+    transition:
+      transform .9s cubic-bezier(.2,.7,.2,1);
+  }
+
+
+  .process-step.is-active
+  .diagram-node {
+
+    opacity:
+      1;
+
+    transition:
+      opacity .4s ease .7s;
+  }
+
+
+  .process-step.is-active
+  .diagram-label {
+
+    opacity:
+      1;
+
+    transition:
+      opacity .5s ease 1s;
+  }
+
+
+  .process-step.is-active
+  .blueprint-box {
+
+    opacity:
+      1;
+
+    transform:
+      scale(1);
+
+    transition:
+      opacity .5s ease,
+      transform .8s cubic-bezier(.2,.7,.2,1);
+  }
+
+
+  .process-step.is-active
+  .blueprint-dimension {
+
+    opacity:
+      1;
+
+    transition:
+      opacity .5s ease .7s;
+  }
+
+
+  .process-step.is-active
+  .building-floor {
+
+    transform:
+      scaleX(1);
+
+    transition:
+      transform .8s cubic-bezier(.2,.7,.2,1);
+  }
+
+
+  .process-step.is-active
+  .building-column {
+
+    transform:
+      scaleY(1);
+
+    transition:
+      transform .8s cubic-bezier(.2,.7,.2,1);
+  }
+
+
+  .process-step.is-active
+  .construction-label {
+
+    opacity:
+      1;
+
+    transition:
+      opacity .5s ease .7s;
+  }
+
+
+  .process-step.is-active
+  .completion-ring {
+
+    opacity:
+      1;
+
+    transform:
+      translate(-50%,-50%)
+      scale(1);
+
+    transition:
+      opacity .6s ease,
+      transform .9s cubic-bezier(.2,.7,.2,1);
+  }
+
+
+  .process-step.is-active
+  .completion-check {
+
+    opacity:
+      1;
+
+    transform:
+      translate(-50%,-50%)
+      scale(1);
+
+    transition:
+      opacity .5s ease .4s,
+      transform .7s cubic-bezier(.2,.7,.2,1) .4s;
+  }
+
+
+  .process-step.is-active
+  .completion-label {
+
+    opacity:
+      1;
+
+    transition:
+      opacity .5s ease 1s;
+  }
+
+
+  /* ==========================================================
+     MOBILE
+  ========================================================== */
+
+  @media (max-width: 768px) {
+
+    .process-grid {
+
+      background-size:
+        55px 55px;
+    }
+
+    .process-diagram {
+
+      min-height:
+        260px;
+    }
+
+  }
+
+
+  @media (prefers-reduced-motion: reduce) {
+
+    .process-progress,
+    .diagram-line,
+    .diagram-node,
+    .diagram-label,
+    .blueprint-box,
+    .blueprint-dimension,
+    .building-floor,
+    .building-column,
+    .construction-label,
+    .completion-ring,
+    .completion-check,
+    .completion-label {
+
+      transition:
+        none !important;
+
+      transform:
+        none !important;
+
+      opacity:
+        1 !important;
+    }
+
+  }
+
+</style>
+
+
+<script>
+
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+
+  gsap.registerPlugin(
+    ScrollTrigger
+  );
+
+
+  const processSection =
+    document.querySelector<HTMLElement>(
+      '.process-section'
+    );
+
+
+  if (processSection) {
+
+    const steps =
+      Array.from(
+        processSection.querySelectorAll<HTMLElement>(
+          '.process-step'
+        )
+      );
+
+
+    const progress =
+      processSection.querySelector<HTMLElement>(
+        '.process-progress'
+      );
+
+
+    const reduceMotion =
+      window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+      ).matches;
+
+
+    if (!reduceMotion) {
+
+      /*
+       * Draw the vertical timeline as the user scrolls.
+       */
+
+      if (progress) {
+
+        gsap.to(
+          progress,
+          {
+            height: '100%',
+            ease: 'none',
+
+            scrollTrigger: {
+
+              trigger:
+                processSection,
+
+              start:
+                'top 55%',
+
+              end:
+                'bottom 65%',
+
+              scrub:
+                0.8
+
+            }
+
+          }
+        );
+
+      }
+
+
+      /*
+       * Activate each stage when it reaches
+       * the centre of the viewport.
+       */
+
+      steps.forEach(
+        (step) => {
+
+          ScrollTrigger.create({
+
+            trigger:
+              step,
+
+            start:
+              'top 58%',
+
+            end:
+              'bottom 58%',
+
+            onEnter:
+              () => {
+
+                steps.forEach(
+                  (item) =>
+                    item.classList.remove(
+                      'is-active'
+                    )
+                );
+
+                step.classList.add(
+                  'is-active'
+                );
+
+              },
+
+            onEnterBack:
+              () => {
+
+                steps.forEach(
+                  (item) =>
+                    item.classList.remove(
+                      'is-active'
+                    )
+                );
+
+                step.classList.add(
+                  'is-active'
+                );
+
+              }
+
+          });
+
+        }
+      );
+
+    }
+
+  }
+
+</script>
+<!-- =========================================================
+     SECTION 06 — WHY PBJ
+========================================================== -->
+
+<section
+  id="about"
+  class="why-section relative overflow-hidden bg-paper text-ink py-24 md:py-36"
+  aria-labelledby="why-title"
+>
+
+  <div class="why-grid absolute inset-0" aria-hidden="true"></div>
+
+  <div class="wrap relative z-[2]">
+
+    <!-- HEADER -->
+
+    <div class="grid gap-10 md:grid-cols-[.65fr_1.8fr] md:items-end">
+
+      <div>
+
+        <div class="flex items-center gap-3">
+
+          <span class="h-px w-8 bg-accent"></span>
+
+          <span class="font-mono text-[9px] uppercase tracking-[.2em] text-ink/45">
+            06 / Why PBJ
+          </span>
+
+        </div>
+
+      </div>
+
+      <div>
+
+        <h2
+          id="why-title"
+          class="why-title max-w-[950px] font-serif text-[clamp(46px,6vw,86px)] leading-[.88] tracking-[-.05em]"
+        >
+          Experience you can
+          <span class="text-ink/30">
+            build on.
+          </span>
+        </h2>
+
+      </div>
+
+    </div>
+
+
+    <!-- MAIN EDITORIAL BLOCK -->
+
+    <div class="mt-20 grid gap-14 lg:grid-cols-[1.15fr_.85fr] lg:gap-24">
+
+
+      <!-- BIG EXPERIENCE -->
+
+      <div class="why-experience">
+
+        <div class="why-big-number">
+
+          <span
+            class="why-number font-serif text-[clamp(120px,19vw,280px)] leading-[.7] tracking-[-.08em]"
+          >
+            15
+          </span>
+
+          <span class="why-plus font-serif text-[clamp(50px,7vw,90px)]">
+            +
+          </span>
+
+        </div>
+
+
+        <div class="mt-10 flex items-center gap-4">
+
+          <span class="h-px w-12 bg-accent"></span>
+
+          <span class="font-mono text-[9px] uppercase tracking-[.18em] text-ink/45">
+            Years of experience
+          </span>
+
+        </div>
+
+
+        <p class="why-statement mt-10 max-w-[680px] font-serif text-[clamp(26px,3.3vw,43px)] leading-[1.08] tracking-[-.025em]">
+
+          Since 2009, PBJ has been turning ambitious ideas into
+          <span class="text-ink/35">
+            real, functional environments.
+          </span>
+
+        </p>
+
+      </div>
+
+
+      <!-- CREDIBILITY -->
+
+      <div class="why-details">
+
+        <p class="max-w-[500px] text-[14px] leading-[1.8] text-ink/55">
+          Our work brings together planning, construction and technical
+          execution — with an emphasis on practical solutions, quality
+          workmanship and long-term performance.
+        </p>
+
+
+        <!-- FACTS -->
+
+        <div class="mt-12 border-t border-ink/15">
+
+          <!-- FACT 01 -->
+
+          <div class="why-fact">
+
+            <span class="why-fact-number">
+              01
+            </span>
+
+            <div>
+
+              <span class="why-fact-label">
+                Operating Since
+              </span>
+
+              <strong>
+                2009
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <!-- FACT 02 -->
+
+          <div class="why-fact">
+
+            <span class="why-fact-number">
+              02
+            </span>
+
+            <div>
+
+              <span class="why-fact-label">
+                Project Coverage
+              </span>
+
+              <strong>
+                Pune → India
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <!-- FACT 03 -->
+
+          <div class="why-fact">
+
+            <span class="why-fact-number">
+              03
+            </span>
+
+            <div>
+
+              <span class="why-fact-label">
+                Warranty
+              </span>
+
+              <strong>
+                Structural / Equipment
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <!-- FACT 04 -->
+
+          <div class="why-fact">
+
+            <span class="why-fact-number">
+              04
+            </span>
+
+            <div>
+
+              <span class="why-fact-label">
+                Business Identity
+              </span>
+
+              <strong>
+                GST · UDYAM
+              </strong>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- BOTTOM STATEMENT -->
+
+    <div
+      class="why-bottom mt-20 border-y border-ink/15 py-8 md:mt-28"
+    >
+
+      <div class="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
+
+        <p class="max-w-[780px] font-serif text-[22px] leading-[1.2] tracking-[-.02em] md:text-[30px]">
+
+          The difference isn't only in the finished project.
+          It's in the
+          <span class="text-accent">
+            experience behind it.
+          </span>
+
+        </p>
+
+
+        <a
+          href="/about/"
+          class="group flex items-center gap-3 font-mono text-[9px] uppercase tracking-[.16em]"
+        >
+
+          <span>
+            More about PBJ
+          </span>
+
+          <span class="transition-transform duration-300 group-hover:translate-x-1">
+            →
+          </span>
+
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<style>
+
+  .why-section {
+    isolation: isolate;
+  }
+
+
+  .why-grid {
+
+    opacity: .04;
+
+    background-image:
+      linear-gradient(
+        rgba(20,23,26,.5) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        rgba(20,23,26,.5) 1px,
+        transparent 1px
+      );
+
+    background-size:
+      80px 80px;
+
+    mask-image:
+      linear-gradient(
+        to bottom,
+        transparent,
+        black 15%,
+        black 85%,
+        transparent
+      );
+  }
+
+
+  /* ==========================================================
+     EXPERIENCE NUMBER
+  ========================================================== */
+
+  .why-big-number {
+
+    display:
+      flex;
+
+    align-items:
+      flex-start;
+
+    position:
+      relative;
+
+    width:
+      fit-content;
+
+  }
+
+
+  .why-number {
+
+    display:
+      block;
+
+    color:
+      rgb(20,23,26);
+
+    opacity:
+      .95;
+  }
+
+
+  .why-plus {
+
+    margin-top:
+      4px;
+
+    margin-left:
+      8px;
+
+    color:
+      rgb(30,110,100);
+  }
+
+
+  /* ==========================================================
+     FACTS
+  ========================================================== */
+
+  .why-fact {
+
+    display:
+      grid;
+
+    grid-template-columns:
+      40px 1fr;
+
+    gap:
+      20px;
+
+    padding:
+      21px 0;
+
+    border-bottom:
+      1px solid rgba(20,23,26,.15);
+
+    transition:
+      padding-left .35s ease,
+      background-color .35s ease;
+  }
+
+
+  .why-fact:hover {
+
+    padding-left:
+      10px;
+  }
+
+
+  .why-fact-number {
+
+    padding-top:
+      3px;
+
+    font-family:
+      ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      monospace;
+
+    font-size:
+      8px;
+
+    color:
+      rgba(20,23,26,.3);
+  }
+
+
+  .why-fact-label {
+
+    display:
+      block;
+
+    font-family:
+      ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      monospace;
+
+    font-size:
+      8px;
+
+    text-transform:
+      uppercase;
+
+    letter-spacing:
+      .16em;
+
+    color:
+      rgba(20,23,26,.38);
+  }
+
+
+  .why-fact strong {
+
+    display:
+      block;
+
+    margin-top:
+      6px;
+
+    font-family:
+      Georgia,
+      serif;
+
+    font-size:
+      22px;
+
+    font-weight:
+      400;
+
+    line-height:
+      1;
+  }
+
+
+  /* ==========================================================
+     MOBILE
+  ========================================================== */
+
+  @media (max-width: 768px) {
+
+    .why-grid {
+
+      background-size:
+        55px 55px;
+    }
+
+    .why-fact:hover {
+
+      padding-left:
+        0;
+    }
+
+  }
+
+
+  @media (prefers-reduced-motion: reduce) {
+
+    .why-fact {
+
+      transition:
+        none !important;
+    }
+
+  }
+
+</style>
+
+
+<script>
+
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+
+  const whySection =
+    document.querySelector<HTMLElement>(
+      '.why-section'
+    );
+
+
+  if (whySection) {
+
+    const reduceMotion =
+      window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+      ).matches;
+
+
+    if (!reduceMotion) {
+
+      const number =
+        whySection.querySelector(
+          '.why-number'
+        );
+
+
+      const statement =
+        whySection.querySelector(
+          '.why-statement'
+        );
+
+
+      const facts =
+        whySection.querySelectorAll(
+          '.why-fact'
+        );
+
+
+      if (number) {
+
+        gsap.fromTo(
+          number,
+
+          {
+            y: 80,
+            opacity: 0
+          },
+
+          {
+            y: 0,
+            opacity: 1,
+            duration: 1.1,
+            ease: 'power3.out',
+
+            scrollTrigger: {
+
+              trigger:
+                whySection,
+
+              start:
+                'top 75%',
+
+              once:
+                true
+
+            }
+
+          }
+        );
+
+      }
+
+
+      if (statement) {
+
+        gsap.fromTo(
+          statement,
+
+          {
+            y: 35,
+            opacity: 0
+          },
+
+          {
+            y: 0,
+            opacity: 1,
+            duration: .9,
+            delay: .15,
+            ease: 'power3.out',
+
+            scrollTrigger: {
+
+              trigger:
+                statement,
+
+              start:
+                'top 80%',
+
+              once:
+                true
+
+            }
+
+          }
+        );
+
+      }
+
+
+      gsap.fromTo(
+        facts,
+
+        {
+          y: 25,
+          opacity: 0
+        },
+
+        {
+          y: 0,
+          opacity: 1,
+          duration: .65,
+          stagger: .1,
+          ease: 'power2.out',
+
+          scrollTrigger: {
+
+            trigger:
+              facts[0],
+
+            start:
+              'top 80%',
+
+            once:
+              true
+
+          }
+
+        }
+      );
+
+    }
+
+  }
+
+</script>
+
+<!-- =========================================================
+     SECTION 07 — FAQ
+
+     `faqSchema(faqItems)` (passed to BaseLayout above) emits FAQPage
+     JSON-LD for these same five questions — Google requires structured
+     data to match visible page content, so this section must stay in
+     sync with `faqSlugs` in the frontmatter rather than being removed.
+========================================================== -->
+
+<section
+  id="faq"
+  class="faq-section relative overflow-hidden bg-paper text-ink py-24 md:py-36"
+  aria-labelledby="faq-title"
+>
+
+  <div class="wrap relative z-[2]">
+
+    <div class="grid gap-10 md:grid-cols-[.65fr_1.8fr] md:items-end">
+
+      <div>
+
+        <div class="flex items-center gap-3">
+
+          <span class="h-px w-8 bg-accent"></span>
+
+          <span class="font-mono text-[9px] uppercase tracking-[.2em] text-ink/45">
+            07 / FAQ
+          </span>
+
+        </div>
+
+      </div>
+
+      <div>
+
+        <h2
+          id="faq-title"
+          class="max-w-[850px] font-serif text-[clamp(44px,6vw,82px)] leading-[.9] tracking-[-.045em]"
+        >
+          Questions worth
+          <span class="text-ink/35">
+            answering upfront.
+          </span>
+        </h2>
+
+      </div>
+
+    </div>
+
+    <div class="mt-16 max-w-[880px] md:mt-20">
+      <FAQAccordion items={faqItems} idPrefix="home-faq" />
+    </div>
+
+  </div>
+
+</section>
+
+<!-- =========================================================
+     SECTION 08 — FINAL CTA
+========================================================== -->
+
+<section
+  id="contact"
+  class="final-cta relative min-h-[85svh] overflow-hidden bg-ink text-paper"
+  aria-labelledby="cta-title"
+>
+
+  <!-- =====================================================
+       VISUAL BACKGROUND
+  ====================================================== -->
+
+  <div
+    class="cta-visual absolute inset-0"
+    aria-hidden="true"
+  >
+
+    <img
+      src="https://pbjinfra.com/assets/images/resort.jpg"
+      alt=""
+      loading="lazy"
+      width="1800"
+      height="1200"
+      class="cta-image absolute inset-0 h-full w-full object-cover"
+    />
+
+    <div class="absolute inset-0 bg-ink/65"></div>
+
+    <div
+      class="absolute inset-0 bg-gradient-to-b from-ink/30 via-ink/50 to-ink"
+    ></div>
+
+  </div>
+
+
+  <!-- =====================================================
+       ARCHITECTURAL GRID
+  ====================================================== -->
+
+  <div
+    class="cta-grid absolute inset-0"
+    aria-hidden="true"
+  ></div>
+
+
+  <!-- =====================================================
+       CONTENT
+  ====================================================== -->
+
+  <div class="wrap relative z-[3] flex min-h-[85svh] flex-col justify-between py-12 md:py-16">
+
+
+    <!-- TOP -->
+
+    <div class="flex items-center justify-between">
+
+      <div class="flex items-center gap-3">
+
+        <span class="h-px w-8 bg-accent"></span>
+
+        <span class="font-mono text-[9px] uppercase tracking-[.2em] text-paper/45">
+          08 / Start a Project
+        </span>
+
+      </div>
+
+
+      <span class="font-mono text-[9px] text-paper/30">
+        PBJ INFRA
+      </span>
+
+    </div>
+
+
+    <!-- =====================================================
+         MAIN CTA
+    ====================================================== -->
+
+    <div class="cta-main max-w-[1100px]">
+
+      <h2
+        id="cta-title"
+        class="cta-title font-serif text-[clamp(58px,10vw,145px)] leading-[.78] tracking-[-.065em]"
+      >
+
+        Have something
+        <span class="block text-paper/35">
+          worth building?
+        </span>
+
+      </h2>
+
+
+      <p class="cta-copy mt-9 max-w-[520px] text-[14px] leading-[1.75] text-paper/55 md:text-[15px]">
+        Tell us what you're planning. We'll help you understand the
+        right way forward — from the first conversation to execution.
+      </p>
+
+
+      <!-- PRIMARY CTA -->
+
+      <div class="mt-10">
+
+        <a
+          href="/contact/"
+          class="cta-button group relative inline-flex items-center gap-7 overflow-hidden border border-paper/30 px-7 py-5 md:px-9 md:py-6"
+          data-analytics-event="click_start_project"
+          data-analytics-params={JSON.stringify({ placement: 'homepage_final_cta' })}
+        >
+
+          <span class="relative z-[2] font-mono text-[10px] uppercase tracking-[.18em]">
+            Start a project
+          </span>
+
+          <span class="relative z-[2] text-[20px] transition-transform duration-500 group-hover:translate-x-2">
+            ↗
+          </span>
+
+          <span class="cta-button-fill absolute inset-0 origin-left scale-x-0 bg-accent transition-transform duration-500 ease-out group-hover:scale-x-100"></span>
+
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         CONTACT STRIP
+    ====================================================== -->
+
+    <div class="cta-footer border-t border-paper/15 pt-7">
+
+      <div class="grid gap-7 md:grid-cols-[1fr_auto] md:items-end">
+
+
+        <!-- LOCATION -->
+
+        <div>
+
+          <span class="font-mono text-[8px] uppercase tracking-[.18em] text-paper/35">
+            Project Coverage
+          </span>
+
+          <p class="mt-2 font-serif text-[22px]">
+            Pune · Maharashtra · India
+          </p>
+
+        </div>
+
+
+        <!-- CONTACT ACTIONS -->
+
+        <div class="flex flex-wrap gap-5">
+
+          <a
+            href={whatsappLink('Hi PBJ Infra, I have a project in mind.')}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="cta-contact group"
+            data-analytics-event="click_whatsapp"
+            data-analytics-params={JSON.stringify({ placement: 'homepage_final_cta' })}
+          >
+
+            <span>
+              WhatsApp
+            </span>
+
+            <span class="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+              ↗
+            </span>
+
+          </a>
+
+
+          <a
+            href={telLink()}
+            class="cta-contact group"
+            data-analytics-event="click_phone"
+          >
+
+            <span>
+              Call
+            </span>
+
+            <span class="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+              ↗
+            </span>
+
+          </a>
+
+
+          <a
+            href={mailtoLink()}
+            class="cta-contact group"
+            data-analytics-event="click_email"
+          >
+
+            <span>
+              Email
+            </span>
+
+            <span class="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+              ↗
+            </span>
+
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<style>
+
+  /* ==========================================================
+     CTA VISUAL
+  ========================================================== */
+
+  .final-cta {
+    isolation: isolate;
+  }
+
+
+  .cta-image {
+
+    opacity:
+      .72;
+
+    filter:
+      saturate(.55)
+      contrast(1.1);
+
+    transform:
+      scale(1.08);
+
+    transition:
+      transform 1.5s cubic-bezier(.2,.7,.2,1);
+  }
+
+
+  .final-cta:hover .cta-image {
+
+    transform:
+      scale(1.03);
+  }
+
+
+  /* ==========================================================
+     GRID
+  ========================================================== */
+
+  .cta-grid {
+
+    opacity:
+      .045;
+
+    background-image:
+      linear-gradient(
+        rgba(246,243,236,.6) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        rgba(246,243,236,.6) 1px,
+        transparent 1px
+      );
+
+    background-size:
+      90px 90px;
+
+    mask-image:
+      linear-gradient(
+        to bottom,
+        transparent,
+        black 20%,
+        black 80%,
+        transparent
+      );
+  }
+
+
+  /* ==========================================================
+     CTA BUTTON
+  ========================================================== */
+
+  .cta-button {
+
+    isolation:
+      isolate;
+
+    transition:
+      border-color .35s ease,
+      color .35s ease;
+  }
+
+
+  .cta-button:hover {
+
+    border-color:
+      rgb(30,110,100);
+
+    color:
+      white;
+  }
+
+
+  .cta-button-fill {
+
+    z-index:
+      0;
+
+  }
+
+
+  /* ==========================================================
+     CONTACT LINKS
+  ========================================================== */
+
+  .cta-contact {
+
+    display:
+      inline-flex;
+
+    align-items:
+      center;
+
+    gap:
+      9px;
+
+    padding-bottom:
+      7px;
+
+    border-bottom:
+      1px solid rgba(246,243,236,.2);
+
+    font-family:
+      ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      monospace;
+
+    font-size:
+      9px;
+
+    text-transform:
+      uppercase;
+
+    letter-spacing:
+      .15em;
+
+    color:
+      rgba(246,243,236,.55);
+
+    transition:
+      color .3s ease,
+      border-color .3s ease;
+  }
+
+
+  .cta-contact:hover {
+
+    color:
+      rgb(246,243,236);
+
+    border-color:
+      rgb(30,110,100);
+  }
+
+
+  /* ==========================================================
+     MOBILE
+  ========================================================== */
+
+  @media (max-width: 640px) {
+
+    .cta-grid {
+
+      background-size:
+        55px 55px;
+    }
+
+    .cta-copy {
+
+      max-width:
+        340px;
+    }
+
+    .cta-button {
+
+      width:
+        100%;
+
+      justify-content:
+        space-between;
+    }
+
+  }
+
+
+  @media (prefers-reduced-motion: reduce) {
+
+    .cta-image,
+    .cta-button-fill {
+
+      transition:
+        none !important;
+    }
+
+    .final-cta:hover .cta-image {
+
+      transform:
+        scale(1.08);
+    }
+
+  }
+
+</style>
+
+
+<script>
+
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(
+    ScrollTrigger
+  );
+
+
+  const cta =
+    document.querySelector<HTMLElement>(
+      '.final-cta'
+    );
+
+
+  if (cta) {
+
+    const reduceMotion =
+      window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+      ).matches;
+
+
+    if (!reduceMotion) {
+
+      const image =
+        cta.querySelector(
+          '.cta-image'
+        );
+
+
+      const title =
+        cta.querySelector(
+          '.cta-title'
+        );
+
+
+      const copy =
+        cta.querySelector(
+          '.cta-copy'
+        );
+
+
+      const button =
+        cta.querySelector(
+          '.cta-button'
+        );
+
+
+      gsap.fromTo(
+        image,
+
+        {
+          y: -35
+        },
+
+        {
+          y: 35,
+          ease: 'none',
+
+          scrollTrigger: {
+
+            trigger:
+              cta,
+
+            start:
+              'top bottom',
+
+            end:
+              'bottom top',
+
+            scrub:
+              1.2
+
+          }
+
+        }
+      );
+
+
+      gsap.fromTo(
+        [title, copy, button],
+
+        {
+          y: 45,
+          opacity: 0
+        },
+
+        {
+          y: 0,
+          opacity: 1,
+          duration: .9,
+          stagger: .12,
+          ease: 'power3.out',
+
+          scrollTrigger: {
+
+            trigger:
+              cta,
+
+            start:
+              'top 70%',
+
+            once:
+              true
+
+          }
+
+        }
+      );
+
+    }
+
+  }
+
+</script>
 </BaseLayout>

@@ -23,10 +23,40 @@ export const SITE = {
     addressCountry: 'IN',
   },
   hours: 'Mon–Sat 9–7, Sun 10–5 · 24/7 Emergency',
+  // Structured form of `hours`, for schema.org openingHoursSpecification.
+  hoursSpec: [
+    { days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'], opens: '09:00', closes: '19:00' },
+    { days: ['Sunday'], opens: '10:00', closes: '17:00' },
+  ],
   gst: '27BQRPJ7692F2Z4',
   udyam: 'UDYAM-MH-26-0101863',
   warranty: { structural: '5-year', equipment: '2-year' },
   coordinates: { lat: 18.4702, lng: 73.9758 },
+  foundingLocation: 'Pune, Maharashtra, India',
+  // Areas with verified page-level or project-level evidence (see docs/website-audit.md).
+  serviceAreas: ['Pune', 'Latur', 'Maharashtra', 'India'],
+  // Topical entities PBJ Infra is an authority on — mirrors the /services/ catalog.
+  knowsAbout: [
+    'Swimming pool construction',
+    'Infinity pool construction',
+    'Pool filtration systems',
+    'Swimming pool tiling',
+    'Lagoon pool construction',
+    'Waterpark construction',
+    'Resort construction',
+    'Farmhouse construction',
+    'Cob house construction',
+    'Ferrocement dome construction',
+    'Ferro concrete design',
+    'Land development and site preparation',
+  ],
+  // Logo: favicon.svg is the only mark hosted by this site today. A raster
+  // logo + a 1200×630 OG image are flagged as required from PBJ — see
+  // docs/seo-rebuild-2026.md ("Information required from PBJ").
+  logoUrl: 'https://www.pbjinfra.com/favicon.svg',
+  // Verified social profiles — none confirmed yet. organizationSchema() only
+  // emits `sameAs` when this is non-empty, so an empty array is safe.
+  sameAs: [] as string[],
 } as const;
 
 export function whatsappLink(message: string): string {

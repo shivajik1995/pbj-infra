@@ -36,32 +36,37 @@ No third-party keyword-volume tool was run for this build (that requires live AP
 
 ```
 /                                          Homepage
-/about/                                    Company + team
+/about/                                    Company + team + developer proof
 /services/                                 Services hub (all 11, grouped by category)
 /services/swimming-pool-construction/      ✅ published
-/services/pool-filtration-systems/         draft (not routed — no public URL yet)
-/services/swimming-pool-tiles/             draft
-/services/lagoon-pool-construction/        draft
-/services/waterpark-construction/          draft
-/services/resort-construction/             draft
-/services/farmhouse-construction/          draft
-/services/cob-house-construction/          draft
-/services/ferro-concrete-design/           draft
-/services/ferrocement-dome/                draft
-/services/land-development/                draft
+/services/pool-filtration-systems/         ✅ published (Aug 2026 rebuild)
+/services/swimming-pool-tiles/             ✅ published
+/services/lagoon-pool-construction/        ✅ published
+/services/waterpark-construction/          ✅ published
+/services/resort-construction/             ✅ published
+/services/farmhouse-construction/          ✅ published
+/services/cob-house-construction/          ✅ published
+/services/ferro-concrete-design/           ✅ published
+/services/ferrocement-dome/                ✅ published
+/services/land-development/                ✅ published
 /projects/                                 Projects hub (all 5 signature projects)
 /projects/adventure-waterpark-latur/       ✅ published
-/projects/luxury-infinity-pool/            draft (location conflict — see audit)
-/projects/rabbit-dome-house/               draft
-/projects/natural-lagoon-pool/             draft
-/projects/farm-house-latur/                draft
+/projects/rabbit-dome-house/               ✅ published (Aug 2026 rebuild)
+/projects/natural-lagoon-pool/             ✅ published
+/projects/farm-house-latur/                ✅ published
+/projects/luxury-infinity-pool/            draft (Pune/Mumbai location conflict — see audit)
 /locations/                                Locations hub (verified / in-progress / coverage-only tiers)
 /locations/pune/                           ✅ published
-/locations/latur/                          draft (has real project evidence — next candidate)
+/locations/latur/                          ✅ published (Aug 2026 rebuild)
 /resources/                                Resource hub
 /resources/how-long-does-swimming-pool-construction-take/   ✅ published
 /contact/                                  Contact + lead form
+/privacy-policy/                           ✅ published (Aug 2026 rebuild)
+/terms/                                    ✅ published
+/404                                       noindex, excluded from sitemap
 ```
+
+**27 indexable URLs** as of the August 2026 SEO rebuild — see `docs/seo-rebuild-2026.md`.
 
 **Rule:** a collection entry only gets a real, routed URL (and a sitemap entry) when `status: "published"`. `draft` entries exist in the CMS for editorial visibility (they render as non-linked cards) but Astro's `getStaticPaths` filters them out entirely — see `src/pages/services/[slug].astro` etc. This is the mechanical enforcement of "quality over page count" (brief §6): a thin page is structurally impossible to publish by accident, since flipping `status` to `published` is the only way a URL is created, and doing that on a stub entry as currently written would just look unfinished — the schema doesn't gate on word count.
 

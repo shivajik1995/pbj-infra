@@ -11,10 +11,14 @@ export function organizationSchema() {
     '@type': 'GeneralContractor',
     '@id': `${SITE.url}/#organization`,
     name: SITE.name,
+    legalName: SITE.legalName,
     url: SITE.url,
+    logo: SITE.logoUrl,
+    image: SITE.logoUrl,
     telephone: SITE.phone,
     email: SITE.email,
     foundingDate: SITE.founded,
+    foundingLocation: SITE.foundingLocation,
     address: {
       '@type': 'PostalAddress',
       streetAddress: SITE.address.streetAddress,
@@ -28,7 +32,15 @@ export function organizationSchema() {
       latitude: SITE.coordinates.lat,
       longitude: SITE.coordinates.lng,
     },
-    areaServed: 'Maharashtra, India',
+    areaServed: SITE.serviceAreas.map((name) => ({ '@type': 'AdministrativeArea', name })),
+    knowsAbout: SITE.knowsAbout,
+    openingHoursSpecification: SITE.hoursSpec.map((h) => ({
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: h.days,
+      opens: h.opens,
+      closes: h.closes,
+    })),
+    ...(SITE.sameAs.length ? { sameAs: SITE.sameAs } : {}),
   };
 }
 
@@ -53,15 +65,48 @@ export function breadcrumbSchema(items: { name: string; url: string }[]) {
   };
 }
 
-export function serviceSchema(opts: { name: string; description: string; url: string }) {
+export function serviceSchema(opts: {
+  name: string;
+  description: string;
+  url: string;
+  solutions?: { name: string; description: string }[];
+}) {
   return {
     '@context': 'https://schema.org',
     '@type': 'Service',
     serviceType: opts.name,
+    name: opts.name,
     description: opts.description,
-    provider: { '@id': `${SITE.url}/#organization` },
-    areaServed: 'Maharashtra, India',
+    provider: { '@id': `${SITE.url}/#organization`, name: SITE.name },
+    areaServed: SITE.serviceAreas.map((name) => ({ '@type': 'AdministrativeArea', name })),
     url: `${SITE.url}${opts.url}`,
+    ...(opts.solutions?.length
+      ? {
+          hasOfferCatalog: {
+            '@type': 'OfferCatalog',
+            name: `${opts.name} options`,
+            itemListElement: opts.solutions.map((s) => ({
+              '@type': 'Offer',
+              itemOffered: { '@type': 'Service', name: s.name, description: s.description },
+            })),
+          },
+        }
+      : {}),
+  };
+}
+
+/** ItemList of the primary service pages — used on the homepage. */
+export function serviceItemListSchema(items: { name: string; url: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: `${SITE.name} construction services`,
+    itemListElement: items.map((item, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: item.name,
+      url: `${SITE.url}${item.url}`,
+    })),
   };
 }
 
@@ -112,7 +157,9 @@ export function websiteSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
+    '@id': `${SITE.url}/#website`,
     name: SITE.name,
     url: SITE.url,
+    publisher: { '@id': `${SITE.url}/#organization` },
   };
 }

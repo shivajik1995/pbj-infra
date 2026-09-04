@@ -41,6 +41,9 @@ const services = defineCollection({
     // still present in every entry's frontmatter (see the .md files) and
     // available at render time as `entry.slug`.
     category: z.enum(['Aquatic', 'Hospitality & Leisure', 'Residential', 'Specialized']),
+    // Optional clean on-page H1. Falls back to `name` in the template — set
+    // this where "<name> Company in Pune & Maharashtra" reads awkwardly.
+    h1: z.string().optional(),
     shortDescription: z.string(),
     heroImage: media,
     solutions: z.array(z.object({ name: z.string(), description: z.string() })),

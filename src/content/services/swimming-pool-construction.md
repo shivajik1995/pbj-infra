@@ -2,13 +2,14 @@
 status: "published"
 name: "Swimming Pool Construction"
 slug: "swimming-pool-construction"
+h1: "Swimming Pool Construction in Pune, Latur & Maharashtra"
 category: "Aquatic"
 shortDescription: "Infinity, glass-wall, indoor and residential pools — engineered, built and finished in-house by PBJ Infra, with advanced filtration and a 5-year structural warranty."
 heroImage:
   src: "https://pbjinfra.com/assets/images/swimming-pool.jpg"
   alt: "Infinity-edge swimming pool under construction by PBJ Infra"
   width: 1600
-  height: 2000
+  height: 1000
 solutions:
   - name: "Infinity pools"
     description: "Vanishing-edge pools engineered for the visual effect of water meeting the horizon, built with the structural and hydraulic detailing infinity edges require."
@@ -34,10 +35,10 @@ process:
     description: "Excavation, structural shell, filtration and waterproofing systems, then tiling and finishing — with regular progress updates."
   - step: "Handover"
     description: "Final inspection, a walkthrough of filtration and maintenance, and warranty documentation."
-relatedServices: ["ferrocement-dome"]
-relatedProjects: ["adventure-waterpark-latur"]
-relatedLocations: ["pune"]
-faq: ["pool-timeline", "warranty", "design-and-build", "cost"]
+relatedServices: ["pool-filtration-systems", "swimming-pool-tiles", "lagoon-pool-construction"]
+relatedProjects: ["adventure-waterpark-latur", "natural-lagoon-pool"]
+relatedLocations: ["pune", "latur"]
+faq: ["pool-timeline", "warranty", "design-and-build", "cost", "permits"]
 ctaLabel: "Get a Pool Consultation"
 whatsappMessage: "Hi PBJ Infra, I'm interested in discussing a swimming pool project."
 seo:
@@ -53,4 +54,6 @@ This service is for homeowners building a residential pool, farmhouse or resort 
 
 ## Related work
 
-PBJ's Adventure Waterpark project (Pune–Latur corridor) applied the same filtration and safety-system discipline at a larger, multi-attraction scale — see the [full case study](/projects/adventure-waterpark-latur/). Two further pool-specific signature projects, a Luxury Infinity Pool and a Natural Lagoon Pool, are documented on PBJ's own portfolio and are a content item in progress for a dedicated case-study page — see [/projects/](/projects/).
+PBJ's Adventure Waterpark project (Pune–Latur corridor) applied the same filtration and safety-system discipline at a larger, multi-attraction scale — see the [full case study](/projects/adventure-waterpark-latur/). The [Natural Lagoon Pool](/projects/natural-lagoon-pool/) in Chatrapati Sambhaji Nagar shows the same engineering under a naturalistic finish. A third pool-specific project, a Luxury Infinity Pool, is documented on PBJ's own portfolio and is pending a location confirmation before its case study is published — see [/projects/](/projects/).
+
+Related aquatic services: [pool filtration systems](/services/pool-filtration-systems/), [pool tiling and finishing](/services/swimming-pool-tiles/) and [lagoon pool construction](/services/lagoon-pool-construction/).

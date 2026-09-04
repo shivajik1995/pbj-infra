@@ -1,33 +1,44 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import PageHero from '../../components/PageHero.astro';
+import PageShell from '../../components/PageShell.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+import FinalCTA from '../../components/FinalCTA.astro';
 import ServiceCard from '../../components/ServiceCard.astro';
-import RevealScript from '../../components/RevealScript.astro';
 import { breadcrumbSchema } from '../../lib/schema';
 
 const services = await getCollection('services');
 const categories = ['Aquatic', 'Hospitality & Leisure', 'Residential', 'Specialized'] as const;
 const crumbs = [{ name: 'Home', url: '/' }, { name: 'Services', url: '/services/' }];
+const tones = ['paper', 'paper-dim', 'paper', 'paper-dim'] as const;
 ---
 <BaseLayout
-  title="Construction Services | Pools, Waterparks, Resorts & More | PBJ Infra"
-  description="All PBJ Infra construction services — swimming pools, waterparks, resorts, farmhouses, ferrocement domes and land development — across Pune, Latur and Maharashtra."
+  title="Construction Services in Pune & Maharashtra | PBJ Infra"
+  description="Every PBJ Infra construction service — swimming pools, filtration and tiling, waterparks, resorts, farmhouses, cob houses, ferrocement domes and land development."
   path="/services/"
   schema={[breadcrumbSchema(crumbs)]}
 >
-  <Breadcrumbs items={crumbs} />
-  <div class="wrap pt-8 pb-14">
-    <h1 class="text-[32px] md:text-[48px] max-w-[18ch]">What PBJ Infra builds.</h1>
-    <p class="mt-5 max-w-[62ch] text-ink-soft">Four disciplines, one in-house site team: aquatic construction, hospitality &amp; leisure, residential builds, and specialized structural work. Every service below is genuinely offered by PBJ — pages marked "in development" are real, verified service lines that don't yet have a fully written page on this site.</p>
-  </div>
+  <PageHero
+    crumbs={crumbs}
+    tone="ink"
+    eyebrow="Services / Capabilities"
+    title="What PBJ Infra"
+    titleMuted="builds."
+    lead="Four disciplines, one in-house site team: aquatic construction, hospitality & leisure, residential builds, and specialised structural work. Every service is genuinely offered by PBJ Infra, operating since 2009 with a 5-year structural warranty."
+    ctas={[
+      { label: 'Start a project', href: '/contact/', style: 'solid', event: 'click_start_project', params: { placement: 'services_hero' } },
+      { label: 'See projects', href: '/projects/', style: 'lt' },
+    ]}
+  />
 
-  {categories.map((cat) => {
+  {categories.map((cat, i) => {
     const inCat = services.filter((s) => s.data.category === cat);
+    const id = `svc-cat-${i}`;
     return (
-      <section class="wrap pb-16">
-        <h2 class="font-serif text-2xl mb-6 border-b border-ink/[.14] pb-4">{cat}</h2>
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <PageShell tone={tones[i]} labelledby={id}>
+        <SectionHeader id={id} num={String(i + 1).padStart(2, '0')} label="Discipline" title={cat} tone="paper" />
+        <div class="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-5" data-reveal-stagger>
           {inCat.map((s) => (
             <ServiceCard
               name={s.data.name}
@@ -38,9 +49,15 @@ const crumbs = [{ name: 'Home', url: '/' }, { name: 'Services', url: '/services/
             />
           ))}
         </div>
-      </section>
+      </PageShell>
     );
   })}
 
-  <RevealScript />
+  <FinalCTA
+    title="Not sure which"
+    titleMuted="you need?"
+    copy="Tell us what you're planning and PBJ Infra will help you understand the right way forward — from the first conversation to execution."
+    primary={{ label: 'Start a project', href: '/contact/', event: 'click_start_project', params: { placement: 'services_cta' } }}
+    contact={true}
+  />
 </BaseLayout>

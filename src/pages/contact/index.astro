@@ -1,10 +1,11 @@
 ---
 import { getEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import PageHero from '../../components/PageHero.astro';
+import PageShell from '../../components/PageShell.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
 import FAQAccordion from '../../components/FAQAccordion.astro';
 import LeadForm from '../../components/LeadForm.astro';
-import RevealScript from '../../components/RevealScript.astro';
 import { breadcrumbSchema, faqSchema } from '../../lib/schema';
 import { SITE, whatsappLink, telLink, mailtoLink } from '../../lib/site';
 
@@ -20,44 +21,52 @@ const mapQuery = encodeURIComponent(`${SITE.address.streetAddress}, ${SITE.addre
   path="/contact/"
   schema={[breadcrumbSchema(crumbs), faqSchema(faqs)]}
 >
-  <Breadcrumbs items={crumbs} />
+  <PageHero
+    crumbs={crumbs}
+    tone="ink"
+    eyebrow="Contact / Start a project"
+    title="Have a project in mind?"
+    titleMuted="Let's build it."
+    lead="Tell us what you're planning and our team will help you understand the next steps. No fixed pricing is published — every project gets a consultation and a project-specific quote."
+    ctas={[
+      { label: 'WhatsApp us', href: whatsappLink('Hi PBJ Infra, I would like to discuss a project.'), style: 'solid', external: true, event: 'click_whatsapp', params: { placement: 'contact_hero' } },
+      { label: 'Call', href: telLink(), style: 'lt', event: 'click_phone' },
+    ]}
+  />
 
-  <section class="wrap pt-8 pb-16">
-    <h1 class="text-[32px] md:text-[48px] max-w-[18ch]">Have a project in mind? Let's build it.</h1>
-    <p class="mt-5 max-w-[62ch] text-ink-soft">Tell us what you're planning and our team will help you understand the next steps. No fixed pricing is published — every project gets a consultation and a project-specific quote.</p>
-  </section>
-
-  <section class="wrap pb-20 grid lg:grid-cols-[1fr_1fr] gap-12 items-start">
-    <div>
-      <LeadForm />
-    </div>
-    <div class="flex flex-col gap-8">
-      <div class="border border-ink/[.14] p-7">
-        <h2 class="font-serif text-xl mb-5">Direct contact</h2>
-        <ul class="flex flex-col gap-3.5 font-mono text-sm">
-          <li><a href={telLink()} data-analytics-event="click_phone" class="hover:text-accent">{SITE.phoneDisplay}</a></li>
-          <li><a href={mailtoLink()} data-analytics-event="click_email" class="hover:text-accent">{SITE.email}</a></li>
-          <li><a href={whatsappLink('Hi PBJ Infra, I would like to discuss a project.')} target="_blank" rel="noopener" data-analytics-event="click_whatsapp" data-analytics-params={JSON.stringify({ placement: 'contact_page' })} class="hover:text-accent">WhatsApp →</a></li>
-        </ul>
-        <p class="text-[13px] text-ink-soft mt-5">{SITE.address.streetAddress}, {SITE.address.addressLocality} {SITE.address.postalCode}</p>
-        <p class="font-mono text-xs text-ink/50 mt-2">{SITE.hours}</p>
+  <PageShell tone="paper">
+    <div class="grid lg:grid-cols-[1fr_1fr] gap-12 items-start" data-reveal>
+      <div>
+        <LeadForm />
       </div>
-      <div class="border border-ink/[.14] overflow-hidden aspect-[4/3]">
-        <iframe
-          title="PBJ Infra location — Phursungi, Pune"
-          src={`https://www.google.com/maps?q=${mapQuery}&output=embed`}
-          class="w-full h-full border-0"
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-        ></iframe>
+      <div class="flex flex-col gap-8">
+        <div class="border border-ink/[.14] p-7">
+          <h2 class="font-serif text-xl mb-5">Direct contact</h2>
+          <ul class="flex flex-col gap-3.5 font-mono text-sm">
+            <li><a href={telLink()} data-analytics-event="click_phone" class="hover:text-accent">{SITE.phoneDisplay}</a></li>
+            <li><a href={mailtoLink()} data-analytics-event="click_email" class="hover:text-accent">{SITE.email}</a></li>
+            <li><a href={whatsappLink('Hi PBJ Infra, I would like to discuss a project.')} target="_blank" rel="noopener" data-analytics-event="click_whatsapp" data-analytics-params={JSON.stringify({ placement: 'contact_page' })} class="hover:text-accent">WhatsApp →</a></li>
+          </ul>
+          <p class="text-[13px] text-ink-soft mt-5">{SITE.address.streetAddress}, {SITE.address.addressLocality} {SITE.address.postalCode}</p>
+          <p class="font-mono text-xs text-ink/50 mt-2">{SITE.hours}</p>
+        </div>
+        <div class="border border-ink/[.14] overflow-hidden aspect-[4/3]">
+          <iframe
+            title="PBJ Infra location — Phursungi, Pune"
+            src={`https://www.google.com/maps?q=${mapQuery}&output=embed`}
+            class="w-full h-full border-0"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
       </div>
     </div>
-  </section>
+  </PageShell>
 
-  <section class="wrap py-16 max-w-[880px]" id="faq">
-    <h2 class="font-serif text-3xl mb-4">FAQ</h2>
-    <FAQAccordion items={faqs} idPrefix="contact-faq" />
-  </section>
-
-  <RevealScript />
+  <PageShell tone="paper-dim" labelledby="contact-faq" id="faq">
+    <SectionHeader id="contact-faq" label="Before you ask" title="FAQ" tone="paper" />
+    <div class="mt-12 max-w-[880px]" data-reveal>
+      <FAQAccordion items={faqs} idPrefix="contact-faq" />
+    </div>
+  </PageShell>
 </BaseLayout>

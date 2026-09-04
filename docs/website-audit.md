@@ -2,6 +2,8 @@
 
 Source analyzed: **pbjinfra.com** (homepage + portfolio page, as provided). This audit lists only facts that could be directly sourced from that site — nothing here is estimated or inferred.
 
+> **August 2026 update:** the SEO rebuild (`docs/seo-rebuild-2026.md`) published all 10 remaining verified services, 3 project case studies (Rabbit Dome House, Natural Lagoon Pool, Farm House) and `/locations/latur/`, with content grounded in the verified facts below plus clearly-general construction guidance. `*Content required:*` notes are rendered on-page wherever a PBJ-specific fact is still missing. **Luxury Infinity Pool remains draft** pending the location confirmation flagged below.
+
 ## Verified company facts
 
 | Fact | Value | Source location |

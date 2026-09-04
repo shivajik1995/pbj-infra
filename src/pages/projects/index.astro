@@ -1,9 +1,11 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import PageHero from '../../components/PageHero.astro';
+import PageShell from '../../components/PageShell.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+import FinalCTA from '../../components/FinalCTA.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
-import RevealScript from '../../components/RevealScript.astro';
 import { breadcrumbSchema } from '../../lib/schema';
 
 const projects = await getCollection('projects');
@@ -12,18 +14,24 @@ const ordered = order.map((slug) => projects.find((p) => p.slug === slug)!).filt
 const crumbs = [{ name: 'Home', url: '/' }, { name: 'Projects', url: '/projects/' }];
 ---
 <BaseLayout
-  title="Construction Projects | Pools, Waterparks, Domes & More | PBJ Infra"
-  description="PBJ Infra's signature projects — from an Adventure Waterpark in the Pune–Latur corridor to a ferrocement dome house in Pune. Real, verified project work."
+  title="Construction Projects & Case Studies | PBJ Infra"
+  description="PBJ Infra's signature projects — an operating Adventure Waterpark, a ferrocement dome house, lagoon and infinity pools and a farmhouse across Pune and Latur."
   path="/projects/"
   schema={[breadcrumbSchema(crumbs)]}
 >
-  <Breadcrumbs items={crumbs} />
-  <div class="wrap pt-8 pb-14">
-    <h1 class="text-[32px] md:text-[48px] max-w-[20ch]">We don't just show projects. We show what we've built.</h1>
-    <p class="mt-5 max-w-[62ch] text-ink-soft">Five signature projects verified from PBJ Infra's own portfolio. One has a full, detailed case study so far — the rest are shown honestly as verified project references while their case studies are written.</p>
-  </div>
-  <div class="wrap pb-20">
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  <PageHero
+    crumbs={crumbs}
+    tone="ink"
+    eyebrow="Projects / Selected work"
+    title="We don't just show projects."
+    titleMuted="We show what we've built."
+    lead="Five signature projects verified from PBJ Infra's own portfolio — a completed waterpark, two pools, a ferrocement dome house and a farmhouse across Pune, Latur and Chatrapati Sambhaji Nagar. Four have full case studies; the Luxury Infinity Pool is pending a location confirmation before its page is published."
+    ctas={[{ label: 'Start a project', href: '/contact/', style: 'solid', event: 'click_start_project', params: { placement: 'projects_hero' } }]}
+  />
+
+  <PageShell tone="ink" labelledby="proj-list">
+    <SectionHeader id="proj-list" num="01" label="Signature projects" title="Built environments," titleMuted="not just structures." tone="ink" />
+    <div class="mt-16 grid sm:grid-cols-2 lg:grid-cols-3 gap-6" data-reveal-stagger>
       {ordered.map((p) => (
         <ProjectCard
           name={p.data.name}
@@ -34,6 +42,13 @@ const crumbs = [{ name: 'Home', url: '/' }, { name: 'Projects', url: '/projects/
         />
       ))}
     </div>
-  </div>
-  <RevealScript />
+  </PageShell>
+
+  <FinalCTA
+    title="Have something"
+    titleMuted="worth building?"
+    copy="Tell PBJ Infra what you're planning — from the first conversation to execution."
+    primary={{ label: 'Start a project', href: '/contact/', event: 'click_start_project', params: { placement: 'projects_cta' } }}
+    contact={true}
+  />
 </BaseLayout>

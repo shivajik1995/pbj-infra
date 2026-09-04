@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import PageShell from '../../components/PageShell.astro';
+import { breadcrumbSchema } from '../../lib/schema';
+import { SITE, mailtoLink, telLink } from '../../lib/site';
+
+const crumbs = [{ name: 'Home', url: '/' }, { name: 'Privacy Policy', url: '/privacy-policy/' }];
+const updated = 'August 2026';
+---
+<BaseLayout
+  title="Privacy Policy | PBJ Infra"
+  description="How PBJ Infra collects, uses and protects the information you share through this website and its enquiry form."
+  path="/privacy-policy/"
+  schema={[breadcrumbSchema(crumbs)]}
+>
+  <PageHero
+    crumbs={crumbs}
+    tone="ink"
+    size="article"
+    eyebrow="Legal / Privacy"
+    metaRight={`Last updated ${updated}`}
+    title="Privacy Policy"
+    lead={`How PBJ Infra (${SITE.legalName}) collects, uses and protects the information you share through pbjinfra.com.`}
+  />
+
+  <PageShell tone="paper">
+    <div class="prose-page max-w-[74ch]" data-reveal>
+      <h2>Information you give us</h2>
+      <p>When you submit the enquiry form, or contact us by email, phone or WhatsApp, we receive the details you choose to share — typically your name, contact details and a description of your project. We use this only to respond to your enquiry and to discuss and, if you proceed, deliver your project.</p>
+
+      <h2>Information collected automatically</h2>
+      <p>This site uses privacy-oriented, aggregate analytics to understand which pages are used and how visitors move through the site. It does not run third-party advertising trackers or sell data. Standard server logs (IP address, browser type, pages requested) may be retained briefly for security and diagnostics.</p>
+
+      <h2>How we store and share it</h2>
+      <p>Enquiry details are kept for as long as needed to serve your project and our records, and are shared only with the PBJ Infra team members working on your enquiry. We do not sell or rent your information. We may disclose information where required by law.</p>
+
+      <h2>Your choices</h2>
+      <p>You can ask us what enquiry information we hold about you, ask us to correct it, or ask us to delete it, by contacting us at the address below. Some information may be retained where we have a legal or contractual reason to keep it.</p>
+
+      <h2>Contact</h2>
+      <p>
+        PBJ Infra — {SITE.address.streetAddress}, {SITE.address.addressLocality} {SITE.address.postalCode}<br />
+        <a href={mailtoLink()}>{SITE.email}</a> · <a href={telLink()}>{SITE.phoneDisplay}</a>
+      </p>
+    </div>
+  </PageShell>
+</BaseLayout>
+
+<style>
+  .prose-page :global(h2) { font-family: theme('fontFamily.serif'); font-size: clamp(22px, 2.6vw, 28px); margin: 2rem 0 0.6rem; letter-spacing: -0.02em; }
+  .prose-page :global(h2:first-child) { margin-top: 0; }
+  .prose-page :global(p) { color: theme('colors.ink-soft'); margin: 0 0 1rem; line-height: 1.75; }
+  .prose-page :global(a) { color: theme('colors.accent'); text-decoration: underline; }
+  .prose-page :global(strong) { color: theme('colors.ink'); }
+</style>

@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import PageShell from '../../components/PageShell.astro';
+import { breadcrumbSchema } from '../../lib/schema';
+import { SITE, mailtoLink } from '../../lib/site';
+
+const crumbs = [{ name: 'Home', url: '/' }, { name: 'Terms of Service', url: '/terms/' }];
+const updated = 'August 2026';
+---
+<BaseLayout
+  title="Terms of Service | PBJ Infra"
+  description="The terms that apply to your use of the PBJ Infra website. Project scope, pricing and warranties are set by a separate written agreement."
+  path="/terms/"
+  schema={[breadcrumbSchema(crumbs)]}
+>
+  <PageHero
+    crumbs={crumbs}
+    tone="ink"
+    size="article"
+    eyebrow="Legal / Terms"
+    metaRight={`Last updated ${updated}`}
+    title="Terms of Service"
+    lead={`These terms apply to your use of pbjinfra.com, operated by PBJ Infra (${SITE.legalName}).`}
+  />
+
+  <PageShell tone="paper">
+    <div class="prose-page max-w-[74ch]" data-reveal>
+      <h2>Website content</h2>
+      <p>The information on this site is provided for general guidance about PBJ Infra's services and completed projects. Timelines, technical descriptions and cost guidance are indicative and not an offer. Project examples describe work PBJ Infra has carried out; some pages note where specific details are still being documented.</p>
+
+      <h2>No project contract is formed here</h2>
+      <p>Submitting the enquiry form or contacting PBJ Infra does not create a construction contract. The scope, price, schedule and warranties for any project are set out in a separate written agreement signed by both parties. Where this site refers to a 5-year structural warranty and a 2-year equipment warranty, those apply as defined in that agreement, covering defects in materials or workmanship under normal use.</p>
+
+      <h2>Intellectual property</h2>
+      <p>The text, images and design of this site belong to PBJ Infra or are used with permission. You may not reproduce substantial parts of the site without written consent.</p>
+
+      <h2>Third-party links</h2>
+      <p>This site links to external services such as Google Maps and WhatsApp. PBJ Infra is not responsible for the content or practices of those services.</p>
+
+      <h2>Contact</h2>
+      <p>Questions about these terms: <a href={mailtoLink()}>{SITE.email}</a>.</p>
+    </div>
+  </PageShell>
+</BaseLayout>
+
+<style>
+  .prose-page :global(h2) { font-family: theme('fontFamily.serif'); font-size: clamp(22px, 2.6vw, 28px); margin: 2rem 0 0.6rem; letter-spacing: -0.02em; }
+  .prose-page :global(h2:first-child) { margin-top: 0; }
+  .prose-page :global(p) { color: theme('colors.ink-soft'); margin: 0 0 1rem; line-height: 1.75; }
+  .prose-page :global(a) { color: theme('colors.accent'); text-decoration: underline; }
+  .prose-page :global(strong) { color: theme('colors.ink'); }
+</style>

@@ -23,7 +23,7 @@ contentGaps:
   - "Specific challenge/approach narrative (design constraints, engineering decisions) is not documented publicly — a short interview with the project's site engineer would let this section run in full."
 relatedService: "waterpark-construction"
 relatedLocation: "latur"
-relatedProjects: []
+relatedProjects: ["farm-house-latur", "natural-lagoon-pool"]
 seo:
   title: "Adventure Waterpark, Pune–Latur | PBJ Infra Project"
   description: "Case study: PBJ Infra's Adventure Waterpark, a completed family entertainment waterpark in the Pune–Latur corridor, 2023."
