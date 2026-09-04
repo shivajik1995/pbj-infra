@@ -4,13 +4,15 @@ const year = new Date().getFullYear();
 ---
 <footer class="bg-ink text-paper/70 pt-[70px] pb-[26px] border-t border-paper/[.18]">
   <div class="wrap">
-    <div class="grid grid-cols-2 md:grid-cols-[1.4fr_1fr_1fr_1fr] gap-10 pb-[50px] border-b border-paper/[.18]">
+    <div class="grid grid-cols-2 md:grid-cols-[1.5fr_1fr_1fr_1fr] gap-10 pb-[50px] border-b border-paper/[.18]">
       <div>
-        <div class="font-serif text-paper text-[22px] mb-4">PBJ INFRA</div>
-        <p class="text-[13.5px] max-w-[34ch] text-paper/55">Construction and infrastructure company based in Pune, serving Latur and locations across Maharashtra and India since 2009.</p>
+        <div class="font-serif text-paper text-[22px] mb-4">PBJ <span class="text-accent">INFRA</span></div>
+        <p class="text-[13.5px] max-w-[36ch] text-paper/55">Construction and infrastructure company headquartered in Phursungi, Pune — building swimming pools, waterparks, resorts, farmhouses and specialised structures across Latur, Maharashtra and India since 2009.</p>
+        <p class="font-mono text-[11px] text-paper/40 mt-4">GST {SITE.gst} · UDYAM {SITE.udyam}</p>
       </div>
-      <div>
-        <h5 class="font-mono text-[11px] tracking-wide uppercase text-paper mb-5">Services</h5>
+
+      <nav aria-label="Services">
+        <h2 class="font-mono text-[11px] tracking-wide uppercase text-paper mb-5">Services</h2>
         <ul class="flex flex-col gap-[11px] text-[13.5px]">
           <li><a href="/services/swimming-pool-construction/" class="hover:text-paper">Swimming Pool Construction</a></li>
           <li><a href="/services/waterpark-construction/" class="hover:text-paper">Waterpark Construction</a></li>
@@ -19,19 +21,22 @@ const year = new Date().getFullYear();
           <li><a href="/services/ferrocement-dome/" class="hover:text-paper">Ferrocement Dome</a></li>
           <li><a href="/services/" class="hover:text-paper">All Services →</a></li>
         </ul>
-      </div>
-      <div>
-        <h5 class="font-mono text-[11px] tracking-wide uppercase text-paper mb-5">Company</h5>
+      </nav>
+
+      <nav aria-label="Company">
+        <h2 class="font-mono text-[11px] tracking-wide uppercase text-paper mb-5">Company</h2>
         <ul class="flex flex-col gap-[11px] text-[13.5px]">
           <li><a href="/about/" class="hover:text-paper">About Us</a></li>
           <li><a href="/projects/" class="hover:text-paper">Projects</a></li>
-          <li><a href="/locations/" class="hover:text-paper">Locations</a></li>
+          <li><a href="/locations/pune/" class="hover:text-paper">Pune</a></li>
+          <li><a href="/locations/latur/" class="hover:text-paper">Latur</a></li>
           <li><a href="/resources/" class="hover:text-paper">Resources</a></li>
           <li><a href="/contact/" class="hover:text-paper">Contact</a></li>
         </ul>
-      </div>
+      </nav>
+
       <div>
-        <h5 class="font-mono text-[11px] tracking-wide uppercase text-paper mb-5">Get in Touch</h5>
+        <h2 class="font-mono text-[11px] tracking-wide uppercase text-paper mb-5">Get in Touch</h2>
         <ul class="flex flex-col gap-[11px] text-[13.5px]">
           <li>{SITE.address.streetAddress}, {SITE.address.addressLocality} {SITE.address.postalCode}</li>
           <li><a href={`tel:${SITE.phone}`} data-analytics-event="click_phone" class="hover:text-paper">{SITE.phoneDisplay}</a></li>
@@ -41,8 +46,11 @@ const year = new Date().getFullYear();
       </div>
     </div>
     <div class="pt-6 flex justify-between flex-wrap gap-3.5 font-mono text-[11px]">
-      <span>© {year} PBJ Infra. GST {SITE.gst}.</span>
-      <span>Privacy Policy · Terms of Service</span>
+      <span>© {year} PBJ Infra. All rights reserved.</span>
+      <span class="flex gap-4">
+        <a href="/privacy-policy/" class="hover:text-paper">Privacy Policy</a>
+        <a href="/terms/" class="hover:text-paper">Terms of Service</a>
+      </span>
     </div>
   </div>
 </footer>

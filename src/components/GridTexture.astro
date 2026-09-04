@@ -1,0 +1,44 @@
+---
+// Decorative technical line-grid background layer — the homepage's signature
+// section texture, extracted for reuse. Purely visual (aria-hidden). Use
+// `tone="dark"` on bg-ink sections (light lines), `tone="light"` on
+// bg-paper / bg-paper-dim sections (ink lines).
+interface Props {
+  tone?: 'dark' | 'light';
+  class?: string;
+}
+const { tone = 'light', class: extra = '' } = Astro.props;
+---
+<div class:list={['grid-texture', `grid-texture--${tone}`, extra]} aria-hidden="true"></div>
+
+<style>
+  .grid-texture {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-size: 80px 80px;
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 18%, black 82%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, black 18%, black 82%, transparent);
+  }
+
+  .grid-texture--light {
+    opacity: 0.045;
+    background-image:
+      linear-gradient(rgba(20, 23, 26, 0.5) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(20, 23, 26, 0.5) 1px, transparent 1px);
+  }
+
+  .grid-texture--dark {
+    opacity: 0.05;
+    background-image:
+      linear-gradient(rgba(246, 243, 236, 0.35) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(246, 243, 236, 0.35) 1px, transparent 1px);
+  }
+
+  @media (max-width: 640px) {
+    .grid-texture {
+      background-size: 55px 55px;
+    }
+  }
+</style>

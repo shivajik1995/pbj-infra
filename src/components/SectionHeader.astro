@@ -1,0 +1,43 @@
+---
+// The homepage's numbered section header: accent tick + "NN / Label" eyebrow,
+// then a clamp-scaled serif heading with an optional muted second clause,
+// then an optional intro paragraph.
+interface Props {
+  num?: string;
+  label: string;
+  title: string;
+  titleMuted?: string;
+  intro?: string;
+  tone?: 'ink' | 'paper';
+  as?: 'h1' | 'h2' | 'h3';
+  id: string;
+  class?: string;
+}
+const { num, label, title, titleMuted, intro, tone = 'paper', as = 'h2', id, class: extra = '' } = Astro.props;
+const Heading = as;
+const eyebrowColor = tone === 'ink' ? 'text-paper/45' : 'text-ink/45';
+const mutedColor = tone === 'ink' ? 'text-paper/35' : 'text-ink/35';
+const introColor = tone === 'ink' ? 'text-paper/55' : 'text-ink/55';
+---
+<div class:list={['section-header grid gap-8 md:grid-cols-[.6fr_1.9fr] md:items-end', extra]} data-reveal>
+  <div class="flex items-center gap-3">
+    <span class="h-px w-8 bg-accent"></span>
+    <span class:list={['font-mono text-[9px] uppercase tracking-[.2em]', eyebrowColor]}>
+      {num ? `${num} / ` : ''}{label}
+    </span>
+  </div>
+
+  <div>
+    <Heading
+      id={id}
+      class="max-w-[880px] font-serif text-[clamp(38px,5.4vw,78px)] leading-[.92] tracking-[-.04em]"
+    >
+      {title}{titleMuted && <>{' '}<span class={mutedColor}>{titleMuted}</span></>}
+    </Heading>
+    {intro && (
+      <p class:list={['mt-7 max-w-[620px] text-[14px] leading-[1.75] md:text-[15px]', introColor]}>
+        {intro}
+      </p>
+    )}
+  </div>
+</div>

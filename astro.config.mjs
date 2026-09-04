@@ -22,10 +22,9 @@ export default defineConfig({
   integrations: [
     tailwind({ applyBaseStyles: false }),
     sitemap({
-      // Coverage-only location "pages" are just anchors on /locations/, not
-      // real URLs, so there's nothing to exclude here yet. Keep this filter
-      // as the place to exclude any future noindex/thank-you routes.
-      filter: (page) => !page.includes('/thank-you'),
+      // Keep noindex / non-content routes out of the sitemap. The 404 route
+      // is prerendered by Astro but must never be submitted for indexing.
+      filter: (page) => !page.includes('/thank-you') && !page.endsWith('/404') && !page.endsWith('/404/'),
     }),
   ],
   image: {

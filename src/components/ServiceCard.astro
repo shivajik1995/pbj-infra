@@ -11,7 +11,7 @@ const Tag = href ? 'a' : 'div';
 ---
 <Tag href={href ?? undefined} class="group block glass-paper rounded-2xl overflow-hidden hover:border-accent/50 transition-colors">
   <div class="aspect-[4/3] overflow-hidden relative">
-    <img src={image.src} alt={image.alt} width={image.width} height={image.height} loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+    <img src={image.src} alt={image.alt} width={image.width} height={image.height} loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
     {!href && <span class="absolute top-3 right-3 glass-strong text-paper rounded-full font-mono text-[10px] tracking-wide uppercase px-3 py-1.5">Page in development</span>}
   </div>
   <div class="p-6">

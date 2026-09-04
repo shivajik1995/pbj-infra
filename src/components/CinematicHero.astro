@@ -1,274 +1,1400 @@
 ---
-// Cinematic hero — GSAP + ScrollTrigger, used on the homepage only.
+// PBJ Infra — Cinematic Hero
 //
-// SEO / no-JS contract (see docs/technical-seo-plan.md "Cinematic hero"):
-//   - H1, supporting copy, CTAs and the trust strip are plain HTML, always
-//     present in the DOM in reading order. Nothing is hidden by default
-//     CSS — an inline script marks the section `.js-ready` (synchronously,
-//     before paint) and ONLY THEN does a `prefers-reduced-motion:
-//     no-preference` media-gated rule hide anything, so: no JS → visible;
-//     JS present but reduced-motion → visible; JS present + motion OK →
-//     GSAP takes over and animates the reveal.
-//   - The GSAP script is wrapped in try/catch with a timeout safety net
-//     that force-clears every inline style GSAP may have set, so a runtime
-//     error can never leave real content permanently invisible (the same
-//     bug class already fixed once for RevealScript.astro).
-//   - Images are decorative (alt="") — the sequence images beyond the
-//     first are hidden via a plain, unconditional inline style (not JS-
-//     gated), so a no-JS visitor gets a real, complete, single-image
-//     cinematic hero rather than a stack of invisible photos.
+// Design:
+//   Architectural / cinematic / premium
 //
-// Real PBJ imagery only, reused from what's already linked elsewhere in
-// this codebase (see docs/website-audit.md) — nothing invented.
-const sequence = [
-  { src: 'https://pbjinfra.com/assets/images/resort.jpg', stage: 'Vision' },
-  { src: 'https://pbjinfra.com/assets/images/swimming-pool.jpg', stage: 'Architecture' },
-  { src: 'https://pbjinfra.com/assets/images/DOM.jpeg', stage: 'Engineering' },
-  { src: 'https://pbjinfra.com/assets/images/waterpark-construction-services.jpg', stage: 'Construction' },
-  { src: 'https://pbjinfra.com/assets/images/Featured-project1.jpeg', stage: 'Reality' },
-];
+// Technical:
+//   - Astro static HTML
+//   - GSAP only for enhancement
+//   - No ScrollTrigger
+//   - Native video playback
+//   - Poster fallback
+//   - Full HTML content available without JS
+//   - Reduced-motion support
+//   - Safe animation fallback
+
+const posterSrc = 'https://pbjinfra.com/assets/images/resort.jpg';
 ---
-<section class="hero-cinematic relative min-h-screen flex flex-col justify-end pt-[150px] bg-ink text-paper overflow-hidden" id="top">
+
+<section
+  class="hero-cinematic relative min-h-[100svh] overflow-hidden bg-ink text-paper"
+  id="top"
+  aria-labelledby="hero-title"
+>
+  <!-- =========================================================
+       JS READY CONTRACT
+  ========================================================== -->
+
   <script is:inline>
     (function (s) {
-      if (s && s.parentElement) s.parentElement.classList.add('js-ready');
+      if (s && s.parentElement) {
+        s.parentElement.classList.add('js-ready');
+      }
     })(document.currentScript);
   </script>
 
-  <!-- ============ VISUAL LAYER (decorative) ============ -->
-  <div class="hero-visual absolute inset-0" aria-hidden="true">
-    <div class="hero-img-stack absolute inset-0">
-      {sequence.map((img, i) => (
-        <img
-          src={img.src}
-          alt=""
-          data-stage={img.stage}
-          data-seq={i}
-          class="hero-seq-img absolute inset-0 w-full h-full object-cover grayscale-[.1]"
-          style={i === 0 ? undefined : 'opacity:0'}
-          fetchpriority={i === 0 ? 'high' : undefined}
-          loading={i === 0 ? undefined : 'lazy'}
-        />
-      ))}
+
+  <!-- =========================================================
+       CINEMATIC VISUAL LAYER
+  ========================================================== -->
+
+  <div
+    class="hero-visual absolute inset-0"
+    aria-hidden="true"
+  >
+
+    <!-- Video -->
+    <div class="hero-video-wrap absolute inset-[-3%]">
+
+      <video
+        class="hero-bg-video absolute inset-0 h-full w-full object-cover"
+        src="/videos/hero-bg.mp4"
+        poster={posterSrc}
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="auto"
+      ></video>
+
     </div>
 
-    <!-- architectural linework — reuses the site's own corner-cross motif -->
-    <svg class="hero-lines absolute inset-0 w-full h-full" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" focusable="false">
-      <line class="hl-datum" x1="80" y1="760" x2="1520" y2="760" stroke="currentColor" stroke-width="1" opacity="0.5" />
-      <path class="hl-sight-l" d="M80,780 L780,240" fill="none" stroke="currentColor" stroke-width="1" opacity="0.35" />
-      <path class="hl-sight-r" d="M1520,780 L820,240" fill="none" stroke="currentColor" stroke-width="1" opacity="0.35" />
-      <path class="hl-pool" d="M560,520 L1040,520 L1040,700 L560,700 Z" fill="none" stroke="currentColor" stroke-width="1.25" opacity="0.6" />
-      <path class="hl-tick" d="M560,520 L560,505 M560,520 L575,520" fill="none" stroke="currentColor" stroke-width="1.25" />
-      <path class="hl-tick" d="M1040,520 L1040,505 M1040,520 L1025,520" fill="none" stroke="currentColor" stroke-width="1.25" />
-      <path class="hl-tick" d="M560,700 L560,715 M560,700 L575,700" fill="none" stroke="currentColor" stroke-width="1.25" />
-      <path class="hl-tick" d="M1040,700 L1040,715 M1040,700 L1025,700" fill="none" stroke="currentColor" stroke-width="1.25" />
-      <path class="hl-dim" d="M560,745 L1040,745" fill="none" stroke="currentColor" stroke-width="1" opacity="0.5" />
+
+    <!-- Image / video grading -->
+
+    <div
+      class="absolute inset-0 bg-black/35"
+    ></div>
+
+    <div
+      class="absolute inset-0 bg-gradient-to-r from-black/75 via-black/30 to-black/5"
+    ></div>
+
+    <div
+      class="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-black/20"
+    ></div>
+
+
+    <!-- Accent atmospheric glow -->
+
+    <div
+      class="hero-atmosphere absolute inset-0"
+    ></div>
+
+  </div>
+
+
+  <!-- =========================================================
+       ARCHITECTURAL GRID
+  ========================================================== -->
+
+  <div
+    class="hero-grid absolute inset-0 z-[1]"
+    aria-hidden="true"
+  ></div>
+
+
+  <!-- =========================================================
+       BLUEPRINT DRAWING
+  ========================================================== -->
+
+  <div
+    class="hero-blueprint absolute inset-0 z-[2]"
+    aria-hidden="true"
+  >
+
+    <svg
+      class="absolute left-[5%] top-[14%] h-[72%] w-[90%]"
+      viewBox="0 0 1400 760"
+      fill="none"
+      preserveAspectRatio="none"
+    >
+
+      <!-- Primary geometry -->
+
+      <path
+        class="blueprint-path"
+        d="M70 610 L230 120 L690 55 L1230 170 L1300 600 L720 705 Z"
+      />
+
+      <path
+        class="blueprint-path"
+        d="M230 120 L720 705"
+      />
+
+      <path
+        class="blueprint-path"
+        d="M690 55 L720 705"
+      />
+
+      <path
+        class="blueprint-path"
+        d="M1230 170 L720 705"
+      />
+
+      <path
+        class="blueprint-path"
+        d="M70 610 L1300 600"
+      />
+
+
+      <!-- Secondary geometry -->
+
+      <path
+        class="blueprint-path blueprint-secondary"
+        d="M280 505 L345 220 L790 175 L1050 265 L1010 490 Z"
+      />
+
+      <path
+        class="blueprint-path blueprint-secondary"
+        d="M345 220 L1010 490"
+      />
+
+      <path
+        class="blueprint-path blueprint-secondary"
+        d="M790 175 L280 505"
+      />
+
+
+      <!-- Dimension line -->
+
+      <path
+        class="blueprint-path blueprint-dimension"
+        d="M230 92 H690"
+      />
+
+      <path
+        class="blueprint-path blueprint-dimension"
+        d="M215 82 V108"
+      />
+
+      <path
+        class="blueprint-path blueprint-dimension"
+        d="M705 82 V108"
+      />
+
+
+      <!-- Structural circles -->
+
+      <circle
+        class="blueprint-circle"
+        cx="720"
+        cy="375"
+        r="125"
+      />
+
+      <circle
+        class="blueprint-circle"
+        cx="720"
+        cy="375"
+        r="82"
+      />
+
     </svg>
 
-    <div class="absolute inset-0" style="background:linear-gradient(180deg,rgba(20,23,26,.35) 0%, rgba(20,23,26,.55) 55%, #14171A 96%)"></div>
   </div>
 
-  <!-- ============ CONTENT LAYER (real HTML, always present) ============ -->
-  <div class="hero-content relative z-[2] pb-[90px]">
-    <div class="wrap grid md:grid-cols-[1fr_auto] gap-10 items-end">
-      <div>
-        <span class="hero-fade inline-flex items-center gap-2.5 glass rounded-full pl-2 pr-4 py-2 mb-5 font-mono text-[11.5px] tracking-wide uppercase text-paper">
-          <span class="w-6 h-6 rounded-full bg-accent/30 border border-accent/50 flex items-center justify-center text-[11px]" aria-hidden="true">✓</span>
-          Licensed &amp; Insured — Pune · Latur · Maharashtra
-        </span>
-        <h1 class="text-[44px] md:text-[clamp(44px,7.2vw,108px)] leading-[.95] -tracking-[.02em] max-w-[14ch] mt-4">
-          <span class="mask-line"><span>Whatever you imagine,</span></span>
-          <span class="mask-line"><span>we build it.</span></span>
-        </h1>
-        <p class="hero-fade text-[17px] max-w-[38ch] text-paper/80 my-6 leading-relaxed">Luxury swimming pools, waterparks, resorts and farmhouses — designed, engineered and built by PBJ Infra since 2009.</p>
-        <div class="hero-fade flex gap-4 flex-wrap">
-          <a href="/contact/" class="btn btn-solid" data-analytics-event="click_start_project" data-analytics-params={JSON.stringify({ placement: 'hero' })}>Start Your Project →</a>
-          <a href="/projects/" class="btn btn-glass">Explore Our Work →</a>
+
+  <!-- =========================================================
+       TECHNICAL CORNER MARKS
+  ========================================================== -->
+
+  <div
+    class="hero-corner hero-corner-tl"
+    aria-hidden="true"
+  ></div>
+
+  <div
+    class="hero-corner hero-corner-br"
+    aria-hidden="true"
+  ></div>
+
+
+  <!-- =========================================================
+       TOP INFORMATION
+  ========================================================== -->
+
+  <div class="absolute inset-x-0 top-0 z-[5]">
+
+    <div
+      class="wrap flex items-start justify-between pt-28 md:pt-32"
+    >
+
+      <div class="hero-meta">
+
+        <div class="font-mono text-[9px] uppercase tracking-[.22em] text-paper/55">
+          PBJ INFRA
         </div>
+
+        <div class="mt-2 font-mono text-[9px] uppercase tracking-[.16em] text-paper/35">
+          Pune · Maharashtra
+        </div>
+
       </div>
-      <div class="hero-fade font-mono text-xs text-left md:text-right text-paper/55 leading-[1.8] mt-5 md:mt-0">
-        N 18.4702° E 73.9758°<br />
-        Phursungi, Pune — HQ<br />
-        Est. 2009
+
+
+      <div class="hero-meta text-right">
+
+        <div class="font-mono text-[9px] uppercase tracking-[.2em] text-paper/50">
+          Design · Engineering · Build
+        </div>
+
+        <div class="mt-2 font-mono text-[9px] uppercase tracking-[.16em] text-paper/30">
+          Since 2009
+        </div>
+
       </div>
+
     </div>
+
   </div>
 
-  <div class="hero-fade scroll-cue absolute right-8 bottom-[26px] z-[2] font-mono text-[10.5px] text-paper/55 [writing-mode:vertical-rl] hidden md:flex items-center gap-2.5 tracking-wide" aria-hidden="true">SCROLL</div>
+
+  <!-- =========================================================
+       MAIN CONTENT
+  ========================================================== -->
+
+  <div
+    class="wrap relative z-[5] flex min-h-[100svh] items-end pb-16 pt-40 md:pb-20"
+  >
+
+    <div class="hero-content w-full max-w-[1180px]">
+
+
+      <!-- Eyebrow -->
+
+      <div
+        class="hero-eyebrow mb-6 flex items-center gap-3"
+      >
+
+        <span
+          class="h-px w-9 bg-accent"
+        ></span>
+
+        <span
+          class="font-mono text-[9px] uppercase tracking-[.2em] text-paper/65"
+        >
+          Built for the way you imagine it
+        </span>
+
+      </div>
+
+
+      <!-- =====================================================
+           H1
+      ====================================================== -->
+
+      <h1
+        id="hero-title"
+        class="hero-title max-w-[1100px] font-serif text-[clamp(48px,7.8vw,108px)] leading-[.86] tracking-[-.045em]"
+      >
+
+        <span class="mask-line block overflow-hidden">
+
+          <span class="hero-title-line block">
+            Whatever you imagine,
+          </span>
+
+        </span>
+
+
+        <span class="mask-line block overflow-hidden">
+
+          <span class="hero-title-line block text-paper/90">
+            <span class="text-accent">we build it.</span>
+          </span>
+
+        </span>
+
+      </h1>
+
+
+      <!-- =====================================================
+           LOWER CONTENT
+      ====================================================== -->
+
+      <div
+        class="hero-lower mt-8 flex flex-col gap-7 md:mt-10 md:flex-row md:items-end md:justify-between"
+      >
+
+
+        <!-- Description -->
+
+        <div class="max-w-[530px]">
+
+          <p
+            class="hero-description text-[14px] leading-[1.75] text-paper/65 md:text-[15px]"
+          >
+            Swimming pools, waterparks, resorts, farmhouses and specialised
+            structures — designed, engineered and built by PBJ Infra, a
+            Pune-based construction company operating since 2009.
+          </p>
+
+
+          <!-- Capability micro-strip -->
+
+          <div
+            class="hero-capabilities mt-5 flex flex-wrap gap-x-5 gap-y-2"
+          >
+
+            <span>POOLS</span>
+            <span>WATERPARKS</span>
+            <span>RESORTS</span>
+            <span>SPECIALIZED STRUCTURES</span>
+
+          </div>
+
+        </div>
+
+
+        <!-- ===================================================
+             ACTIONS
+        ==================================================== -->
+
+        <div
+          class="hero-actions flex flex-wrap gap-3"
+        >
+
+          <a
+            href="/projects/"
+            class="btn btn-solid hero-button"
+            data-analytics-event="click_explore_work"
+            data-analytics-params={JSON.stringify({ placement: 'hero' })}
+          >
+            Explore Our Work
+            <span aria-hidden="true">→</span>
+          </a>
+
+
+          <a
+            href="/contact/"
+            class="btn btn-glass hero-button"
+            data-analytics-event="click_start_project"
+            data-analytics-params={JSON.stringify({ placement: 'hero' })}
+          >
+            Start a Project
+            <span aria-hidden="true">↗</span>
+          </a>
+
+        </div>
+
+      </div>
+
+
+      <!-- =====================================================
+           TRUST STRIP
+      ====================================================== -->
+
+      <div
+        class="hero-trust mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 border-t border-paper/[.16] pt-5"
+      >
+
+        <div class="flex items-center gap-2">
+
+          <span class="h-1.5 w-1.5 rounded-full bg-accent"></span>
+
+          <span class="font-mono text-[9px] uppercase tracking-[.15em] text-paper/50">
+            Operating since 2009
+          </span>
+
+        </div>
+
+
+        <div class="h-3 w-px bg-paper/15 hidden sm:block"></div>
+
+
+        <div>
+
+          <span class="font-mono text-[9px] uppercase tracking-[.15em] text-paper/50">
+            Pune → India
+          </span>
+
+        </div>
+
+
+        <div class="h-3 w-px bg-paper/15 hidden sm:block"></div>
+
+
+        <div>
+
+          <span class="font-mono text-[9px] uppercase tracking-[.15em] text-paper/50">
+            Founder-led
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================================
+       SCROLL INDICATOR
+  ========================================================== -->
+
+  <div
+    class="hero-scroll absolute bottom-7 right-7 z-[5] hidden md:flex"
+    aria-hidden="true"
+  >
+
+    <div class="flex items-center gap-3">
+
+      <span class="font-mono text-[8px] uppercase tracking-[.2em] text-paper/35">
+        Scroll
+      </span>
+
+      <span class="hero-scroll-line block h-12 w-px bg-paper/25"></span>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================================
+       NO JS FALLBACK
+  ========================================================== -->
+
+  <noscript>
+
+    <div class="absolute bottom-5 left-5 z-[10]">
+
+      <span class="font-mono text-[9px] text-paper/50">
+        PBJ INFRA · DESIGN / ENGINEERING / BUILD
+      </span>
+
+    </div>
+
+  </noscript>
+
 </section>
 
+
 <style>
-  /* Sequence images beyond the first: hidden unconditionally (not JS-gated)
-     — a no-JS visitor gets one complete, real, full-bleed image, not a
-     stack of blank layers. This is a static design choice, not an
-     animation, so it doesn't need the .js-ready guard below. */
 
-  .mask-line { display: block; overflow: hidden; }
+  /* ==========================================================
+     BASE
+  ========================================================== */
 
-  /* Nothing is hidden until we know JS ran (.js-ready, set synchronously
-     pre-paint by the inline script above) AND the visitor hasn't asked
-     for reduced motion. Either condition failing = fully visible, static
-     hero, per the SEO/no-JS contract in the frontmatter comment. */
+  .hero-cinematic {
+    isolation: isolate;
+  }
+
+
+  /* ==========================================================
+     VIDEO
+  ========================================================== */
+
+  .hero-video-wrap {
+    will-change: transform;
+  }
+
+  .hero-bg-video {
+    transform: scale(1.06);
+    filter:
+      saturate(.78)
+      contrast(1.05)
+      brightness(.88);
+
+    will-change: transform;
+  }
+
+
+  /* ==========================================================
+     ATMOSPHERE
+  ========================================================== */
+
+  .hero-atmosphere {
+    background:
+      radial-gradient(
+        circle at 72% 42%,
+        rgba(30,110,100,.20),
+        transparent 32%
+      ),
+      radial-gradient(
+        circle at 15% 85%,
+        rgba(255,255,255,.04),
+        transparent 28%
+      );
+  }
+
+
+  /* ==========================================================
+     GRID
+  ========================================================== */
+
+  .hero-grid {
+
+    opacity: .07;
+
+    background-image:
+      linear-gradient(
+        rgba(246,243,236,.28) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        rgba(246,243,236,.28) 1px,
+        transparent 1px
+      );
+
+    background-size:
+      80px 80px;
+
+    mask-image:
+      linear-gradient(
+        to bottom,
+        black 0%,
+        rgba(0,0,0,.65) 55%,
+        transparent 100%
+      );
+  }
+
+
+  /* ==========================================================
+     BLUEPRINT
+  ========================================================== */
+
+  .hero-blueprint {
+    opacity: .65;
+    pointer-events: none;
+  }
+
+  .blueprint-path,
+  .blueprint-circle {
+
+    vector-effect: non-scaling-stroke;
+
+    stroke:
+      rgba(246,243,236,.28);
+
+    stroke-width: 1;
+
+    fill: none;
+  }
+
+  .blueprint-secondary {
+
+    stroke:
+      rgba(30,110,100,.65);
+  }
+
+  .blueprint-dimension {
+
+    stroke:
+      rgba(246,243,236,.20);
+
+    stroke-dasharray:
+      4 8;
+  }
+
+
+  /* ==========================================================
+     CORNER MARKS
+  ========================================================== */
+
+  .hero-corner {
+
+    position: absolute;
+
+    width: 45px;
+    height: 45px;
+
+    z-index: 3;
+
+    opacity: .45;
+  }
+
+  .hero-corner::before,
+  .hero-corner::after {
+
+    content: '';
+
+    position: absolute;
+
+    background:
+      rgba(246,243,236,.28);
+  }
+
+  .hero-corner::before {
+
+    width: 45px;
+    height: 1px;
+  }
+
+  .hero-corner::after {
+
+    width: 1px;
+    height: 45px;
+  }
+
+  .hero-corner-tl {
+
+    top: 130px;
+    left: 28px;
+  }
+
+  .hero-corner-br {
+
+    right: 28px;
+    bottom: 28px;
+    transform: rotate(180deg);
+  }
+
+
+  /* ==========================================================
+     TEXT
+  ========================================================== */
+
+  .mask-line {
+    display: block;
+    overflow: hidden;
+  }
+
+  .hero-title-line {
+
+    will-change:
+      transform;
+  }
+
+  .hero-capabilities {
+
+    font-family:
+      ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      monospace;
+
+    font-size: 8px;
+
+    letter-spacing:
+      .15em;
+
+    color:
+      rgba(246,243,236,.35);
+  }
+
+  .hero-capabilities span {
+
+    position: relative;
+  }
+
+  .hero-capabilities span:not(:last-child)::after {
+
+    content: '·';
+
+    position: absolute;
+
+    right: -13px;
+
+    color:
+      rgba(246,243,236,.20);
+  }
+
+
+  /* ==========================================================
+     INITIAL MOTION STATE
+  ========================================================== */
+
   @media (prefers-reduced-motion: no-preference) {
-    .hero-cinematic.js-ready .mask-line > span {
-      display: block;
-      transform: translateY(110%);
+
+    .hero-cinematic.js-ready
+      .hero-title-line {
+
+      transform:
+        translateY(115%);
     }
-    .hero-cinematic.js-ready .hero-fade {
+
+    .hero-cinematic.js-ready
+      .hero-eyebrow,
+    .hero-cinematic.js-ready
+      .hero-description,
+    .hero-cinematic.js-ready
+      .hero-capabilities,
+    .hero-cinematic.js-ready
+      .hero-actions,
+    .hero-cinematic.js-ready
+      .hero-trust,
+    .hero-cinematic.js-ready
+      .hero-meta,
+    .hero-cinematic.js-ready
+      .hero-scroll {
+
       opacity: 0;
-      transform: translateY(16px);
     }
+
   }
 
-  .hero-lines {
-    color: theme('colors.accent-lt');
-    opacity: 0;
+
+  /* ==========================================================
+     BUTTON
+  ========================================================== */
+
+  .hero-button {
+
+    transition:
+      transform .45s cubic-bezier(.2,.7,.2,1),
+      background-color .3s ease,
+      color .3s ease;
   }
+
+  .hero-button:hover {
+
+    transform:
+      translateY(-3px);
+  }
+
+
+  /* ==========================================================
+     SCROLL
+  ========================================================== */
+
+  .hero-scroll-line {
+
+    transform-origin:
+      top;
+
+    animation:
+      heroScroll 2s ease-in-out infinite;
+  }
+
+  @keyframes heroScroll {
+
+    0%,
+    100% {
+      transform:
+        scaleY(.45);
+      opacity: .3;
+    }
+
+    50% {
+      transform:
+        scaleY(1);
+      opacity: .8;
+    }
+
+  }
+
+
+  /* ==========================================================
+     MOBILE
+  ========================================================== */
+
+  @media (max-width: 640px) {
+
+    .hero-grid {
+
+      background-size:
+        55px 55px;
+    }
+
+    .hero-blueprint {
+
+      opacity: .38;
+    }
+
+    .hero-bg-video {
+
+      object-position:
+        62% center;
+    }
+
+    .hero-corner {
+
+      display: none;
+    }
+
+    .hero-capabilities {
+
+      max-width: 340px;
+    }
+
+  }
+
+
+  /* ==========================================================
+     REDUCED MOTION
+  ========================================================== */
+
+  @media (prefers-reduced-motion: reduce) {
+
+    .hero-title-line,
+    .hero-bg-video {
+
+      transform: none !important;
+    }
+
+    .hero-eyebrow,
+    .hero-description,
+    .hero-capabilities,
+    .hero-actions,
+    .hero-trust,
+    .hero-meta,
+    .hero-scroll {
+
+      opacity: 1 !important;
+    }
+
+    .hero-scroll-line {
+
+      animation: none !important;
+    }
+
+  }
+
 </style>
 
-<script>
-  import { gsap } from 'gsap';
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-  const hero = document.querySelector<HTMLElement>('.hero-cinematic');
-  if (!hero) {
-    // nothing to animate — the static markup already stands on its own
-  } else {
+<script>
+
+  import { gsap } from 'gsap';
+
+
+  const hero =
+    document.querySelector<HTMLElement>(
+      '.hero-cinematic'
+    );
+
+
+  if (hero) {
+
+    /*
+     * ========================================================
+     * SAFETY FALLBACK
+     * ========================================================
+     */
+
     const clearEverything = () => {
+
       try {
-        ScrollTrigger.getAll().forEach((t) => t.kill());
-        gsap.set(hero.querySelectorAll('.mask-line > span, .hero-fade, .hero-seq-img, .hero-lines, .hero-img-stack'), {
-          clearProps: 'all',
-        });
+
+        gsap.set(
+          hero.querySelectorAll(
+            '.hero-title-line, .hero-eyebrow, .hero-description, .hero-capabilities, .hero-actions, .hero-trust, .hero-meta, .hero-scroll'
+          ),
+          {
+            clearProps:
+              'all'
+          }
+        );
+
       } catch {
-        // last resort: drop the class that gates the hidden CSS state so
-        // everything falls back to plain, visible HTML/CSS regardless.
-        hero.classList.remove('js-ready');
+
+        hero.classList.remove(
+          'js-ready'
+        );
+
       }
+
     };
 
-    // Absolute safety net: if anything below hangs or throws without being
-    // caught, real content must not stay invisible forever.
-    const safetyTimer = window.setTimeout(clearEverything, 4000);
+
+    const safetyTimer =
+      window.setTimeout(
+        clearEverything,
+        4000
+      );
+
 
     try {
-      gsap.registerPlugin(ScrollTrigger);
 
-      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const isDesktop = window.matchMedia('(min-width: 900px)').matches;
-      const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      const reduceMotion =
+        window.matchMedia(
+          '(prefers-reduced-motion: reduce)'
+        ).matches;
 
-      const images = Array.from(hero.querySelectorAll<HTMLImageElement>('.hero-seq-img'));
-      const lines = hero.querySelector<SVGElement>('.hero-lines');
-      const linePaths = lines ? Array.from(lines.querySelectorAll<SVGGeometryElement>('path, line')) : [];
-      const maskLines = Array.from(hero.querySelectorAll<HTMLElement>('.mask-line > span'));
-      const fadeEls = Array.from(hero.querySelectorAll<HTMLElement>('.hero-fade'));
-      const visualStack = hero.querySelector<HTMLElement>('.hero-img-stack');
 
-      // Headline/copy/CTA/trust reveal on LOAD, independent of scroll — a
-      // visitor who never scrolls still gets the full above-fold pitch
-      // within ~1.5s. The scroll-driven sequence below is a separate,
-      // purely decorative background layer that never gates this content.
-      if (!reduceMotion) {
-        gsap.timeline({ delay: 0.15, defaults: { ease: 'power3.out' } })
-          .to(maskLines, { y: 0, duration: 0.9, stagger: 0.1 }, 0)
-          .to(fadeEls, { opacity: 1, y: 0, duration: 0.7, stagger: 0.07 }, 0.2);
-      }
+      const isDesktop =
+        window.matchMedia(
+          '(min-width: 900px)'
+        ).matches;
+
+
+      const canHover =
+        window.matchMedia(
+          '(hover: hover) and (pointer: fine)'
+        ).matches;
+
+
+      const video =
+        hero.querySelector<HTMLVideoElement>(
+          '.hero-bg-video'
+        );
+
+
+      const videoWrap =
+        hero.querySelector<HTMLElement>(
+          '.hero-video-wrap'
+        );
+
+
+      const blueprint =
+        hero.querySelector<HTMLElement>(
+          '.hero-blueprint'
+        );
+
+
+      const blueprintPaths =
+        Array.from(
+          hero.querySelectorAll<SVGGeometryElement>(
+            '.blueprint-path, .blueprint-circle'
+          )
+        );
+
+
+      const titleLines =
+        Array.from(
+          hero.querySelectorAll<HTMLElement>(
+            '.hero-title-line'
+          )
+        );
+
+
+      const eyebrow =
+        hero.querySelector<HTMLElement>(
+          '.hero-eyebrow'
+        );
+
+
+      const description =
+        hero.querySelector<HTMLElement>(
+          '.hero-description'
+        );
+
+
+      const capabilities =
+        hero.querySelector<HTMLElement>(
+          '.hero-capabilities'
+        );
+
+
+      const actions =
+        hero.querySelector<HTMLElement>(
+          '.hero-actions'
+        );
+
+
+      const trust =
+        hero.querySelector<HTMLElement>(
+          '.hero-trust'
+        );
+
+
+      const meta =
+        Array.from(
+          hero.querySelectorAll<HTMLElement>(
+            '.hero-meta'
+          )
+        );
+
+
+      const scroll =
+        hero.querySelector<HTMLElement>(
+          '.hero-scroll'
+        );
+
+
+      /* ======================================================
+         REDUCED MOTION
+      ====================================================== */
 
       if (reduceMotion) {
-        // Beautiful, complete, fully static hero — the finished project
-        // photo rather than the establishing shot, everything else as
-        // authored in HTML (no opacity/translate applied, see the media
-        // guard in <style> above which already excludes this state).
-        gsap.set(images[images.length - 1], { opacity: 1 });
-        images.slice(0, -1).forEach((img) => gsap.set(img, { opacity: 0 }));
-        window.clearTimeout(safetyTimer);
+
+        video?.pause();
+
+        window.clearTimeout(
+          safetyTimer
+        );
+
       } else {
-        // Precompute stroke lengths for the "drawing" line effect.
-        const lineLengths = linePaths.map((p) => {
-          try {
-            return p.getTotalLength();
-          } catch {
-            return 0;
+
+        /* ====================================================
+           BLUEPRINT DRAWING
+        ==================================================== */
+
+        blueprintPaths.forEach(
+          (path) => {
+
+            let length = 1200;
+
+            try {
+
+              if (
+                typeof path.getTotalLength ===
+                'function'
+              ) {
+
+                length =
+                  path.getTotalLength();
+
+              }
+
+            } catch {}
+
+            gsap.set(
+              path,
+              {
+                strokeDasharray:
+                  length,
+                strokeDashoffset:
+                  length,
+                opacity:
+                  0
+              }
+            );
+
           }
-        });
-        linePaths.forEach((p, i) => {
-          const len = lineLengths[i];
-          if (len) gsap.set(p, { strokeDasharray: len, strokeDashoffset: len });
-        });
+        );
 
-        const activeImages = isDesktop ? images : [images[0], images[2], images[4]].filter(Boolean);
-        gsap.set(activeImages, { scale: 1.06 });
 
-        const buildSequenceTl = () => {
-          const tl = gsap.timeline({ defaults: { ease: 'power2.inOut' } });
+        /* ====================================================
+           INTRO TIMELINE
+        ==================================================== */
 
-          tl.to(lines, { opacity: 1, duration: 0.6 }, 0);
-          linePaths.forEach((p, i) => {
-            if (!lineLengths[i]) return;
-            tl.to(p, { strokeDashoffset: 0, duration: 1.4 }, 0.15 + i * 0.12);
+        const intro =
+          gsap.timeline({
+            delay:
+              .12,
+
+            defaults: {
+              ease:
+                'power3.out'
+            }
           });
 
-          activeImages.forEach((img, i) => {
-            if (i === 0) return;
-            const at = isDesktop ? [2, 4, 6, 7.5][i - 1] : [3.2, 6.4][i - 1];
-            tl.to(activeImages[i - 1], { opacity: 0, scale: 1.0, duration: 1.2 }, at);
-            tl.fromTo(img, { opacity: 0, scale: 1.06 }, { opacity: 1, scale: 1.0, duration: 1.2 }, at);
-          });
 
-          const settle = isDesktop ? 8.2 : 6.6;
-          tl.to(lines, { opacity: 0, duration: 0.8 }, settle - 0.6);
+        intro
 
-          return tl;
-        };
+          /* Metadata */
 
-        if (isDesktop) {
-          const tl = buildSequenceTl();
-          ScrollTrigger.create({
-            trigger: hero,
-            start: 'top top',
-            end: '+=180%',
-            pin: true,
-            scrub: 0.6,
-            animation: tl,
-          });
-        } else {
-          // Lighter mobile path: no pin (avoids known mobile viewport/pin
-          // jank), plays once as an entrance sequence, then releases
-          // straight into normal scrolling — no added scroll distance.
-          buildSequenceTl().play();
+          .to(
+            meta,
+            {
+              opacity:
+                1,
+              y:
+                0,
+              duration:
+                .65,
+              stagger:
+                .08
+            }
+          )
+
+
+          /* Blueprint */
+
+          .to(
+            blueprintPaths,
+            {
+              opacity:
+                1,
+
+              strokeDashoffset:
+                0,
+
+              duration:
+                1.7,
+
+              stagger:
+                .025,
+
+              ease:
+                'power2.inOut'
+            },
+            '-=.35'
+          )
+
+
+          /* Video camera */
+
+          .to(
+            video,
+            {
+              scale:
+                1,
+
+              duration:
+                2.1,
+
+              ease:
+                'power2.out'
+            },
+            '-=1.25'
+          )
+
+
+          /* H1 */
+
+          .to(
+            titleLines,
+            {
+              y:
+                0,
+
+              duration:
+                1.0,
+
+              stagger:
+                .12,
+
+              ease:
+                'power4.out'
+            },
+            '-=1.05'
+          )
+
+
+          /* Eyebrow */
+
+          .to(
+            eyebrow,
+            {
+              opacity:
+                1,
+
+              y:
+                0,
+
+              duration:
+                .55
+            },
+            '-=.55'
+          )
+
+
+          /* Description */
+
+          .to(
+            description,
+            {
+              opacity:
+                1,
+
+              y:
+                0,
+
+              duration:
+                .6
+            },
+            '-=.35'
+          )
+
+
+          /* Capabilities */
+
+          .to(
+            capabilities,
+            {
+              opacity:
+                1,
+
+              y:
+                0,
+
+              duration:
+                .5
+            },
+            '-=.35'
+          )
+
+
+          /* Actions */
+
+          .to(
+            actions,
+            {
+              opacity:
+                1,
+
+              y:
+                0,
+
+              duration:
+                .6
+            },
+            '-=.35'
+          )
+
+
+          /* Trust */
+
+          .to(
+            trust,
+            {
+              opacity:
+                1,
+
+              y:
+                0,
+
+              duration:
+                .55
+            },
+            '-=.3'
+          )
+
+
+          /* Scroll */
+
+          .to(
+            scroll,
+            {
+              opacity:
+                1,
+
+              duration:
+                .45
+            },
+            '-=.2'
+          );
+
+
+        /* ====================================================
+           MOUSE DEPTH
+        ==================================================== */
+
+        if (
+          canHover &&
+          isDesktop &&
+          videoWrap &&
+          blueprint
+        ) {
+
+          const moveX =
+            gsap.quickTo(
+              videoWrap,
+              'x',
+              {
+                duration:
+                  .7,
+                ease:
+                  'power3.out'
+              }
+            );
+
+
+          const moveY =
+            gsap.quickTo(
+              videoWrap,
+              'y',
+              {
+                duration:
+                  .7,
+                ease:
+                  'power3.out'
+              }
+            );
+
+
+          const drawX =
+            gsap.quickTo(
+              blueprint,
+              'x',
+              {
+                duration:
+                  1,
+                ease:
+                  'power3.out'
+              }
+            );
+
+
+          const drawY =
+            gsap.quickTo(
+              blueprint,
+              'y',
+              {
+                duration:
+                  1,
+                ease:
+                  'power3.out'
+              }
+            );
+
+
+          hero.addEventListener(
+            'mousemove',
+            (event) => {
+
+              const rect =
+                hero.getBoundingClientRect();
+
+
+              const px =
+                (event.clientX -
+                  rect.left) /
+                  rect.width -
+                .5;
+
+
+              const py =
+                (event.clientY -
+                  rect.top) /
+                  rect.height -
+                .5;
+
+
+              moveX(
+                px * 12
+              );
+
+              moveY(
+                py * 8
+              );
+
+
+              drawX(
+                px * -7
+              );
+
+              drawY(
+                py * -5
+              );
+
+            }
+          );
+
+
+          hero.addEventListener(
+            'mouseleave',
+            () => {
+
+              moveX(0);
+              moveY(0);
+
+              drawX(0);
+              drawY(0);
+
+            }
+          );
+
         }
 
-        if (canHover && isDesktop && visualStack) {
-          // Two depth planes: the image stack drifts a little (background),
-          // the linework drifts a little more (foreground) — a slight
-          // camera-shift feel, kept small enough to stay subtle.
-          const imgX = gsap.quickTo(visualStack, 'x', { duration: 0.6, ease: 'power3.out' });
-          const imgY = gsap.quickTo(visualStack, 'y', { duration: 0.6, ease: 'power3.out' });
-          const lineX = lines ? gsap.quickTo(lines, 'x', { duration: 0.5, ease: 'power3.out' }) : null;
-          const lineY = lines ? gsap.quickTo(lines, 'y', { duration: 0.5, ease: 'power3.out' }) : null;
-          hero.addEventListener('mousemove', (e) => {
-            const r = hero.getBoundingClientRect();
-            const px = (e.clientX - r.left) / r.width - 0.5;
-            const py = (e.clientY - r.top) / r.height - 0.5;
-            imgX(px * 14);
-            imgY(py * 10);
-            lineX?.(px * 26);
-            lineY?.(py * 18);
-          });
-          hero.addEventListener('mouseleave', () => {
-            imgX(0);
-            imgY(0);
-            lineX?.(0);
-            lineY?.(0);
-          });
-        }
 
-        window.clearTimeout(safetyTimer);
+        window.clearTimeout(
+          safetyTimer
+        );
+
       }
+
     } catch (err) {
-      console.warn('[CinematicHero] animation setup failed, falling back to static hero.', err);
+
+      console.warn(
+        '[CinematicHero] animation setup failed. Falling back to static hero.',
+        err
+      );
+
+      window.clearTimeout(
+        safetyTimer
+      );
+
       clearEverything();
+
     }
+
   }
+
 </script>

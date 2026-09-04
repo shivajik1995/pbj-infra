@@ -12,7 +12,7 @@ const Tag = href ? 'a' : 'div';
 <Tag href={href ?? undefined} class="group block relative overflow-hidden text-paper">
   <div class="spec-frame aspect-[4/5]">
     <span class="cA"></span><span class="cB"></span>
-    <img src={image.src} alt={image.alt} width={image.width} height={image.height} loading="lazy" class="w-full h-full object-cover brightness-[.72] group-hover:scale-105 transition-transform duration-700" />
+    <img src={image.src} alt={image.alt} width={image.width} height={image.height} loading="lazy" decoding="async" class="w-full h-full object-cover brightness-[.72] group-hover:scale-105 transition-transform duration-700" />
     <div class="absolute top-[18px] left-[18px] right-[18px] z-[2] flex flex-col items-end gap-2">
       {!href && <span class="glass-strong rounded-full font-mono text-[10px] tracking-wide uppercase px-3 py-1.5 w-fit">Case study in development</span>}
       <span class="glass rounded-full font-mono text-[10px] tracking-wide uppercase px-3 py-1.5 w-fit">{projectType}</span>

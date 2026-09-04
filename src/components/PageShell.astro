@@ -1,0 +1,39 @@
+---
+// Full-bleed content section in the homepage rhythm: py-24/36, one of three
+// tones, optional technical grid texture. Wraps its slot in `.wrap`.
+import GridTexture from './GridTexture.astro';
+
+interface Props {
+  tone?: 'ink' | 'paper' | 'paper-dim';
+  id?: string;
+  labelledby?: string;
+  grid?: boolean;
+  class?: string;
+  wrapClass?: string;
+}
+const { tone = 'paper', id, labelledby, grid = true, class: extra = '', wrapClass = '' } = Astro.props;
+
+const toneClass = {
+  ink: 'bg-ink text-paper',
+  paper: 'bg-paper text-ink',
+  'paper-dim': 'bg-paper-dim text-ink',
+}[tone];
+
+const gridTone = tone === 'ink' ? 'dark' : 'light';
+---
+<section
+  id={id}
+  aria-labelledby={labelledby}
+  class:list={['page-shell relative overflow-hidden py-24 md:py-36', toneClass, extra]}
+>
+  {grid && <GridTexture tone={gridTone} />}
+  <div class:list={['wrap relative z-[2]', wrapClass]}>
+    <slot />
+  </div>
+</section>
+
+<style>
+  .page-shell {
+    isolation: isolate;
+  }
+</style>

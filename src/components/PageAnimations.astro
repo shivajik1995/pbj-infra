@@ -1,0 +1,115 @@
+---
+// Shared scroll-animation driver for every route (included once in
+// BaseLayout). GSAP + ScrollTrigger are dynamically imported AFTER `load`
+// and only when motion is allowed, so they never touch first paint / LCP.
+//
+// The hero headline's pre-animation state is CSS-gated on `.page-hero.js-ready`
+// (set by an inline script in PageHero.astro) + `prefers-reduced-motion:
+// no-preference`; everything else animates from a runtime `opacity:0` set by
+// GSAP itself, so nothing is ever hidden before the script runs. A timeout +
+// try/catch guarantee a fully visible page if anything fails.
+//
+// Hooks: [data-reveal], [data-reveal-stagger] > *, [data-hero] .hero-title-line,
+// [data-parallax], and the legacy .reveal class.
+//
+// Homepage-specific section scripts in index.astro / CinematicHero.astro are
+// untouched — this script never selects their classes.
+---
+<script>
+  const legacyReveal = () => document.querySelectorAll('.reveal').forEach((el) => el.classList.add('in'));
+
+  const clearHero = () => {
+    document.querySelectorAll<HTMLElement>('.page-hero').forEach((h) => {
+      h.classList.remove('js-ready');
+      h.querySelectorAll<HTMLElement>('.hero-title-line, .page-hero-lead, .page-hero-actions').forEach((el) => {
+        el.style.removeProperty('opacity');
+        el.style.removeProperty('transform');
+      });
+    });
+  };
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (reduceMotion) {
+    legacyReveal();
+    clearHero();
+  } else {
+    const safety = window.setTimeout(() => {
+      clearHero();
+      legacyReveal();
+    }, 4200);
+
+    const run = () => {
+      Promise.all([import('gsap'), import('gsap/ScrollTrigger')])
+        .then(([{ gsap }, { ScrollTrigger }]) => {
+          gsap.registerPlugin(ScrollTrigger);
+
+          // Hero headline line-mask reveal + lead/actions fade (on load)
+          const heroLines = document.querySelectorAll<HTMLElement>('[data-hero] .hero-title-line');
+          if (heroLines.length) {
+            gsap.to(heroLines, { yPercent: 0, duration: 1, stagger: 0.1, ease: 'power4.out', delay: 0.08 });
+            gsap.to(
+              document.querySelectorAll<HTMLElement>('[data-hero] .page-hero-lead, [data-hero] .page-hero-actions'),
+              { opacity: 1, duration: 0.6, stagger: 0.12, ease: 'power3.out', delay: 0.5 },
+            );
+          }
+
+          // Anything already in view when the script runs is left as-is —
+          // only elements below the fold get the reveal animation, so there
+          // is never a flash of content disappearing then fading back in.
+          const belowFold = (el: HTMLElement) => el.getBoundingClientRect().top > window.innerHeight * 0.9;
+
+          // Generic reveal-on-scroll
+          document.querySelectorAll<HTMLElement>('[data-reveal]').forEach((el) => {
+            if (!belowFold(el)) return;
+            gsap.fromTo(
+              el,
+              { opacity: 0, y: 34 },
+              { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 86%', once: true } },
+            );
+          });
+
+          // Staggered children
+          document.querySelectorAll<HTMLElement>('[data-reveal-stagger]').forEach((group) => {
+            if (!belowFold(group)) return;
+            gsap.fromTo(
+              Array.from(group.children),
+              { opacity: 0, y: 26 },
+              { opacity: 1, y: 0, duration: 0.6, stagger: 0.07, ease: 'power2.out', scrollTrigger: { trigger: group, start: 'top 84%', once: true } },
+            );
+          });
+
+          // Subtle parallax
+          document.querySelectorAll<HTMLElement>('[data-parallax]').forEach((el) => {
+            gsap.fromTo(
+              el,
+              { y: -22 },
+              { y: 22, ease: 'none', scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: 1 } },
+            );
+          });
+
+          legacyReveal();
+          ScrollTrigger.refresh();
+          window.clearTimeout(safety);
+        })
+        .catch((err) => {
+          console.warn('[PageAnimations] GSAP failed to load; showing static page.', err);
+          window.clearTimeout(safety);
+          clearHero();
+          legacyReveal();
+        });
+    };
+
+    if (document.readyState === 'complete') {
+      run();
+    } else {
+      window.addEventListener('load', () => {
+        if ('requestIdleCallback' in window) {
+          (window as any).requestIdleCallback(run, { timeout: 1200 });
+        } else {
+          window.setTimeout(run, 200);
+        }
+      });
+    }
+  }
+</script>

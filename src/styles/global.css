@@ -206,3 +206,29 @@
     background: rgba(246, 243, 236, 0.2);
   }
 }
+
+@layer components {
+  /* Blueprint-art background, applied explicitly per section (not via a
+     body-wide/global override) so each page controls exactly which of its
+     light sections carry it. `.bg-blueprint` is the plain-paper variant;
+     `.bg-blueprint-dim` layers the same image under the paper-dim tint so
+     dimmed sections keep their contrast/rhythm while still showing the
+     art through. Both are toned down to ~20% image visibility (an 80%
+     matching-color tint on top, since CSS `opacity` on the element would
+     also fade the section's own text/content) so it reads as a faint
+     watermark behind text rather than competing with it. */
+  .bg-blueprint {
+    background-color: theme('colors.paper');
+    background-image: linear-gradient(rgba(246, 243, 236, 0.8), rgba(246, 243, 236, 0.8)), url('/images/blueprint-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  .bg-blueprint-dim {
+    background-color: theme('colors.paper-dim');
+    background-image: linear-gradient(rgba(236, 231, 218, 0.8), rgba(236, 231, 218, 0.8)), url('/images/blueprint-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+}

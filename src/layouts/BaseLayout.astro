@@ -3,6 +3,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppFloat from '../components/WhatsAppFloat.astro';
 import MobileStickyCTA from '../components/MobileStickyCTA.astro';
+import PageAnimations from '../components/PageAnimations.astro';
 import { SITE } from '../lib/site';
 import { organizationSchema, websiteSchema } from '../lib/schema';
 import '../styles/global.css';
@@ -71,5 +72,6 @@ const allSchema = [organizationSchema(), websiteSchema(), ...schema];
   <Footer />
   <WhatsAppFloat message="Hi PBJ Infra, I'd like to discuss a project." />
   <MobileStickyCTA />
+  <PageAnimations />
 </body>
 </html>
