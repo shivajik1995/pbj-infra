@@ -6,10 +6,10 @@ projectType: "Farmhouse Construction"
 location: "Latur"
 locationVerified: true
 heroImage:
-  src: "https://pbjinfra.com/assets/images/farm-house-new.jpg"
-  alt: "Completed farmhouse with landscaped grounds, built by PBJ Infra near Latur"
-  width: 1600
-  height: 1000
+  src: "/images/projects/farmhouse-modern-slat.jpg"
+  alt: "Completed farmhouse with a timber-slat upper level and landscaped grounds, built by PBJ Infra near Latur"
+  width: 896
+  height: 1200
 gallery: []
 overview: "A custom farmhouse near Latur — a residence on rural land, blending rustic materials with modern amenities, built with its own site infrastructure by PBJ Infra's in-house team."
 approach: "Site works and infrastructure first, then the residence, then landscaping — the sequence PBJ uses on remote plots where mobilising multiple contractors is slow and costly."

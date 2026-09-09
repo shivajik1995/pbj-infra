@@ -6,10 +6,10 @@ h1: "Farmhouse Construction in Pune, Latur & Maharashtra"
 category: "Residential"
 shortDescription: "Custom farmhouse construction on agricultural and weekend-home land — main residence, guest and staff quarters, pool and landscaping, water and power infrastructure, built end-to-end."
 heroImage:
-  src: "https://pbjinfra.com/assets/images/farm-house-new.jpg"
-  alt: "Completed farmhouse with landscaped surroundings built by PBJ Infra"
-  width: 1600
-  height: 1000
+  src: "/images/projects/farmhouse-render-cube.jpg"
+  alt: "Completed farmhouse with tall windows and landscaped surroundings built by PBJ Infra"
+  width: 896
+  height: 1200
 solutions:
   - name: "Main residence"
     description: "The farmhouse itself — planned around indoor–outdoor living, verandahs and courtyards, in a mix of rustic and contemporary materials the client chooses."

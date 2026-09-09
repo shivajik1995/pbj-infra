@@ -6,10 +6,10 @@ projectType: "Ferrocement Dome"
 location: "Pune"
 locationVerified: true
 heroImage:
-  src: "https://pbjinfra.com/assets/images/DOM.jpeg"
-  alt: "Rabbit Dome House — a curved ferrocement dome residence built by PBJ Infra in Pune"
-  width: 1600
-  height: 1000
+  src: "/images/projects/ferrocement-dome-pod-exterior.jpg"
+  alt: "Rabbit Dome House — a curved ferrocement dome residence with circular openings, built by PBJ Infra in Pune"
+  width: 1376
+  height: 768
 gallery: []
 overview: "A ferrocement dome residence in Pune — a habitable thin-shell structure that demonstrates PBJ Infra's specialised structural capability beyond conventional pool and building contracting."
 approach: "Built as a designed thin shell: shell geometry, mesh reinforcement and mortar mix specified for the span, with openings and services planned into the form."

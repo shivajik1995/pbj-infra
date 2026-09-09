@@ -6,10 +6,10 @@ h1: "Ferrocement Dome Construction in Pune & Maharashtra"
 category: "Specialized"
 shortDescription: "Thin-shell ferrocement dome structures — durable, low-material, monolithic roofs and buildings for homes, farm structures, water tanks and feature spaces, as built for the Rabbit Dome House."
 heroImage:
-  src: "https://pbjinfra.com/assets/images/DOM.jpeg"
-  alt: "Ferrocement dome structure built by PBJ Infra, exterior view of the curved shell"
-  width: 1600
-  height: 1000
+  src: "/images/projects/ferrocement-dome-sunset-openings.jpg"
+  alt: "Ferrocement dome structure built by PBJ Infra, curved shell with large circular openings at dusk"
+  width: 1376
+  height: 768
 solutions:
   - name: "Dome homes & habitable shells"
     description: "Single- or multi-dome residences and studios where the dome is the living space, not just a roof — as demonstrated by the completed Rabbit Dome House in Pune."

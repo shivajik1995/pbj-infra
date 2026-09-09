@@ -29,6 +29,8 @@ const {
 } = Astro.props;
 ---
 <section class="final-cta relative flex min-h-[68svh] flex-col justify-between overflow-hidden bg-ink py-14 text-paper md:py-20" aria-labelledby="final-cta-title">
+  <div class="final-cta-glow" aria-hidden="true"></div>
+  <div class="final-cta-grain" aria-hidden="true"></div>
   <GridTexture tone="dark" />
 
   <div class="wrap relative z-[3] flex flex-1 flex-col justify-between gap-12">
@@ -93,7 +95,30 @@ const {
 </section>
 
 <style>
-  .final-cta { isolation: isolate; }
+  .final-cta {
+    isolation: isolate;
+    background-image:
+      radial-gradient(140% 90% at 50% -10%, rgba(246, 243, 236, 0.05), transparent 60%);
+    border-top: 1px solid rgba(246, 243, 236, 0.06);
+  }
+  .final-cta-glow {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(38% 55% at 82% 12%, rgba(30, 110, 100, 0.14), transparent 70%),
+      radial-gradient(45% 60% at 8% 92%, rgba(30, 110, 100, 0.07), transparent 70%);
+  }
+  .final-cta-grain {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
   .cta-button { isolation: isolate; transition: border-color .35s ease, color .35s ease; }
   .cta-button:hover { border-color: rgb(30, 110, 100); color: #fff; }
   .cta-button-fill { z-index: 0; }

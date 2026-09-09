@@ -6,10 +6,10 @@ h1: "Pool Tiling & Finishing"
 category: "Aquatic"
 shortDescription: "The finishing stage of a pool build — ceramic, porcelain, glass mosaic and natural-stone tiling for the shell, waterline and surround, plus coping and deck finishes, executed by PBJ's in-house team."
 heroImage:
-  src: "https://pbjinfra.com/assets/images/swimming-pool.jpg"
-  alt: "Glass mosaic tiling being laid on a swimming pool shell by PBJ Infra"
-  width: 1600
-  height: 1000
+  src: "/images/projects/lagoon-pool-blue-tile.jpg"
+  alt: "Swimming pool finished in blue glass mosaic tiling by PBJ Infra"
+  width: 1376
+  height: 768
 solutions:
   - name: "Full-shell tiling"
     description: "The entire pool interior tiled in ceramic, porcelain or glass mosaic — the most durable and colour-stable pool finish."

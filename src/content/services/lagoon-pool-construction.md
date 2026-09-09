@@ -6,10 +6,10 @@ h1: "Lagoon Pool Construction in Pune & Maharashtra"
 category: "Aquatic"
 shortDescription: "Naturalistic, lagoon-style pools with beach entries, free-form edges, rock and planting integration — engineered as real swimming pools, finished to read as natural water. PBJ's Trusted Lagoon line."
 heroImage:
-  src: "https://pbjinfra.com/assets/images/Lagoon.jpeg"
-  alt: "Free-form lagoon-style swimming pool with a beach entry, built by PBJ Infra"
-  width: 1600
-  height: 1000
+  src: "/images/projects/lagoon-pool-curved-resort.jpg"
+  alt: "Free-form lagoon-style swimming pool with a curved edge, built by PBJ Infra"
+  width: 1376
+  height: 768
 solutions:
   - name: "Free-form lagoon pools"
     description: "Curved, irregular shells with no straight lines, sized for swimming but shaped to sit in the landscape as a natural water body."

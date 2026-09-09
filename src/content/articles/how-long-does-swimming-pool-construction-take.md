@@ -5,10 +5,10 @@ slug: "how-long-does-swimming-pool-construction-take"
 dek: "A stage-by-stage breakdown of a residential pool build timeline — site, structure, systems and signature finish — and what actually moves the 4–8 week estimate."
 publishDate: 2026-02-10
 heroImage:
-  src: "https://pbjinfra.com/assets/images/Featured-project1.jpeg"
-  alt: "Finished infinity pool built by PBJ Infra"
-  width: 1600
-  height: 1000
+  src: "/images/projects/lagoon-pool-curved-resort.jpg"
+  alt: "Finished curved infinity pool built by PBJ Infra"
+  width: 1376
+  height: 768
 relatedServices: ["swimming-pool-construction"]
 relatedProjects: ["adventure-waterpark-latur"]
 seo:

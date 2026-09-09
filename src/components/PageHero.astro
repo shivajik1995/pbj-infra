@@ -78,6 +78,13 @@ const btnClass = { solid: 'btn btn-solid', line: isInk ? 'btn btn-lt' : 'btn btn
     </div>
   )}
 
+  {isInk && !bgImage && (
+    <>
+      <div class="dark-glow" aria-hidden="true"></div>
+      <div class="dark-grain" aria-hidden="true"></div>
+    </>
+  )}
+
   <GridTexture tone={isInk ? 'dark' : 'light'} />
 
   <div class="relative z-[3]">
@@ -133,6 +140,28 @@ const btnClass = { solid: 'btn btn-solid', line: isInk ? 'btn btn-lt' : 'btn btn
 <style>
   .page-hero { isolation: isolate; }
   .page-hero-bg { filter: saturate(0.72) contrast(1.05); }
+
+  /* Depth treatment for flat bg-ink heroes (no photo): soft top bloom,
+     faint teal accent glow, fine grain — so it isn't a flat black band. */
+  .dark-glow {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(50% 60% at 85% 8%, rgba(30, 110, 100, 0.14), transparent 70%),
+      radial-gradient(60% 70% at 0% 100%, rgba(30, 110, 100, 0.07), transparent 70%),
+      radial-gradient(140% 90% at 50% -10%, rgba(246, 243, 236, 0.05), transparent 60%);
+  }
+  .dark-grain {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
 
   /* Pre-animation state — only once the inline script has flagged the
      section `.js-ready`, and only when motion is allowed. No-JS and

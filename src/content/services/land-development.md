@@ -6,10 +6,10 @@ h1: "Land Development & Site Preparation in Maharashtra"
 category: "Specialized"
 shortDescription: "Turning raw land into a buildable site — survey and clearing, grading and levelling, access roads, drainage, water supply, sewage and utility infrastructure ahead of construction."
 heroImage:
-  src: "https://pbjinfra.com/assets/images/DOM.jpeg"
-  alt: "Site under preparation by PBJ Infra, showing graded ground and access works"
+  src: "/images/projects/ferrocement-dome-under-construction.jpg"
+  alt: "Site under development by PBJ Infra — graded ground, new planting and structures under construction"
   width: 1600
-  height: 1000
+  height: 901
 solutions:
   - name: "Survey & site clearing"
     description: "Topographic survey, boundary verification, vegetation clearing and demolition of any existing structures."

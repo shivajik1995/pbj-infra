@@ -6,10 +6,10 @@ h1: "Pool Filtration Systems — Design, Installation & Commissioning"
 category: "Aquatic"
 shortDescription: "Circulation and filtration plant for swimming pools — pump, filter and dosing sizing, plant-room layout, installation and commissioning, designed in with the pool rather than added afterwards."
 heroImage:
-  src: "https://pbjinfra.com/assets/images/swimming-pool.jpg"
-  alt: "Swimming pool plant room with pump and filter installed by PBJ Infra"
-  width: 1600
-  height: 1000
+  src: "/images/projects/lagoon-pool-blue-tile.jpg"
+  alt: "Blue-tiled lagoon pool filled and running on a filtration system built by PBJ Infra"
+  width: 1376
+  height: 768
 solutions:
   - name: "Circulation & filtration design"
     description: "Pump and filter sizing to the pool's volume and expected use, so the whole body of water turns over in the right time."

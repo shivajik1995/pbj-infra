@@ -6,10 +6,10 @@ h1: "Resort Construction in Pune, Latur & Maharashtra"
 category: "Hospitality & Leisure"
 shortDescription: "End-to-end resort and hospitality construction — guest accommodation, central facilities, pools and water features, landscaping and site infrastructure, delivered in coordinated phases."
 heroImage:
-  src: "https://pbjinfra.com/assets/images/resort.jpg"
-  alt: "Resort building and landscaped pool area constructed by PBJ Infra"
-  width: 1600
-  height: 1000
+  src: "/images/projects/resort-dome-pavilion-seating.jpg"
+  alt: "Resort pavilion with a curved shell roof and landscaped outdoor seating, constructed by PBJ Infra"
+  width: 1376
+  height: 768
 solutions:
   - name: "Guest accommodation & central facilities"
     description: "Cottages, room blocks, restaurants, banquet and reception structures built to hospitality durability and serviceability standards."

@@ -7,15 +7,15 @@ location: "Pune–Latur corridor"
 locationVerified: true
 year: "2023"
 heroImage:
-  src: "https://pbjinfra.com/assets/images/waterpark-construction-services.jpg"
-  alt: "Adventure Waterpark built by PBJ Infra in the Pune–Latur corridor"
-  width: 1600
-  height: 1000
+  src: "/images/projects/waterpark-playground-canopy.jpg"
+  alt: "Adventure Waterpark by PBJ Infra — play structure beside a tensile shade canopy in the Pune–Latur corridor"
+  width: 1376
+  height: 768
 gallery:
-  - src: "https://pbjinfra.com/assets/images/Featured-project3.jpeg"
-    alt: "Adventure Waterpark attraction area"
-    width: 1600
-    height: 1000
+  - src: "/images/projects/waterpark-playground-pool.jpg"
+    alt: "Adventure Waterpark attraction area with play equipment and a leisure pool"
+    width: 1376
+    height: 768
 overview: "A family entertainment waterpark built in the Pune–Latur corridor, combining multiple water attractions with the filtration and safety systems a public leisure facility requires. Completed in 2023 and currently operating."
 result: "A family entertainment waterpark with multiple attractions and safety systems, completed and operating in the Pune–Latur corridor."
 contentGaps:

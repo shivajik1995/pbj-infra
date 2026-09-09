@@ -6,10 +6,10 @@ h1: "Cob House Construction in Maharashtra"
 category: "Residential"
 shortDescription: "Natural building in cob — monolithic earth-and-straw walls with deep window reveals, sculpted forms and high thermal mass — offered as a deliberate residential service alongside conventional construction."
 heroImage:
-  src: "https://pbjinfra.com/assets/images/farm-house-new.jpg"
-  alt: "Natural cob house with thick earthen walls and rounded openings"
-  width: 1600
-  height: 1000
+  src: "/images/projects/cob-house-curved-entrance.jpg"
+  alt: "Cob house with a curved plastered wall, rounded roof edge and timber entrance door, built by PBJ Infra"
+  width: 1024
+  height: 1024
 solutions:
   - name: "Cob (earth & straw) walls"
     description: "Load-bearing monolithic walls built up in layers from subsoil, sand and straw — no formwork, no blocks, sculpted by hand."

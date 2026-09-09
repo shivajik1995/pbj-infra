@@ -6,10 +6,10 @@ h1: "Waterpark Construction in Pune, Latur & Maharashtra"
 category: "Hospitality & Leisure"
 shortDescription: "Family waterpark construction — slides and attractions, wave and activity pools, circulation and filtration plant, and the lifeguard-supported safety systems a public leisure facility needs."
 heroImage:
-  src: "https://pbjinfra.com/assets/images/waterpark-construction-services.jpg"
-  alt: "Waterpark under construction by PBJ Infra, showing pool shells and attraction foundations"
-  width: 1600
-  height: 1000
+  src: "/images/projects/waterpark-playground-canopy.jpg"
+  alt: "Waterpark play structure and tensile shade canopy built by PBJ Infra"
+  width: 1376
+  height: 768
 solutions:
   - name: "Attraction pools & activity zones"
     description: "Wave pools, activity and leisure pools, lazy rivers and children's splash zones — each with the shell geometry, depth transitions and non-slip finishes its use demands."

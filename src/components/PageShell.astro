@@ -1,6 +1,9 @@
 ---
 // Full-bleed content section in the homepage rhythm: py-24/36, one of three
 // tones, optional technical grid texture. Wraps its slot in `.wrap`.
+// `tone="ink"` sections carry a subtle depth treatment (soft top glow, faint
+// teal accent bloom, fine grain, hairline top rule) so they don't read as a
+// flat black slab — see the .dark-dress layers below.
 import GridTexture from './GridTexture.astro';
 
 interface Props {
@@ -20,12 +23,19 @@ const toneClass = {
 }[tone];
 
 const gridTone = tone === 'ink' ? 'dark' : 'light';
+const isInk = tone === 'ink';
 ---
 <section
   id={id}
   aria-labelledby={labelledby}
-  class:list={['page-shell relative overflow-hidden py-24 md:py-36', toneClass, extra]}
+  class:list={['page-shell relative overflow-hidden py-24 md:py-36', toneClass, isInk && 'page-shell--ink', extra]}
 >
+  {isInk && (
+    <>
+      <div class="dark-glow" aria-hidden="true"></div>
+      <div class="dark-grain" aria-hidden="true"></div>
+    </>
+  )}
   {grid && <GridTexture tone={gridTone} />}
   <div class:list={['wrap relative z-[2]', wrapClass]}>
     <slot />
@@ -35,5 +45,35 @@ const gridTone = tone === 'ink' ? 'dark' : 'light';
 <style>
   .page-shell {
     isolation: isolate;
+  }
+
+  /* --- bg-ink depth treatment ------------------------------------------
+     Keeps the same #14171A base but lifts it off "flat black": a soft
+     lighter bloom from the top edge, one low-opacity teal accent glow,
+     a fine film grain to stop banding, and a hairline rule at the join. */
+  .page-shell--ink {
+    background-image:
+      radial-gradient(140% 90% at 50% -10%, rgba(246, 243, 236, 0.05), transparent 60%);
+    border-top: 1px solid rgba(246, 243, 236, 0.06);
+  }
+
+  .dark-glow {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(38% 55% at 82% 12%, rgba(30, 110, 100, 0.13), transparent 70%),
+      radial-gradient(45% 60% at 8% 92%, rgba(30, 110, 100, 0.06), transparent 70%);
+  }
+
+  .dark-grain {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 </style>

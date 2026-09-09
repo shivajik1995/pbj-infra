@@ -6,10 +6,10 @@ h1: "Ferro Concrete Design & Thin-Shell Construction"
 category: "Specialized"
 shortDescription: "Ferrocement and thin-shell concrete for curved, sculptural and column-free forms — shells, vaults, folded plates, tanks and feature elements that standard beam-and-column contracting can't produce economically."
 heroImage:
-  src: "https://pbjinfra.com/assets/images/DOM.jpeg"
-  alt: "Curved thin-shell ferro-concrete structure built by PBJ Infra"
-  width: 1600
-  height: 1000
+  src: "/images/projects/ferrocement-dome-tunnel-entrance.jpg"
+  alt: "Curved thin-shell ferro-concrete entrance arch and steps built by PBJ Infra"
+  width: 1376
+  height: 768
 solutions:
   - name: "Thin-shell roofs & canopies"
     description: "Curved shells, vaults and folded-plate roofs that span without internal columns and use far less concrete than a flat slab of the same reach."

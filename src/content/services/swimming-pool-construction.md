@@ -6,10 +6,10 @@ h1: "Swimming Pool Construction in Pune, Latur & Maharashtra"
 category: "Aquatic"
 shortDescription: "Infinity, glass-wall, indoor and residential pools — engineered, built and finished in-house by PBJ Infra, with advanced filtration and a 5-year structural warranty."
 heroImage:
-  src: "https://pbjinfra.com/assets/images/swimming-pool.jpg"
-  alt: "Infinity-edge swimming pool under construction by PBJ Infra"
-  width: 1600
-  height: 1000
+  src: "/images/projects/lagoon-pool-curved-resort.jpg"
+  alt: "Curved infinity-edge swimming pool with a resort building beyond, built by PBJ Infra"
+  width: 1376
+  height: 768
 solutions:
   - name: "Infinity pools"
     description: "Vanishing-edge pools engineered for the visual effect of water meeting the horizon, built with the structural and hydraulic detailing infinity edges require."
