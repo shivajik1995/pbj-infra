@@ -60,7 +60,7 @@ No keyword stuffing: each page names its primary term in the H1 and first paragr
 | ferrocement dome construction | `/services/ferrocement-dome/` | Primary | Ferrocement Dome Construction in Pune & Maharashtra | Ferrocement Dome Construction \| Pune \| PBJ Infra | Overview |
 | ferro concrete design / thin-shell | `/services/ferro-concrete-design/` | Primary | Ferro Concrete Design & Thin-Shell Construction | Ferro Concrete Design & Construction \| PBJ Infra | Overview |
 | land development site preparation | `/services/land-development/` | Primary | Land Development & Site Preparation in Maharashtra | Land Development & Site Preparation \| PBJ Infra | Overview |
-| adventure waterpark (proof) | `/projects/adventure-waterpark-latur/` | Secondary | Adventure Waterpark | Adventure Waterpark, Pune–Latur \| PBJ Infra Project | Case study |
+| adventure waterpark (proof) | `/projects/adventure-waterpark-ahilyanagar/` | Secondary | Adventure Waterpark | Adventure Waterpark, Ahilyanagar \| PBJ Infra Project | Case study |
 | ferrocement dome house (proof) | `/projects/rabbit-dome-house/` | Secondary | Rabbit Dome House | Rabbit Dome House, Pune \| PBJ Infra Project | Case study |
 | lagoon pool project (proof) | `/projects/natural-lagoon-pool/` | Secondary | Natural Lagoon Pool | Natural Lagoon Pool, Chatrapati Sambhaji Nagar \| PBJ Infra | Case study |
 | farmhouse project latur (proof) | `/projects/farm-house-latur/` | Secondary | Farm House | Farm House, Latur \| PBJ Infra Project | Case study |
@@ -121,7 +121,7 @@ One `<h1>`, verified in the build. Section eyebrows ("02 / Signature Projects") 
 | `/locations/latur/` | placeholder | Construction Company in Latur \| PBJ Infra | 41 |
 | `/privacy-policy/`, `/terms/`, `404` | — | Privacy Policy / Terms of Service / Page Not Found \| PBJ Infra | — |
 
-Unchanged (already good): `/about/`, `/contact/`, `/resources/`, `/services/swimming-pool-construction/`, `/locations/pune/`, `/projects/adventure-waterpark-latur/`, the article.
+Unchanged (already good): `/about/`, `/contact/`, `/resources/`, `/services/swimming-pool-construction/`, `/locations/pune/`, `/projects/adventure-waterpark-ahilyanagar/`, the article.
 
 ---
 
@@ -168,7 +168,7 @@ Anchor-text rule: entity name only ("Swimming Pool Construction", "Adventure Wat
 
 ## J. Local SEO improvements
 
-- `/locations/latur/` published — Latur moves from the "in-progress evidence" tier to the "verified locations" tier on `/locations/`. Backed by two real projects (Adventure Waterpark, Farm House) and the Pune–Latur corridor logistics story.
+- `/locations/latur/` published — Latur moves from the "in-progress evidence" tier to the "verified locations" tier on `/locations/`. Backed by the completed Farm House project, the nearby Adventure Waterpark in Ahilyanagar, and the Pune–Latur corridor logistics story.
 - `/locations/pune/` expanded: 7 services offered (was 1), links to the Rabbit Dome House case study, honest handling of the Luxury Infinity Pool location conflict, developer names in context.
 - `openingHoursSpecification` now in `Organization`/`LocalBusiness` schema (structured, from `SITE.hoursSpec`).
 - `areaServed` is now a list of `AdministrativeArea` nodes, not a string.

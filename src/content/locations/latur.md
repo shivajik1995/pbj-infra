@@ -3,27 +3,29 @@ status: "published"
 name: "Latur"
 slug: "latur"
 role: "Major Operational Hub"
-intro: "Latur is PBJ Infra's second base after its Pune headquarters — described on the company's own site as a major operational hub, and the location of two of its five signature projects: the Adventure Waterpark in the Pune–Latur corridor and a completed Farm House."
+intro: "Latur is PBJ Infra's second base after its Pune headquarters — described on the company's own site as a major operational hub. It is the location of a completed Farm House and, currently, an in-progress family water park being built by PBJ's regional team."
 servicesOffered: ["swimming-pool-construction", "waterpark-construction", "farmhouse-construction", "land-development"]
-relatedProjects: ["adventure-waterpark-latur", "farm-house-latur"]
+relatedProjects: ["latur-water-park", "farm-house-latur"]
 localNotes:
-  - "The Adventure Waterpark (Pune–Latur corridor, completed 2023 and operating) and a completed Farm House are both attributed to Latur on pbjinfra.com's portfolio."
+  - "A completed Farm House and an in-progress family water park are both in the Latur region; the Pune team also delivered the Adventure Waterpark in nearby Ahilyanagar."
   - "Latur sits on the Pune–Latur corridor, so PBJ's Pune site team and equipment reach the region directly rather than through a third party."
   - "Building permits, approvals and regulatory compliance for Latur-region projects are handled directly by PBJ."
 faq: ["locations-served", "permits", "warranty", "design-and-build"]
 seo:
   title: "Construction Company in Latur | PBJ Infra"
-  description: "PBJ Infra in Latur — a major operational hub building swimming pools, waterparks, farmhouses and specialised structures, with two completed signature projects."
+  description: "PBJ Infra in Latur — an operational hub for swimming pools, waterparks, farmhouses and specialised structures, with a completed Farm House as local evidence."
 ---
 
-Latur is where PBJ Infra's work extends beyond its home region. The company is headquartered in Phursungi, Pune, but its own site describes Latur as a major operational hub — and unlike the wider list of cities PBJ can serve, Latur is backed by real, completed project evidence.
+Latur is where PBJ Infra's work extends beyond its home region. The company is headquartered in Phursungi, Pune, but its own site describes Latur as a major operational hub — and unlike the wider list of cities PBJ can serve, Latur is backed by real project evidence: a completed Farm House and a family water park currently on site.
 
-## Verified Latur project history
+## Latur project history
 
-Two of PBJ Infra's five signature projects are attributed to Latur:
+Two PBJ Infra projects are in the Latur region:
 
-- The [Adventure Waterpark](/projects/adventure-waterpark-latur/) in the Pune–Latur corridor — a family entertainment waterpark completed in 2023 and operating since, and PBJ's clearest example of hospitality-scale construction.
 - A completed [Farm House](/projects/farm-house-latur/) — a custom rural residence built end-to-end with its own site infrastructure.
+- [Latur Water Park](/projects/latur-water-park/) — a family water park currently under construction, at the pool-structure stage, on a roughly nine-month programme.
+
+The same team also delivered the [Adventure Waterpark](/projects/adventure-waterpark-ahilyanagar/) in nearby Ahilyanagar — PBJ's clearest completed example of hospitality-scale construction, and evidence of how far its base reaches into central Maharashtra.
 
 ## What PBJ builds in Latur
 

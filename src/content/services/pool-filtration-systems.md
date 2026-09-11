@@ -35,7 +35,7 @@ process:
   - step: "Handover"
     description: "Commissioning, water-balance sign-off, a maintenance walkthrough and warranty documentation."
 relatedServices: ["swimming-pool-construction", "lagoon-pool-construction", "swimming-pool-tiles"]
-relatedProjects: ["adventure-waterpark-latur"]
+relatedProjects: ["adventure-waterpark-ahilyanagar"]
 relatedLocations: ["pune"]
 faq: ["warranty", "design-and-build", "cost"]
 ctaLabel: "Get a Pool Consultation"
@@ -64,6 +64,6 @@ The starting point is turnover — how long the system takes to filter the whole
 
 ## Related work
 
-This work sits behind every PBJ Infra pool, from [swimming pool construction](/services/swimming-pool-construction/) and [lagoon pool construction](/services/lagoon-pool-construction/) to the plant supporting the [Adventure Waterpark](/projects/adventure-waterpark-latur/).
+This work sits behind every PBJ Infra pool, from [swimming pool construction](/services/swimming-pool-construction/) and [lagoon pool construction](/services/lagoon-pool-construction/) to the plant supporting the [Adventure Waterpark](/projects/adventure-waterpark-ahilyanagar/).
 
 [Talk to PBJ about pool filtration →](/contact/?project=pool-filtration-systems)

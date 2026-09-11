@@ -20,7 +20,7 @@ const d = entry.data;
 
 const services = await Promise.all(d.servicesOffered.map((s) => getEntry(s)));
 const relatedProjects = d.relatedProjects
-  ? (await Promise.all(d.relatedProjects.map((r) => getEntry(r)))).filter((p) => p && p.data.status === 'published')
+  ? (await Promise.all(d.relatedProjects.map((r) => getEntry(r)))).filter((p) => p && p.data.status !== 'draft')
   : [];
 const faqs = d.faq ? (await Promise.all(d.faq.map((r) => getEntry(r)))).map((f) => f!.data) : [];
 

@@ -10,7 +10,7 @@ heroImage:
   width: 1376
   height: 768
 relatedServices: ["swimming-pool-construction"]
-relatedProjects: ["adventure-waterpark-latur"]
+relatedProjects: ["adventure-waterpark-ahilyanagar"]
 seo:
   title: "How Long Does Swimming Pool Construction Take? | PBJ Infra"
   description: "A residential swimming pool typically takes 4–8 weeks. Here's the stage-by-stage breakdown of what happens in that time and what can extend it."
@@ -44,6 +44,6 @@ Tiling, landscaping and final detailing — the result the client actually sees 
 
 ## Getting a real timeline
 
-The 4–8 week figure is a planning range, not a quote. PBJ confirms an actual project-specific timeline during the free consultation stage, once your site, size and design are known — see the [Swimming Pool Construction](/services/swimming-pool-construction/) page for what that process looks like, or the completed [Adventure Waterpark](/projects/adventure-waterpark-latur/) project for how the same four stages apply at a larger, multi-attraction scale.
+The 4–8 week figure is a planning range, not a quote. PBJ confirms an actual project-specific timeline during the free consultation stage, once your site, size and design are known — see the [Swimming Pool Construction](/services/swimming-pool-construction/) page for what that process looks like, or the completed [Adventure Waterpark](/projects/adventure-waterpark-ahilyanagar/) project for how the same four stages apply at a larger, multi-attraction scale.
 
 **Planning a pool?** [Start a consultation →](/contact/?project=swimming-pool)

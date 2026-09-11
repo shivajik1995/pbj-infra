@@ -19,6 +19,12 @@ export default defineConfig({
   site: 'https://www.pbjinfra.com',
   output: 'static',
   adapter: node({ mode: 'standalone' }),
+  // Permanent redirects for renamed URLs. The Adventure Waterpark project was
+  // published under a "-latur" slug before its location was confirmed as
+  // Ahilyanagar, Maharashtra.
+  redirects: {
+    '/projects/adventure-waterpark-latur': '/projects/adventure-waterpark-ahilyanagar',
+  },
   integrations: [
     tailwind({ applyBaseStyles: false }),
     sitemap({

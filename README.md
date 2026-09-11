@@ -25,7 +25,7 @@ npm run check             # astro check (TypeScript + template diagnostics)
 ## What's live right now
 Homepage, About, Services hub, Projects hub, Locations hub, Resources hub, Contact — plus **one fully-built example of every repeatable page type**, as agreed for this phase:
 - `/services/swimming-pool-construction/`
-- `/projects/adventure-waterpark-latur/`
+- `/projects/adventure-waterpark-ahilyanagar/`
 - `/locations/pune/`
 - `/resources/how-long-does-swimming-pool-construction-take/`
 

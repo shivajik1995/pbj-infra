@@ -62,12 +62,20 @@ const services = defineCollection({
 const projects = defineCollection({
   type: 'content',
   schema: z.object({
-    status: z.enum(['published', 'draft']),
+    // "published" = completed, full case-study page built and linked.
+    // "in-progress" = live project; case-study page is built and linked, but
+    //   labelled "In progress" rather than "Completed".
+    // "draft" = documented intent only; non-linked card on /projects/, no page.
+    status: z.enum(['published', 'draft', 'in-progress']),
     name: z.string(),
     projectType: z.string(),
     location: z.string(),
     locationVerified: z.boolean(), // false = location as stated on source site could not be cross-confirmed; documented, not hidden
-    year: z.string().optional(),
+    year: z.string().optional(), // completion year, e.g. "2024" — drives the hero meta line and the "Completed" fact
+    duration: z.string().optional(), // build duration, e.g. "9 months" — shown on the case-study fact strip
+    category: z.enum(['Aquatic', 'Hospitality & Leisure', 'Residential', 'Specialized']).optional(),
+    scope: z.string().optional(), // short phrase for the /projects/ card, e.g. "Site works, buildings, infinity pool & landscaping"
+    shortDescription: z.string().optional(), // one-line summary for the /projects/ card (distinct from the longer `overview`)
     heroImage: media,
     gallery: z.array(media).default([]),
     overview: z.string(),

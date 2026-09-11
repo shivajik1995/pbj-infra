@@ -6,10 +6,10 @@ h1: "Waterpark Construction in Pune, Latur & Maharashtra"
 category: "Hospitality & Leisure"
 shortDescription: "Family waterpark construction — slides and attractions, wave and activity pools, circulation and filtration plant, and the lifeguard-supported safety systems a public leisure facility needs."
 heroImage:
-  src: "/images/projects/waterpark-playground-canopy.jpg"
-  alt: "Waterpark play structure and tensile shade canopy built by PBJ Infra"
-  width: 1376
-  height: 768
+  src: "/images/projects/waterpark-ahilyanagar-slide-tower-pool.jpg"
+  alt: "Multi-lane slide tower and attraction pools at PBJ Infra's completed Adventure Waterpark in Ahilyanagar, Maharashtra"
+  width: 1280
+  height: 720
 solutions:
   - name: "Attraction pools & activity zones"
     description: "Wave pools, activity and leisure pools, lazy rivers and children's splash zones — each with the shell geometry, depth transitions and non-slip finishes its use demands."
@@ -22,7 +22,7 @@ solutions:
   - name: "Safety & compliance infrastructure"
     description: "Lifeguard sightlines, depth marking and signage, pool-surround drainage, plant-room access and the documentation an operating licence requires."
 whyPbj:
-  - "PBJ Infra built the Adventure Waterpark, a completed family entertainment waterpark that has been operating in the Pune–Latur corridor since 2023."
+  - "PBJ Infra built the Adventure Waterpark, a completed family entertainment waterpark operating in Ahilyanagar, Maharashtra since 2023, and is currently building a second family water park at Latur."
   - "The same in-house team handles pool shells, filtration plant and finishing — the three trades that most often clash on a waterpark site are coordinated under one contract."
   - "Operating continuously since 2009, GST-registered (27BQRPJ7692F2Z4) and UDYAM-registered (UDYAM-MH-26-0101863), with permits and regulatory compliance handled directly."
   - "5-year structural warranty and 2-year equipment warranty on every build."
@@ -36,14 +36,14 @@ process:
   - step: "Handover"
     description: "Commissioning of filtration and dosing, water-balance sign-off, an operations and maintenance walkthrough for park staff, and warranty documentation."
 relatedServices: ["resort-construction", "swimming-pool-construction", "pool-filtration-systems"]
-relatedProjects: ["adventure-waterpark-latur"]
+relatedProjects: ["adventure-waterpark-ahilyanagar", "latur-water-park"]
 relatedLocations: ["latur", "pune"]
 faq: ["design-and-build", "permits", "warranty", "cost"]
 ctaLabel: "Discuss Your Waterpark Project"
 whatsappMessage: "Hi PBJ Infra, I'm interested in discussing a waterpark project."
 seo:
   title: "Waterpark Construction Company | Pune & Latur | PBJ Infra"
-  description: "PBJ Infra builds family waterparks — attractions, filtration plant and safety systems — including the operating Adventure Waterpark in the Pune–Latur corridor."
+  description: "PBJ Infra builds family waterparks — attractions, filtration plant and safety systems. Adventure Waterpark, Ahilyanagar is open; a second is under way at Latur."
 ---
 
 ## Overview
@@ -65,7 +65,7 @@ PBJ Infra scales the filtration and structural discipline it applies to resident
 
 ## Related work
 
-PBJ Infra's [Adventure Waterpark](/projects/adventure-waterpark-latur/) in the Pune–Latur corridor is a completed, operating example of this service at full scale. It draws on the same discipline as PBJ's [swimming pool construction](/services/swimming-pool-construction/) and [pool filtration systems](/services/pool-filtration-systems/) work, and pairs naturally with [resort construction](/services/resort-construction/) where the waterpark is one element of a larger destination.
+PBJ Infra's [Adventure Waterpark](/projects/adventure-waterpark-ahilyanagar/) in Ahilyanagar, Maharashtra is a completed, operating example of this service at full scale, and a second family water park is currently under construction at [Latur](/projects/latur-water-park/). This work draws on the same discipline as PBJ's [swimming pool construction](/services/swimming-pool-construction/) and [pool filtration systems](/services/pool-filtration-systems/), and pairs naturally with [resort construction](/services/resort-construction/) where the waterpark is one element of a larger destination.
 
 *Content required: PBJ team to supply the attraction count, water-surface area and daily-capacity figures for the Adventure Waterpark so this page can state them directly.*
 

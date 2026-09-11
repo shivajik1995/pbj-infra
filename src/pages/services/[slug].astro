@@ -129,7 +129,7 @@ const svc = d.name.toLowerCase();
                   name={p.data.name}
                   projectType={p.data.projectType}
                   location={p.data.location}
-                  href={p.data.status === 'published' ? `/projects/${p.slug}/` : null}
+                  href={p.data.status !== 'draft' ? `/projects/${p.slug}/` : null}
                   image={p.data.heroImage}
                 />
               ))}

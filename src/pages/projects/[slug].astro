@@ -1,34 +1,76 @@
 ---
 import { getCollection, getEntry, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import PageHero from '../../components/PageHero.astro';
 import PageShell from '../../components/PageShell.astro';
-import SectionHeader from '../../components/SectionHeader.astro';
 import FinalCTA from '../../components/FinalCTA.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import { breadcrumbSchema } from '../../lib/schema';
 import { whatsappLink } from '../../lib/site';
 
 export async function getStaticPaths() {
-  const projects = await getCollection('projects', ({ data }) => data.status === 'published');
-  return projects.map((p) => ({ params: { slug: p.slug }, props: { entry: p } }));
+  const projects = await getCollection(
+    'projects',
+    ({ data }) => data.status !== 'draft'
+  );
+
+  return projects.map((p) => ({
+    params: { slug: p.slug },
+    props: { entry: p },
+  }));
 }
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 const d = entry.data;
 
-const relatedService = await getEntry(d.relatedService);
-const relatedLocation = d.relatedLocation ? await getEntry(d.relatedLocation) : null;
-const relatedProjects = d.relatedProjects ? (await Promise.all(d.relatedProjects.map((r) => getEntry(r)))).filter(Boolean) : [];
+const statusLabel = d.status === 'in-progress' ? 'In progress' : 'Completed';
+
+// The case-study gallery always leads with the hero image, then any additional
+// gallery photos. Content files therefore don't repeat the hero in `gallery`.
+const galleryImages = [
+  d.heroImage,
+  ...entry.data.gallery.filter((img) => img.src !== d.heroImage.src),
+];
+
+const relatedLocation = d.relatedLocation
+  ? await getEntry(d.relatedLocation)
+  : null;
+
+const relatedProjects = d.relatedProjects
+  ? (
+      await Promise.all(
+        d.relatedProjects.map((r) => getEntry(r))
+      )
+    ).filter(Boolean)
+  : [];
 
 const crumbs = [
-  { name: 'Home', url: '/' },
-  { name: 'Projects', url: '/projects/' },
-  { name: d.name, url: `/projects/${entry.slug}/` },
+  {
+    name: 'Home',
+    url: '/',
+  },
+  {
+    name: 'Projects',
+    url: '/projects/',
+  },
+  {
+    name: d.name,
+    url: `/projects/${entry.slug}/`,
+  },
 ];
-const meta = [d.location, d.year].filter(Boolean).join(' · ');
+
+const meta = [d.location, d.year]
+  .filter(Boolean)
+  .join(' · ');
+
+const projectNumber = entry.slug
+  .split('-')
+  .map((word) => word.charAt(0))
+  .join('')
+  .slice(0, 3)
+  .toUpperCase();
 ---
+
 <BaseLayout
   title={d.seo.title}
   description={d.seo.description}
@@ -36,82 +78,1000 @@ const meta = [d.location, d.year].filter(Boolean).join(' · ');
   ogImage={d.heroImage.src}
   schema={[breadcrumbSchema(crumbs)]}
 >
-  <PageHero
-    crumbs={crumbs}
-    tone="ink"
-    eyebrow={`Projects / ${d.projectType}`}
-    metaRight={meta}
-    title={d.name}
-    lead={d.overview}
-    bgImage={{ src: d.heroImage.src, alt: d.heroImage.alt }}
-    ctas={[
-      { label: 'Start a similar project', href: `/contact/?project=${relatedService?.slug ?? ''}`, style: 'solid', event: 'click_start_project', params: { placement: 'project_hero', project: entry.slug } },
-    ]}
-  />
 
-  <section class="bg-paper spec-frame">
-    <span class="cA"></span><span class="cB"></span>
-    <img src={d.heroImage.src} alt={d.heroImage.alt} width={d.heroImage.width} height={d.heroImage.height} class="w-full max-h-[620px] object-cover" loading="lazy" decoding="async" />
+  <!-- ===================================================== -->
+  <!-- HERO -->
+  <!-- ===================================================== -->
+
+  <section class="relative min-h-[78vh] overflow-hidden bg-[#111] text-white">
+
+    <div class="absolute inset-0">
+      <img
+        src={d.heroImage.src}
+        alt={d.heroImage.alt}
+        width={d.heroImage.width}
+        height={d.heroImage.height}
+        class="h-full w-full object-cover"
+        loading="eager"
+        decoding="async"
+      />
+
+      <div class="absolute inset-0 bg-black/45"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/10"></div>
+    </div>
+
+    <div
+      class="absolute inset-0 opacity-[0.07]"
+      aria-hidden="true"
+    >
+      <div class="h-full w-full bg-[linear-gradient(to_right,white_1px,transparent_1px),linear-gradient(to_bottom,white_1px,transparent_1px)] bg-[size:80px_80px]">
+      </div>
+    </div>
+
+    <div class="relative z-10 mx-auto flex min-h-[78vh] max-w-7xl flex-col justify-between px-6 py-8 lg:px-8 lg:py-10">
+
+      <!-- Breadcrumb -->
+      <nav
+        aria-label="Breadcrumb"
+        class="flex flex-wrap items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] text-white/60"
+      >
+        {crumbs.map((crumb, index) => (
+          <>
+            {index > 0 && (
+              <span aria-hidden="true" class="text-white/30">
+                /
+              </span>
+            )}
+
+            {index === crumbs.length - 1 ? (
+              <span class="text-white/80">
+                {crumb.name}
+              </span>
+            ) : (
+              <a
+                href={crumb.url}
+                class="transition hover:text-white"
+              >
+                {crumb.name}
+              </a>
+            )}
+          </>
+        ))}
+      </nav>
+
+
+      <!-- Hero content -->
+      <div class="grid gap-10 lg:grid-cols-[1fr_280px] lg:items-end">
+
+        <div>
+
+          <div class="mb-6 flex flex-wrap gap-2">
+
+            <span class="border border-white/20 bg-black/20 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.18em] backdrop-blur-sm">
+              {d.projectType}
+            </span>
+
+            <span class="border border-[#1e6e64]/60 bg-[#1e6e64]/20 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.18em] backdrop-blur-sm">
+              {statusLabel}
+            </span>
+
+          </div>
+
+
+          <h1 class="max-w-5xl font-serif text-5xl leading-[0.95] tracking-[-0.035em] sm:text-6xl lg:text-8xl">
+            {d.name}
+          </h1>
+
+
+          {d.overview && (
+            <p class="mt-7 max-w-2xl text-base leading-7 text-white/75 sm:text-lg">
+              {d.overview}
+            </p>
+          )}
+
+        </div>
+
+
+        <div class="border-l border-white/20 pl-6">
+
+          <div class="mb-7">
+
+            <p class="font-mono text-[10px] uppercase tracking-[0.18em] text-white/40">
+              Project
+            </p>
+
+            <p class="mt-2 font-mono text-sm tracking-widest text-white/80">
+              {projectNumber}
+            </p>
+
+          </div>
+
+
+          <div>
+
+            <p class="font-mono text-[10px] uppercase tracking-[0.18em] text-white/40">
+              Location / Year
+            </p>
+
+            <p class="mt-2 text-sm text-white/80">
+              {meta || '—'}
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
   </section>
 
-  <PageShell tone="paper">
-    <div class="prose-content max-w-[74ch]" data-reveal>
-      <Content />
-    </div>
-  </PageShell>
 
-  {d.gallery.length > 0 && (
-    <PageShell tone="paper-dim" labelledby="proj-gallery">
-      <SectionHeader id="proj-gallery" num="02" label="Gallery" title="Project gallery" tone="paper" />
-      <div class="mt-14 grid sm:grid-cols-2 gap-4" data-reveal-stagger>
-        {d.gallery.map((img) => (
-          <img src={img.src} alt={img.alt} width={img.width} height={img.height} loading="lazy" decoding="async" class="w-full aspect-[4/3] object-cover" />
-        ))}
+  <!-- ===================================================== -->
+  <!-- PROJECT FACTS -->
+  <!-- ===================================================== -->
+
+ <section class="border-y border-black/10 bg-white">
+  <div class="mx-auto max-w-7xl px-6 lg:px-10">
+    <div class="grid grid-cols-2 md:grid-cols-4">
+
+      <!-- Project Type -->
+      <div class="project-fact group border-b border-r border-black/10 p-6 md:border-b-0 md:p-8">
+        <span class="mb-3 block font-mono text-[10px] uppercase tracking-[0.18em] text-black/45">
+          Project type
+        </span>
+
+        <div class="relative">
+          <p class="font-serif text-lg text-black transition-all duration-300 group-hover:translate-x-1 group-hover:text-[#1e6e64]">
+            {d.projectType}
+          </p>
+
+          <span class="absolute -bottom-2 left-0 h-px w-0 bg-[#1e6e64] transition-all duration-300 group-hover:w-12"></span>
+        </div>
       </div>
-    </PageShell>
+
+      <!-- Location -->
+      <div class="project-fact group border-b border-black/10 p-6 md:border-b-0 md:border-r md:p-8">
+        <span class="mb-3 block font-mono text-[10px] uppercase tracking-[0.18em] text-black/45">
+          Location
+        </span>
+
+        <div class="relative">
+          <p class="font-serif text-lg text-black transition-all duration-300 group-hover:translate-x-1 group-hover:text-[#1e6e64]">
+            {d.location}
+          </p>
+
+          <span class="absolute -bottom-2 left-0 h-px w-0 bg-[#1e6e64] transition-all duration-300 group-hover:w-12"></span>
+        </div>
+      </div>
+
+      <!-- Completed / Duration -->
+      <div class="project-fact group border-r border-black/10 p-6 md:p-8">
+        <span class="mb-3 block font-mono text-[10px] uppercase tracking-[0.18em] text-black/45">
+          {d.status === 'in-progress' ? 'Build duration' : 'Completed'}
+        </span>
+
+        <div class="relative">
+          <p class="font-serif text-lg text-black transition-all duration-300 group-hover:translate-x-1 group-hover:text-[#1e6e64]">
+            {d.status === 'in-progress' ? (d.duration ?? 'In progress') : (d.year ?? d.duration ?? '—')}
+          </p>
+
+          <span class="absolute -bottom-2 left-0 h-px w-0 bg-[#1e6e64] transition-all duration-300 group-hover:w-12"></span>
+        </div>
+      </div>
+
+      <!-- Status -->
+      <div class="project-fact group p-6 md:p-8">
+        <span class="mb-3 block font-mono text-[10px] uppercase tracking-[0.18em] text-black/45">
+          Status
+        </span>
+
+        <div class="relative">
+          <p class="font-serif text-lg text-black transition-all duration-300 group-hover:translate-x-1 group-hover:text-[#1e6e64]">
+            {statusLabel}
+          </p>
+
+          <span class="absolute -bottom-2 left-0 h-px w-0 bg-[#1e6e64] transition-all duration-300 group-hover:w-12"></span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+  <!-- ===================================================== -->
+  <!-- CASE STUDY -->
+  <!-- ===================================================== -->
+
+  <section class="bg-[#f3f2ee] text-[#111]">
+
+    <div class="mx-auto max-w-7xl px-6 py-24 lg:px-8 lg:py-36">
+
+      <div class="grid gap-16 lg:grid-cols-[0.65fr_1.35fr] lg:gap-28">
+
+        <div
+          class="lg:sticky lg:top-24 lg:self-start"
+          data-reveal
+        >
+
+          <p class="mb-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#1e6e64]">
+            01 / Project
+          </p>
+
+          <h2 class="max-w-sm font-serif text-4xl leading-none tracking-[-0.03em] sm:text-5xl">
+            From brief
+            <span class="block text-black/30">
+              to built.
+            </span>
+          </h2>
+
+          <div class="mt-8 h-px w-16 bg-[#1e6e64]"></div>
+
+        </div>
+
+
+        <div
+          class="prose-content max-w-[72ch]"
+          data-reveal
+        >
+          <Content />
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ===================================================== -->
+  <!-- PROJECT GALLERY -->
+  <!-- ===================================================== -->
+
+  {galleryImages.length > 0 && (
+    <section
+      id="proj-gallery"
+      class="overflow-hidden bg-[#111] text-white"
+    >
+
+      <div class="mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-28">
+
+        <!-- Gallery heading -->
+        <div
+          class="mb-12 flex items-end justify-between"
+          data-reveal
+        >
+
+          <div>
+
+            <p class="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-[#1e6e64]">
+              02 / Gallery
+            </p>
+
+            <h2 class="font-serif text-4xl tracking-tight sm:text-5xl">
+              Project gallery
+            </h2>
+
+          </div>
+
+
+          <div class="hidden text-right sm:block">
+
+            <p class="font-mono text-xs uppercase tracking-widest text-white/30">
+              PBJ Infra
+            </p>
+
+            <p class="mt-1 font-mono text-xs text-white/50">
+              {galleryImages.length} photographs
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- DESKTOP MAC STYLE GALLERY -->
+        <!-- ================================================= -->
+
+        <div class="hidden lg:block">
+
+          <div
+            id="gallery-window"
+            class="relative mx-auto w-full max-w-6xl"
+          >
+
+            <!-- Window -->
+            <div class="overflow-hidden rounded-[18px] border border-white/10 bg-[#181818] shadow-2xl">
+
+              <!-- Mac style header -->
+              <div class="flex h-12 items-center justify-between border-b border-white/10 bg-[#1c1c1c] px-5">
+
+                <div class="flex items-center gap-2">
+
+                  <span class="h-2.5 w-2.5 rounded-full bg-white/20"></span>
+                  <span class="h-2.5 w-2.5 rounded-full bg-white/20"></span>
+                  <span class="h-2.5 w-2.5 rounded-full bg-white/20"></span>
+
+                </div>
+
+
+                <span class="font-mono text-[9px] uppercase tracking-[0.2em] text-white/30">
+                  {d.name}
+                </span>
+
+
+                <span
+                  id="gallery-counter"
+                  class="font-mono text-[10px] tracking-widest text-white/50"
+                >
+                  01 / {String(galleryImages.length).padStart(2, '0')}
+                </span>
+
+              </div>
+
+
+              <!-- Carousel -->
+              <div
+                id="gallery-stage"
+                class="relative flex h-[52vh] min-h-[430px] max-h-[620px] items-center justify-center overflow-hidden bg-[#0d0d0d]"
+              >
+
+                <!-- Previous preview -->
+                <button
+                  id="gallery-prev-preview"
+                  type="button"
+                  aria-label="Previous image"
+                  class="gallery-side gallery-side-left group absolute left-[-5%] z-10 h-[72%] w-[25%] overflow-hidden rounded-xl opacity-35 transition-all duration-500 hover:opacity-60"
+                >
+
+                  <img
+                    id="gallery-prev-image"
+                    src={galleryImages[0].src}
+                    alt=""
+                    class="h-full w-full object-cover"
+                  />
+
+                  <span class="absolute inset-0 bg-black/45 transition group-hover:bg-black/20"></span>
+
+                  <span class="absolute right-5 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-md">
+                    ←
+                  </span>
+
+                </button>
+
+
+                <!-- Current image -->
+                <div
+                  id="gallery-current"
+                  class="relative z-20 flex h-[82%] w-[70%] items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-black shadow-2xl transition-all duration-500"
+                >
+
+                  <img
+                    id="gallery-current-image"
+                    src={galleryImages[0].src}
+                    alt={galleryImages[0].alt}
+                    width={galleryImages[0].width}
+                    height={galleryImages[0].height}
+                    loading="eager"
+                    decoding="async"
+                    class="h-full w-full object-contain"
+                  />
+
+                </div>
+
+
+                <!-- Next preview -->
+                <button
+                  id="gallery-next-preview"
+                  type="button"
+                  aria-label="Next image"
+                  class="gallery-side gallery-side-right group absolute right-[-5%] z-10 h-[72%] w-[25%] overflow-hidden rounded-xl opacity-35 transition-all duration-500 hover:opacity-60"
+                >
+
+                  <img
+                    id="gallery-next-image"
+                    src={galleryImages[Math.min(1, galleryImages.length - 1)].src}
+                    alt=""
+                    class="h-full w-full object-cover"
+                  />
+
+                  <span class="absolute inset-0 bg-black/45 transition group-hover:bg-black/20"></span>
+
+                  <span class="absolute left-5 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-md">
+                    →
+                  </span>
+
+                </button>
+
+
+                <!-- Main arrows -->
+                <button
+                  id="gallery-prev"
+                  type="button"
+                  aria-label="Previous project image"
+                  class="absolute left-6 top-1/2 z-30 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-black/60 text-sm backdrop-blur-md transition hover:border-white hover:bg-white hover:text-black"
+                >
+                  ←
+                </button>
+
+
+                <button
+                  id="gallery-next"
+                  type="button"
+                  aria-label="Next project image"
+                  class="absolute right-6 top-1/2 z-30 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-black/60 text-sm backdrop-blur-md transition hover:border-white hover:bg-white hover:text-black"
+                >
+                  →
+                </button>
+
+              </div>
+
+
+              <!-- Bottom information -->
+              <div class="border-t border-white/10 bg-[#181818] px-5 py-4">
+
+                <div class="flex items-center gap-5">
+
+                  <span
+                    id="gallery-progress-label"
+                    class="font-mono text-[9px] uppercase tracking-[0.18em] text-white/30"
+                  >
+                    Project photographs
+                  </span>
+
+
+                  <div class="h-px flex-1 bg-white/10">
+
+                    <div
+                      id="gallery-progress"
+                      class="h-px w-0 bg-[#1e6e64] transition-all duration-500"
+                    ></div>
+
+                  </div>
+
+
+                  <span class="font-mono text-[9px] uppercase tracking-[0.18em] text-white/30">
+                    ← / →
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- MOBILE GALLERY -->
+        <!-- ================================================= -->
+
+        <div class="lg:hidden">
+
+          <!-- First 4 -->
+          <div class="grid grid-cols-2 gap-2">
+
+            {galleryImages.slice(0, 4).map((img, index) => (
+              <figure class="group overflow-hidden bg-white/5">
+
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  width={img.width}
+                  height={img.height}
+                  loading={index < 2 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  class="aspect-square w-full object-cover transition duration-500 group-hover:scale-105"
+                />
+
+              </figure>
+            ))}
+
+          </div>
+
+
+          <!-- View more -->
+          {galleryImages.length > 4 && (
+            <button
+              id="gallery-more"
+              type="button"
+              aria-expanded="false"
+              class="mt-6 w-full border border-white/15 px-5 py-5 text-left transition hover:border-[#1e6e64] hover:bg-[#1e6e64]"
+            >
+
+              <span class="flex items-center justify-between gap-5">
+
+                <span>
+
+                  <span class="block font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
+                    {galleryImages.length - 4} more photographs
+                  </span>
+
+                  <span
+                    id="gallery-more-label"
+                    class="mt-1 block font-serif text-xl"
+                  >
+                    View entire gallery
+                  </span>
+
+                </span>
+
+
+                <span
+                  id="gallery-more-icon"
+                  class="text-xl transition-transform duration-300"
+                >
+                  ↓
+                </span>
+
+              </span>
+
+            </button>
+          )}
+
+
+          <!-- Remaining -->
+          {galleryImages.length > 4 && (
+            <div
+              id="gallery-mobile-more"
+              class="mt-2 hidden grid-cols-2 gap-2"
+            >
+
+              {galleryImages.slice(4).map((img) => (
+                <figure class="group overflow-hidden bg-white/5">
+
+                  <img
+                    src={img.src}
+                    alt={img.alt}
+                    width={img.width}
+                    height={img.height}
+                    loading="lazy"
+                    decoding="async"
+                    class="aspect-square w-full object-cover transition duration-500 group-hover:scale-105"
+                  />
+
+                </figure>
+              ))}
+
+            </div>
+          )}
+
+        </div>
+
+      </div>
+
+    </section>
   )}
 
-  <PageShell tone="ink">
-    <div class="grid md:grid-cols-2 gap-12" data-reveal>
-      <div>
-        <h2 class="font-serif text-2xl mb-4">Related service</h2>
-        {relatedService && (
-          <a href={relatedService.data.status === 'published' ? `/services/${relatedService.slug}/` : '/services/'} class="font-mono text-sm text-accent hover:underline">{relatedService.data.name} →</a>
-        )}
-        {relatedLocation && (
-          <p class="mt-4">
-            <a href={relatedLocation.data.status === 'published' ? `/locations/${relatedLocation.slug}/` : '/locations/'} class="font-mono text-sm text-accent hover:underline">See {relatedLocation.data.name} →</a>
-          </p>
-        )}
-      </div>
-      {relatedProjects.length > 0 && (
-        <div>
-          <h2 class="font-serif text-2xl mb-6">Related projects</h2>
-          <div class="grid gap-5 sm:grid-cols-2">
-            {relatedProjects.map((p) => p && (
-              <ProjectCard name={p.data.name} projectType={p.data.projectType} location={p.data.location} href={p.data.status === 'published' ? `/projects/${p.slug}/` : null} image={p.data.heroImage} />
-            ))}
+
+  <!-- ===================================================== -->
+  <!-- RELATED PROJECTS -->
+  <!-- ===================================================== -->
+
+  {relatedProjects.length > 0 && (
+    <section class="bg-[#0c0c0c] text-white">
+
+      <div class="mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-28">
+
+        <div
+          class="mb-12 flex items-end justify-between"
+          data-reveal
+        >
+
+          <div>
+
+            <p class="mb-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#1e6e64]">
+              03 / Explore
+            </p>
+
+            <h2 class="font-serif text-4xl tracking-tight sm:text-5xl">
+              Related projects
+            </h2>
+
           </div>
+
+
+          <a
+            href="/projects/"
+            class="hidden font-mono text-xs uppercase tracking-[0.16em] text-white/50 transition hover:text-white sm:block"
+          >
+            View all projects →
+          </a>
+
         </div>
-      )}
-    </div>
-  </PageShell>
+
+
+        <div
+          class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+          data-reveal-stagger
+        >
+
+          {relatedProjects.map((p) => (
+            <ProjectCard
+              name={p.data.name}
+              projectType={p.data.projectType}
+              location={p.data.location}
+              href={
+                p.data.status !== 'draft'
+                  ? `/projects/${p.slug}/`
+                  : null
+              }
+              image={p.data.heroImage}
+            />
+          ))}
+
+        </div>
+
+
+        <a
+          href="/projects/"
+          class="mt-8 block border border-white/10 px-5 py-4 text-center font-mono text-xs uppercase tracking-[0.16em] text-white/60 transition hover:border-[#1e6e64] hover:text-white sm:hidden"
+        >
+          View all projects →
+        </a>
+
+      </div>
+
+    </section>
+  )}
+
+
+  <!-- ===================================================== -->
+  <!-- FINAL CTA -->
+  <!-- ===================================================== -->
 
   <FinalCTA
     eyebrow="Start a project"
     title="Build something"
-    titleMuted="similar?"
-    copy={`Planning a project in the same scale as ${d.name}? Tell PBJ Infra what you have in mind.`}
-    primary={{ label: 'Start your project', href: `/contact/?project=${relatedService?.slug ?? ''}`, event: 'click_start_project', params: { placement: 'project_cta', project: entry.slug } }}
-    secondary={{ label: 'WhatsApp us', href: whatsappLink(`Hi PBJ Infra, I saw your ${d.name} project and would like to discuss something similar.`), external: true, event: 'click_whatsapp', params: { placement: 'project_cta', project: entry.slug } }}
+    titleMuted="worth remembering."
+    copy={`Planning a project similar to ${d.name}? Tell PBJ Infra what you have in mind.`}
+    primary={{
+      label: 'Start your project',
+      href: `/contact/?project=${entry.slug}`,
+      event: 'click_start_project',
+      params: {
+        placement: 'project_cta',
+        project: entry.slug,
+      },
+    }}
+    secondary={{
+      label: 'WhatsApp us',
+      href: whatsappLink(
+        `Hi PBJ Infra, I saw your ${d.name} project and would like to discuss something similar.`
+      ),
+      external: true,
+      event: 'click_whatsapp',
+      params: {
+        placement: 'project_cta',
+        project: entry.slug,
+      },
+    }}
   />
+
 </BaseLayout>
 
+
+<!-- ======================================================= -->
+<!-- GALLERY JAVASCRIPT -->
+<!-- ======================================================= -->
+
+<script define:vars={{ gallery: galleryImages }}>
+  const galleryCurrentImage = document.querySelector('#gallery-current-image');
+  const galleryPrevImage = document.querySelector('#gallery-prev-image');
+  const galleryNextImage = document.querySelector('#gallery-next-image');
+  const galleryCounter = document.querySelector('#gallery-counter');
+  const galleryProgress = document.querySelector('#gallery-progress');
+  const galleryPrev = document.querySelector('#gallery-prev');
+  const galleryNext = document.querySelector('#gallery-next');
+  const galleryPrevPreview = document.querySelector('#gallery-prev-preview');
+  const galleryNextPreview = document.querySelector('#gallery-next-preview');
+
+  const galleryData = gallery.map((img) => ({
+    src: img.src,
+    alt: img.alt || '',
+  }));
+
+  let galleryCurrent = 0;
+  const galleryTotal = galleryData.length;
+
+  function getWrappedIndex(index) {
+    if (galleryTotal === 0) return 0;
+    if (index < 0) return galleryTotal - 1;
+    if (index >= galleryTotal) return 0;
+    return index;
+  }
+
+  function updateGallery(index) {
+    if (galleryTotal === 0) return;
+
+    galleryCurrent = getWrappedIndex(index);
+
+    const previous = galleryData[getWrappedIndex(galleryCurrent - 1)];
+    const current = galleryData[galleryCurrent];
+    const next = galleryData[getWrappedIndex(galleryCurrent + 1)];
+
+    if (galleryCurrentImage && current) {
+      galleryCurrentImage.src = current.src;
+      galleryCurrentImage.alt = current.alt || `Project image ${galleryCurrent + 1}`;
+    }
+
+    if (galleryPrevImage && previous) {
+      galleryPrevImage.src = previous.src;
+      galleryPrevImage.alt = '';
+    }
+
+    if (galleryNextImage && next) {
+      galleryNextImage.src = next.src;
+      galleryNextImage.alt = '';
+    }
+
+    if (galleryCounter) {
+      galleryCounter.textContent = `${String(galleryCurrent + 1).padStart(2, '0')} / ${String(galleryTotal).padStart(2, '0')}`;
+    }
+
+    if (galleryProgress) {
+      galleryProgress.style.width = `${((galleryCurrent + 1) / galleryTotal) * 100}%`;
+    }
+  }
+
+  function showPrevious() {
+    updateGallery(galleryCurrent - 1);
+  }
+
+  function showNext() {
+    updateGallery(galleryCurrent + 1);
+  }
+
+  galleryPrev?.addEventListener('click', showPrevious);
+  galleryNext?.addEventListener('click', showNext);
+  galleryPrevPreview?.addEventListener('click', showPrevious);
+  galleryNextPreview?.addEventListener('click', showNext);
+
+  document.addEventListener('keydown', (event) => {
+    if (window.innerWidth < 1024) return;
+    if (event.key === 'ArrowLeft') showPrevious();
+    if (event.key === 'ArrowRight') showNext();
+  });
+
+  const galleryMore = document.querySelector('#gallery-more');
+  const galleryMobileMore = document.querySelector('#gallery-mobile-more');
+  const galleryMoreIcon = document.querySelector('#gallery-more-icon');
+  const galleryMoreLabel = document.querySelector('#gallery-more-label');
+
+  if (galleryMore) {
+    galleryMore.addEventListener('click', () => {
+      if (!galleryMobileMore) return;
+
+      const isOpen = galleryMore.getAttribute('aria-expanded') === 'true';
+
+      if (isOpen) {
+        galleryMobileMore.classList.add('hidden');
+        galleryMobileMore.classList.remove('grid');
+        galleryMore.setAttribute('aria-expanded', 'false');
+        if (galleryMoreIcon) galleryMoreIcon.style.transform = 'rotate(0deg)';
+        if (galleryMoreLabel) galleryMoreLabel.textContent = 'View entire gallery';
+      } else {
+        galleryMobileMore.classList.remove('hidden');
+        galleryMobileMore.classList.add('grid');
+        galleryMore.setAttribute('aria-expanded', 'true');
+        if (galleryMoreIcon) galleryMoreIcon.style.transform = 'rotate(180deg)';
+        if (galleryMoreLabel) galleryMoreLabel.textContent = 'Hide gallery';
+      }
+    });
+  }
+
+  updateGallery(0);
+</script>
+
+
 <style>
-  .prose-content :global(h2) { font-family: theme('fontFamily.serif'); font-size: clamp(24px, 2.8vw, 32px); margin: 2.2rem 0 0.75rem; letter-spacing: -0.02em; }
-  .prose-content :global(h2:first-child) { margin-top: 0; }
-  .prose-content :global(p) { color: theme('colors.ink-soft'); margin-bottom: 1rem; line-height: 1.75; }
-  .prose-content :global(p em) { color: theme('colors.warn'); font-style: italic; }
-  .prose-content :global(a) { color: theme('colors.accent'); text-decoration: underline; }
-  .prose-content :global(strong) { color: theme('colors.ink'); }
+  /* ===================================================== */
+  /* CASE STUDY CONTENT */
+  /* ===================================================== */
+
+  .prose-content :global(h1) {
+    font-family: theme('fontFamily.serif');
+    font-size: clamp(32px, 4vw, 52px);
+    line-height: 1;
+    margin: 0 0 1.5rem;
+    letter-spacing: -0.035em;
+  }
+
+
+  .prose-content :global(h2) {
+    position: relative;
+    font-family: theme('fontFamily.serif');
+    font-size: clamp(28px, 3vw, 40px);
+    line-height: 1.05;
+    margin: 3.25rem 0 1rem;
+    padding-bottom: 0.65rem;
+    letter-spacing: -0.03em;
+  }
+
+
+  .prose-content :global(h2:first-child) {
+    margin-top: 0;
+  }
+
+
+  .prose-content :global(h2)::after {
+    content: '';
+    display: block;
+    width: 42px;
+    height: 2px;
+    margin-top: 0.75rem;
+    background: theme('colors.accent');
+  }
+
+
+  .prose-content :global(h3) {
+    font-family: theme('fontFamily.serif');
+    font-size: clamp(21px, 2.2vw, 28px);
+    line-height: 1.15;
+    margin: 2.25rem 0 0.8rem;
+    letter-spacing: -0.02em;
+  }
+
+
+  .prose-content :global(h4) {
+    margin: 1.75rem 0 0.65rem;
+    font-family: theme('fontFamily.sans');
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.4;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: theme('colors.accent');
+  }
+
+
+  .prose-content :global(p) {
+    color: theme('colors.ink-soft');
+    margin-bottom: 1.15rem;
+    line-height: 1.8;
+  }
+
+
+  .prose-content :global(p + p) {
+    margin-top: 0.25rem;
+  }
+
+
+  .prose-content :global(p em) {
+    color: theme('colors.warn');
+    font-style: italic;
+  }
+
+
+  .prose-content :global(a) {
+    color: theme('colors.accent');
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+
+  .prose-content :global(strong) {
+    color: theme('colors.ink');
+    font-weight: 600;
+  }
+
+
+  .prose-content :global(ul) {
+    margin: 1.25rem 0 1.5rem;
+    padding-left: 1.5rem;
+    list-style: none;
+  }
+
+
+  .prose-content :global(ul li) {
+    position: relative;
+    padding-left: 0.75rem;
+  }
+
+
+  .prose-content :global(ul li)::before {
+    content: '';
+    position: absolute;
+    left: -0.8rem;
+    top: 0.78em;
+    width: 5px;
+    height: 5px;
+    border-radius: 9999px;
+    background: theme('colors.accent');
+  }
+
+
+  .prose-content :global(ol) {
+    margin: 1.25rem 0 1.5rem;
+    padding-left: 1.75rem;
+    list-style: decimal;
+  }
+
+
+  .prose-content :global(ol li) {
+    padding-left: 0.4rem;
+  }
+
+
+  .prose-content :global(li) {
+    color: theme('colors.ink-soft');
+    margin-bottom: 0.65rem;
+    line-height: 1.7;
+  }
+
+
+  .prose-content :global(li strong) {
+    color: theme('colors.ink');
+  }
+
+
+  .prose-content :global(hr) {
+    margin: 2.5rem 0;
+    border: 0;
+    border-top: 1px solid rgba(17, 17, 17, 0.1);
+  }
+
+
+  .prose-content :global(blockquote) {
+    margin: 2rem 0;
+    border-left: 2px solid theme('colors.accent');
+    padding-left: 1.25rem;
+    font-family: theme('fontFamily.serif');
+    font-size: 1.25rem;
+    line-height: 1.5;
+  }
+
+
+  /* ===================================================== */
+  /* GALLERY */
+  /* ===================================================== */
+
+  #proj-gallery img {
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+
+
+  #gallery-stage {
+    isolation: isolate;
+  }
+
+
+  .gallery-side {
+    filter: saturate(0.65);
+  }
+
+
+  .gallery-side-left {
+    transform: translateX(-2%);
+  }
+
+
+  .gallery-side-right {
+    transform: translateX(2%);
+  }
+
+
+  .gallery-side-left:hover {
+    transform: translateX(0) scale(1.015);
+  }
+
+
+  .gallery-side-right:hover {
+    transform: translateX(0) scale(1.015);
+  }
+
+
+  @media (max-width: 1023px) {
+
+    #gallery-mobile-more img {
+      display: block;
+    }
+
+  }
 </style>

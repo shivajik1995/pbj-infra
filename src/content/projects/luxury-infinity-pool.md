@@ -5,6 +5,9 @@ slug: "luxury-infinity-pool"
 projectType: "Swimming Pool Construction"
 location: "Pune Residence (listed as \"Mumbai / 2024\" in pbjinfra.com's case-study section)"
 locationVerified: false
+category: "Aquatic"
+scope: "Infinity-edge pool & automated systems"
+shortDescription: "A premium residential infinity-edge pool with automated systems — case study pending a location confirmation from PBJ."
 heroImage:
   src: "/images/projects/lagoon-pool-curved-resort.jpg"
   alt: "Luxury curved infinity-edge swimming pool with a resort building beyond, built by PBJ Infra"

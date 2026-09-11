@@ -36,7 +36,7 @@ process:
   - step: "Handover"
     description: "Final inspection, a walkthrough of filtration and maintenance, and warranty documentation."
 relatedServices: ["pool-filtration-systems", "swimming-pool-tiles", "lagoon-pool-construction"]
-relatedProjects: ["adventure-waterpark-latur", "natural-lagoon-pool"]
+relatedProjects: ["adventure-waterpark-ahilyanagar", "natural-lagoon-pool"]
 relatedLocations: ["pune", "latur"]
 faq: ["pool-timeline", "warranty", "design-and-build", "cost", "permits"]
 ctaLabel: "Get a Pool Consultation"
@@ -54,6 +54,6 @@ This service is for homeowners building a residential pool, farmhouse or resort 
 
 ## Related work
 
-PBJ's Adventure Waterpark project (Pune–Latur corridor) applied the same filtration and safety-system discipline at a larger, multi-attraction scale — see the [full case study](/projects/adventure-waterpark-latur/). The [Natural Lagoon Pool](/projects/natural-lagoon-pool/) in Chatrapati Sambhaji Nagar shows the same engineering under a naturalistic finish. A third pool-specific project, a Luxury Infinity Pool, is documented on PBJ's own portfolio and is pending a location confirmation before its case study is published — see [/projects/](/projects/).
+PBJ's Adventure Waterpark project (Ahilyanagar, Maharashtra) applied the same filtration and safety-system discipline at a larger, multi-attraction scale — see the [full case study](/projects/adventure-waterpark-ahilyanagar/). The [Natural Lagoon Pool](/projects/natural-lagoon-pool/) in Chatrapati Sambhaji Nagar shows the same engineering under a naturalistic finish. A third pool-specific project, a Luxury Infinity Pool, is documented on PBJ's own portfolio and is pending a location confirmation before its case study is published — see [/projects/](/projects/).
 
 Related aquatic services: [pool filtration systems](/services/pool-filtration-systems/), [pool tiling and finishing](/services/swimming-pool-tiles/) and [lagoon pool construction](/services/lagoon-pool-construction/).

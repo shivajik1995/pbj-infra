@@ -33,7 +33,7 @@ process:
   - step: "Handover"
     description: "Structural inspection, waterproofing check and warranty documentation."
 relatedServices: ["ferrocement-dome", "land-development", "swimming-pool-construction"]
-relatedProjects: ["rabbit-dome-house"]
+relatedProjects: ["rabbit-dome-house", "akaya-resort-gokarna", "mi-casa-kanakapura"]
 relatedLocations: ["pune"]
 faq: ["specialized-structures", "design-and-build", "warranty", "cost"]
 ctaLabel: "Discuss a Custom Structure"
@@ -62,8 +62,6 @@ PBJ Infra treats every thin-shell project as structural engineering before it is
 
 ## Related work
 
-The most common form of this work is the [ferrocement dome](/services/ferrocement-dome/), with the [Rabbit Dome House](/projects/rabbit-dome-house/) as PBJ Infra's completed example. Thin-shell structures on greenfield sites usually begin with [land development](/services/land-development/).
-
-*Content required: PBJ team to supply additional built thin-shell examples (beyond the Rabbit Dome House) — roofs, tanks or canopies — for this page.*
+The most common form of this work is the [ferrocement dome](/services/ferrocement-dome/) — the [Rabbit Dome House](/projects/rabbit-dome-house/) in Pune is PBJ Infra's completed single-dome example, and the dome-cottage cluster at [AKAYA Resort](/projects/akaya-resort-gokarna/), Gokarna, is the same technique across a whole site. The sculptural free-form entrance wall PBJ built for [Mi Casa](/projects/mi-casa-kanakapura/) at Kanakapura shows the same curved-surface capability applied to a feature element rather than a shelter. Thin-shell structures on greenfield sites usually begin with [land development](/services/land-development/).
 
 [Talk to PBJ about a thin-shell structure →](/contact/?project=ferro-concrete-design)

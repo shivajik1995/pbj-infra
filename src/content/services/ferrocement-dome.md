@@ -12,7 +12,7 @@ heroImage:
   height: 768
 solutions:
   - name: "Dome homes & habitable shells"
-    description: "Single- or multi-dome residences and studios where the dome is the living space, not just a roof — as demonstrated by the completed Rabbit Dome House in Pune."
+    description: "Single- or multi-dome residences and studios where the dome is the living space, not just a roof — as demonstrated by the completed Rabbit Dome House in Pune and the dome-cottage cluster at AKAYA Resort, Gokarna."
   - name: "Farm & utility domes"
     description: "Storage, shelter and workshop domes on agricultural land, where a column-free span and a hard-wearing shell are worth more than a conventional shed."
   - name: "Water tanks & reservoirs"
@@ -20,7 +20,7 @@ solutions:
   - name: "Feature & event structures"
     description: "Domes as pavilions, meditation spaces, restaurants or reception structures where the form itself is the point."
 whyPbj:
-  - "A completed, named example exists: the Rabbit Dome House in Pune, on PBJ Infra's own portfolio."
+  - "Completed, named examples exist: the Rabbit Dome House in Pune, and a whole cluster of dome cottages at AKAYA Resort, Gokarna."
   - "Ferrocement domes sit on the same ferro-concrete design capability PBJ applies across its specialised structural work."
   - "Operating since 2009, GST- and UDYAM-registered, with a 5-year structural warranty."
 process:
@@ -33,7 +33,7 @@ process:
   - step: "Handover"
     description: "Structural inspection, waterproofing check and warranty documentation."
 relatedServices: ["ferro-concrete-design", "land-development"]
-relatedProjects: ["rabbit-dome-house"]
+relatedProjects: ["rabbit-dome-house", "akaya-resort-gokarna"]
 relatedLocations: ["pune"]
 faq: ["specialized-structures", "design-and-build", "warranty", "cost"]
 ctaLabel: "Discuss a Dome Structure"
@@ -62,8 +62,8 @@ PBJ Infra treats a dome as a structural-engineering problem first. Shell thickne
 
 ## Related work
 
-The [Rabbit Dome House](/projects/rabbit-dome-house/) in Pune is PBJ Infra's completed ferrocement dome project. This work is closely related to PBJ's [ferro concrete design](/services/ferro-concrete-design/) service, and dome structures on rural land often pair with [land development](/services/land-development/).
+The [Rabbit Dome House](/projects/rabbit-dome-house/) in Pune is PBJ Infra's completed single-dome residence, and [AKAYA Resort](/projects/akaya-resort-gokarna/) at Gokarna is the same technique built as a cluster of dome cottages across a whole resort site. This work is closely related to PBJ's [ferro concrete design](/services/ferro-concrete-design/) service, and dome structures on rural land often pair with [land development](/services/land-development/).
 
-*Content required: PBJ team to supply the Rabbit Dome House's dome span, floor area and construction period so this page can cite them.*
+*Content required: PBJ team to supply dome spans, floor areas and construction periods for the Rabbit Dome House and AKAYA Resort so this page can cite them.*
 
 [Talk to PBJ about a dome structure →](/contact/?project=ferrocement-dome)

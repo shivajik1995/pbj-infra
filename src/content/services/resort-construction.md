@@ -6,10 +6,10 @@ h1: "Resort Construction in Pune, Latur & Maharashtra"
 category: "Hospitality & Leisure"
 shortDescription: "End-to-end resort and hospitality construction — guest accommodation, central facilities, pools and water features, landscaping and site infrastructure, delivered in coordinated phases."
 heroImage:
-  src: "/images/projects/resort-dome-pavilion-seating.jpg"
-  alt: "Resort pavilion with a curved shell roof and landscaped outdoor seating, constructed by PBJ Infra"
-  width: 1376
-  height: 768
+  src: "/images/projects/jalashay-resort-panshet-aerial-promontory.jpg"
+  alt: "PBJ Infra's completed Jalashay Resort on a promontory into the Panshet reservoir — main hall, guest block, villa cottages and pool"
+  width: 1440
+  height: 728
 solutions:
   - name: "Guest accommodation & central facilities"
     description: "Cottages, room blocks, restaurants, banquet and reception structures built to hospitality durability and serviceability standards."
@@ -35,7 +35,7 @@ process:
   - step: "Handover"
     description: "Snagging, systems commissioning, an operations walkthrough and warranty documentation."
 relatedServices: ["waterpark-construction", "swimming-pool-construction", "farmhouse-construction", "land-development"]
-relatedProjects: ["adventure-waterpark-latur"]
+relatedProjects: ["jalashay-resort-panshet", "adventure-waterpark-ahilyanagar"]
 relatedLocations: ["pune", "latur"]
 faq: ["design-and-build", "permits", "warranty", "cost"]
 ctaLabel: "Plan Your Resort Project"
@@ -64,8 +64,8 @@ PBJ works a resort as a phased programme. Site infrastructure and access come fi
 
 ## Related work
 
-PBJ Infra's [Adventure Waterpark](/projects/adventure-waterpark-latur/) shows the company delivering hospitality-scale aquatic infrastructure and safety systems. Resort projects typically combine [swimming pool construction](/services/swimming-pool-construction/), [lagoon pool construction](/services/lagoon-pool-construction/), [waterpark construction](/services/waterpark-construction/) and [land development](/services/land-development/) within one contract.
+PBJ Infra's [Jalashay Resort](/projects/jalashay-resort-panshet/) at Panshet is a completed, operating example of this service — a lakeside resort where PBJ delivered the retaining and site works, the main hall, a guest block and villa cottages, an infinity-edge pool and the full landscaping as one contract. The [Adventure Waterpark](/projects/adventure-waterpark-ahilyanagar/) in Ahilyanagar shows the same team delivering hospitality-scale aquatic infrastructure and safety systems.
 
-*Content required: no standalone completed resort project is documented on pbjinfra.com. PBJ team to supply a resort project reference so a case study can be linked here.*
+Resort projects typically combine [swimming pool construction](/services/swimming-pool-construction/), [lagoon pool construction](/services/lagoon-pool-construction/), [waterpark construction](/services/waterpark-construction/) and [land development](/services/land-development/) within one contract.
 
 [Talk to PBJ about a resort project →](/contact/?project=resort-construction)

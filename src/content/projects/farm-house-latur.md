@@ -5,12 +5,19 @@ slug: "farm-house-latur"
 projectType: "Farmhouse Construction"
 location: "Latur"
 locationVerified: true
+category: "Residential"
+scope: "Site infrastructure, residence & landscaping"
+shortDescription: "A custom rural residence near Latur, built end to end with its own water, drainage, power and access infrastructure."
 heroImage:
   src: "/images/projects/farmhouse-modern-slat.jpg"
   alt: "Completed farmhouse with a timber-slat upper level and landscaped grounds, built by PBJ Infra near Latur"
   width: 896
   height: 1200
-gallery: []
+gallery:
+  - src: "/images/projects/farmhouse-render-cube.jpg"
+    alt: "Design study for the Latur farmhouse — the cube massing of the main residence"
+    width: 896
+    height: 1200
 overview: "A custom farmhouse near Latur — a residence on rural land, blending rustic materials with modern amenities, built with its own site infrastructure by PBJ Infra's in-house team."
 approach: "Site works and infrastructure first, then the residence, then landscaping — the sequence PBJ uses on remote plots where mobilising multiple contractors is slow and costly."
 execution: "Access, water and drainage; the main residence in a rustic-modern material mix; then the grounds and external works."
@@ -28,7 +35,7 @@ seo:
 
 ## Project overview
 
-The Farm House near Latur is PBJ Infra's documented residential project in the region and the reference behind its [farmhouse construction](/services/farmhouse-construction/) service. Latur is described on PBJ's own site as a major operational hub, and this project — alongside the [Adventure Waterpark](/projects/adventure-waterpark-latur/) in the Pune–Latur corridor — is the evidence behind that.
+The Farm House near Latur is PBJ Infra's documented residential project in the region and the reference behind its [farmhouse construction](/services/farmhouse-construction/) service. Latur is described on PBJ's own site as a major operational hub, and this completed build is the project evidence behind that — with PBJ's Pune team also delivering the [Adventure Waterpark](/projects/adventure-waterpark-ahilyanagar/) in nearby Ahilyanagar.
 
 ## Client requirement
 

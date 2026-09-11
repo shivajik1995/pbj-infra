@@ -50,7 +50,7 @@ No third-party keyword-volume tool was run for this build (that requires live AP
 /services/ferrocement-dome/                ✅ published
 /services/land-development/                ✅ published
 /projects/                                 Projects hub (all 5 signature projects)
-/projects/adventure-waterpark-latur/       ✅ published
+/projects/adventure-waterpark-ahilyanagar/       ✅ published
 /projects/rabbit-dome-house/               ✅ published (Aug 2026 rebuild)
 /projects/natural-lagoon-pool/             ✅ published
 /projects/farm-house-latur/                ✅ published

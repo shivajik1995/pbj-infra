@@ -5,12 +5,23 @@ slug: "natural-lagoon-pool"
 projectType: "Lagoon Pool Construction"
 location: "Chatrapati Sambhaji Nagar"
 locationVerified: true
+category: "Aquatic"
+scope: "Free-form lagoon pool shell, beach entry & filtration"
+shortDescription: "A free-form, beach-entry lagoon pool engineered as a full swimming pool and finished to read as a natural water body."
 heroImage:
   src: "/images/projects/lagoon-pool-blue-tile.jpg"
   alt: "Free-form natural lagoon pool with blue mosaic tiling, built by PBJ Infra in Chatrapati Sambhaji Nagar"
   width: 1376
   height: 768
-gallery: []
+gallery:
+  - src: "/images/projects/lagoon-pool-curved-resort.jpg"
+    alt: "Curved free-form edge of the natural lagoon pool grading into a shallow beach entry"
+    width: 1376
+    height: 768
+  - src: "/images/projects/stone-face-water-feature.jpg"
+    alt: "Carved stone water feature spilling into the lagoon pool"
+    width: 768
+    height: 1376
 overview: "A naturalistic, lagoon-style swimming pool in Chatrapati Sambhaji Nagar, built under PBJ Infra's Trusted Lagoon line — engineered as a full swimming pool, finished to read as a natural water body."
 approach: "Free-form shell, beach-entry grading, edge treatment and filtration designed together so the naturalistic look sits on sound pool engineering."
 execution: "Structural shell and waterproofing, filtration and circulation, then the naturalistic interior finish and soft edge detailing."

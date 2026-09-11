@@ -50,10 +50,10 @@ export const SITE = {
     'Ferro concrete design',
     'Land development and site preparation',
   ],
-  // Logo: favicon.svg is the only mark hosted by this site today. A raster
-  // logo + a 1200×630 OG image are flagged as required from PBJ — see
-  // docs/seo-rebuild-2026.md ("Information required from PBJ").
-  logoUrl: 'https://www.pbjinfra.com/favicon.svg',
+  // Logo: PBJ Infra wordmark, hosted at /pbj-infra-logo.png (1024×1024, white
+  // ground). Used for Organization schema logo/image. A dedicated 1200×630 OG
+  // image is still flagged as required from PBJ — see docs/seo-rebuild-2026.md.
+  logoUrl: 'https://www.pbjinfra.com/pbj-infra-logo.png',
   // Verified social profiles — none confirmed yet. organizationSchema() only
   // emits `sameAs` when this is non-empty, so an empty array is safe.
   sameAs: [] as string[],

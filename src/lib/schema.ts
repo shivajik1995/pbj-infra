@@ -14,7 +14,7 @@ export function organizationSchema() {
     legalName: SITE.legalName,
     url: SITE.url,
     logo: SITE.logoUrl,
-    image: SITE.logoUrl,
+    image: `${SITE.url}/images/projects/ferrocement-dome-sunset-openings.jpg`,
     telephone: SITE.phone,
     email: SITE.email,
     foundingDate: SITE.founded,
