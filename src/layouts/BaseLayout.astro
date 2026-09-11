@@ -3,6 +3,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppFloat from '../components/WhatsAppFloat.astro';
 import MobileStickyCTA from '../components/MobileStickyCTA.astro';
+import PageAnimations from '../components/PageAnimations.astro';
 import { SITE } from '../lib/site';
 import { organizationSchema, websiteSchema } from '../lib/schema';
 import '../styles/global.css';
@@ -18,10 +19,12 @@ interface Props {
 
 const { title, description, path, ogImage, schema = [], noindex = false } = Astro.props;
 const canonical = new URL(path, SITE.url).toString();
-// Falls back to a real, existing project photo rather than a placeholder
-// graphic — until a dedicated 1200×630 OG asset is designed, this is the
-// most accurate image available for unfurled links to /, /about/, /contact/.
-const ogImg = ogImage ?? 'https://pbjinfra.com/assets/images/Featured-project1.jpeg';
+// Falls back to a real project photo rather than a placeholder graphic —
+// until a dedicated 1200×630 OG asset is designed, this is the most accurate
+// image available for unfurled links to /, /about/, /contact/. Relative paths
+// (e.g. a page's own heroImage) are resolved to an absolute URL so social
+// scrapers can fetch them.
+const ogImg = new URL(ogImage ?? '/images/projects/ferrocement-dome-sunset-openings.jpg', SITE.url).toString();
 const allSchema = [organizationSchema(), websiteSchema(), ...schema];
 ---
 <!DOCTYPE html>
@@ -71,5 +74,6 @@ const allSchema = [organizationSchema(), websiteSchema(), ...schema];
   <Footer />
   <WhatsAppFloat message="Hi PBJ Infra, I'd like to discuss a project." />
   <MobileStickyCTA />
+  <PageAnimations />
 </body>
 </html>

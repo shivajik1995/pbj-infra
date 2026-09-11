@@ -1,39 +1,377 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Breadcrumbs from '../../components/Breadcrumbs.astro';
-import ProjectCard from '../../components/ProjectCard.astro';
-import RevealScript from '../../components/RevealScript.astro';
+import PageShell from '../../components/PageShell.astro';
+import FinalCTA from '../../components/FinalCTA.astro';
 import { breadcrumbSchema } from '../../lib/schema';
 
 const projects = await getCollection('projects');
-const order = ['adventure-waterpark-latur', 'luxury-infinity-pool', 'rabbit-dome-house', 'natural-lagoon-pool', 'farm-house-latur'];
-const ordered = order.map((slug) => projects.find((p) => p.slug === slug)!).filter(Boolean);
-const crumbs = [{ name: 'Home', url: '/' }, { name: 'Projects', url: '/projects/' }];
+
+const order = [
+  'adventure-waterpark-ahilyanagar',
+  'jalashay-resort-panshet',
+  'akaya-resort-gokarna',
+  'mi-casa-kanakapura',
+  'latur-water-park',
+  'luxury-infinity-pool',
+  'rabbit-dome-house',
+  'natural-lagoon-pool',
+  'farm-house-latur'
+];
+
+const ordered = order
+  .map((slug) => projects.find((p) => p.slug === slug))
+  .filter(Boolean);
+
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Projects', url: '/projects/' }
+];
+
+const publishedProjects = ordered.filter(
+  (project) => project.data.status === 'published'
+);
 ---
+
 <BaseLayout
-  title="Construction Projects | Pools, Waterparks, Domes & More | PBJ Infra"
-  description="PBJ Infra's signature projects — from an Adventure Waterpark in the Pune–Latur corridor to a ferrocement dome house in Pune. Real, verified project work."
+  title="Construction Projects & Case Studies | PBJ Infra"
+  description="Explore PBJ Infra's construction projects across Maharashtra including waterparks, swimming pools, ferrocement structures, farmhouses and specialized construction."
   path="/projects/"
   schema={[breadcrumbSchema(crumbs)]}
 >
-  <Breadcrumbs items={crumbs} />
-  <div class="wrap pt-8 pb-14">
-    <h1 class="text-[32px] md:text-[48px] max-w-[20ch]">We don't just show projects. We show what we've built.</h1>
-    <p class="mt-5 max-w-[62ch] text-ink-soft">Five signature projects verified from PBJ Infra's own portfolio. One has a full, detailed case study so far — the rest are shown honestly as verified project references while their case studies are written.</p>
-  </div>
-  <div class="wrap pb-20">
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {ordered.map((p) => (
-        <ProjectCard
-          name={p.data.name}
-          projectType={p.data.projectType}
-          location={p.data.location}
-          href={p.data.status === 'published' ? `/projects/${p.slug}/` : null}
-          image={p.data.heroImage}
-        />
-      ))}
+
+  <!-- HERO -->
+  <section class="relative overflow-hidden bg-[#111111] text-white">
+
+    <!-- Architectural grid -->
+    <div
+      class="pointer-events-none absolute inset-0 opacity-[0.035]"
+      style="
+        background-image:
+          linear-gradient(rgba(255,255,255,.8) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,.8) 1px, transparent 1px);
+        background-size: 80px 80px;
+      "
+    ></div>
+
+    <div class="relative mx-auto max-w-7xl px-6 pb-20 pt-8 lg:px-8 lg:pb-28">
+
+      <!-- Breadcrumb -->
+      <nav
+        aria-label="Breadcrumb"
+        class="mb-20 flex items-center gap-3 text-xs uppercase tracking-[0.16em] text-white/35"
+      >
+        <a href="/" class="transition-colors hover:text-white">
+          Home
+        </a>
+
+        <span>/</span>
+
+        <span class="text-white/70">
+          Projects
+        </span>
+      </nav>
+
+
+      <!-- Hero content -->
+      <div class="grid gap-12 lg:grid-cols-[1.25fr_0.75fr] lg:items-end">
+
+        <div>
+
+          <p class="text-xs uppercase tracking-[0.24em] text-[rgb(30_110_100)]">
+            PBJ Infra / Project Portfolio
+          </p>
+
+          <h1 class="mt-6 max-w-5xl text-5xl font-medium leading-[0.95] tracking-[-0.045em] sm:text-6xl lg:text-8xl">
+            Projects
+            <span class="block text-white/30">
+              we've built.
+            </span>
+          </h1>
+
+        </div>
+
+
+        <div>
+
+          <p class="max-w-md text-base leading-7 text-white/55 lg:text-lg">
+            Explore selected PBJ Infra projects across aquatic,
+            hospitality, residential and specialized construction.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- Stats -->
+      <div class="mt-20 grid grid-cols-2 border-t border-white/10 sm:grid-cols-4">
+
+        <div class="border-r border-white/10 py-7 pr-6">
+          <p class="text-3xl font-medium">
+            {ordered.length}
+          </p>
+
+          <p class="mt-2 text-[10px] uppercase tracking-[0.18em] text-white/35">
+            Total projects
+          </p>
+        </div>
+
+
+        <div class="border-r border-white/10 py-7 pl-6 pr-6">
+          <p class="text-3xl font-medium">
+            {publishedProjects.length}
+          </p>
+
+          <p class="mt-2 text-[10px] uppercase tracking-[0.18em] text-white/35">
+            Case studies
+          </p>
+        </div>
+
+
+        <div class="border-r border-white/10 py-7 pr-6 sm:pl-6">
+          <p class="text-3xl font-medium">
+            04
+          </p>
+
+          <p class="mt-2 text-[10px] uppercase tracking-[0.18em] text-white/35">
+            Sectors
+          </p>
+        </div>
+
+
+        <div class="py-7 pl-6">
+          <p class="text-3xl font-medium">
+            2009
+          </p>
+
+          <p class="mt-2 text-[10px] uppercase tracking-[0.18em] text-white/35">
+            Operating since
+          </p>
+        </div>
+
+      </div>
+
     </div>
-  </div>
-  <RevealScript />
+
+  </section>
+
+
+  <!-- PROJECTS -->
+  <section class="bg-[#f3f2ee] text-[#111111]">
+
+    <div class="mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-28">
+
+      <!-- Section header -->
+      <div class="mb-14 flex flex-col gap-6 border-b border-black/10 pb-8 sm:flex-row sm:items-end sm:justify-between">
+
+        <div>
+
+          <p class="text-[10px] uppercase tracking-[0.22em] text-[rgb(30_110_100)]">
+            01 / Portfolio
+          </p>
+
+          <h2 class="mt-3 text-3xl font-medium tracking-tight sm:text-4xl">
+            Project details
+          </h2>
+
+        </div>
+
+        <p class="max-w-sm text-sm leading-6 text-black/45">
+          Selected construction projects delivered by PBJ Infra.
+        </p>
+
+      </div>
+
+
+      <!-- Project cards -->
+      <div class="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+
+        {
+          ordered.map((project, index) => {
+            const data = project.data;
+            const inProgress = data.status === 'in-progress';
+            const hasPage = data.status !== 'draft';
+            const statusLabel = inProgress ? 'In progress' : data.status === 'published' ? 'Completed' : 'Coming soon';
+            const timeline = inProgress ? (data.duration ?? 'In progress') : (data.year ?? data.duration ?? statusLabel);
+            const Wrapper = hasPage ? 'a' : 'div';
+
+            return (
+              <Wrapper
+                href={hasPage ? `/projects/${project.slug}/` : undefined}
+                class:list={[
+                  "group flex flex-col overflow-hidden rounded-2xl border border-black/10 bg-white transition-all duration-500",
+                  hasPage && "hover:-translate-y-1 hover:border-black/20 hover:shadow-[0_18px_45px_rgba(0,0,0,0.09)]",
+                ]}
+              >
+
+                <!-- IMAGE -->
+                <div class="relative aspect-[16/9] overflow-hidden bg-black/5">
+
+                  <img
+                    src={data.heroImage.src}
+                    alt={data.heroImage.alt}
+                    width={data.heroImage.width}
+                    height={data.heroImage.height}
+                    class="h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.05]"
+                    loading={index < 3 ? 'eager' : 'lazy'}
+                    decoding="async"
+                  />
+
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent"></div>
+
+                  <!-- Number -->
+                  <div class="absolute left-3.5 top-3.5 flex h-7 w-7 items-center justify-center rounded-full border border-white/25 bg-black/25 text-[9px] font-medium text-white backdrop-blur-md">
+                    {String(index + 1).padStart(2, '0')}
+                  </div>
+
+                  <!-- Status -->
+                  <div class="absolute right-3.5 top-3.5">
+                    <span class="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/30 px-2.5 py-1 text-[8.5px] uppercase tracking-[0.16em] text-white backdrop-blur-md">
+                      {hasPage && (
+                        <span class:list={["h-1 w-1 rounded-full", inProgress ? "bg-[rgb(245_200_110)]" : "bg-[rgb(110_210_180)]"]}></span>
+                      )}
+                      {statusLabel}
+                    </span>
+                  </div>
+
+                </div>
+
+
+                <!-- CARD CONTENT -->
+                <div class="flex flex-1 flex-col p-5">
+
+                  <div class="flex items-center justify-between gap-3 text-[9.5px] uppercase tracking-[0.16em]">
+                    <span class="font-medium text-[rgb(30_110_100)]">{data.projectType}</span>
+                    {data.category && <span class="text-black/35">{data.category}</span>}
+                  </div>
+
+                  <h3 class="mt-2.5 text-xl font-medium leading-snug tracking-[-0.02em]">
+                    {data.name}
+                  </h3>
+
+                  <div class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-black/55">
+                    <span>{data.location}</span>
+                    <span class="h-1 w-1 rounded-full bg-black/20"></span>
+                    <span>{timeline}</span>
+                  </div>
+
+                  <div class="mt-4 flex items-center justify-between border-t border-black/10 pt-3.5 text-[10.5px] font-medium uppercase tracking-[0.16em] text-black/45">
+                    <span>{hasPage ? (inProgress ? 'View progress' : 'View project') : 'Coming soon'}</span>
+                    <span class="text-sm transition-transform duration-300 group-hover:translate-x-1">→</span>
+                  </div>
+
+                </div>
+
+              </Wrapper>
+            );
+          })
+        }
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- CAPABILITIES -->
+  <section class="bg-[#111111] text-white">
+
+    <div class="mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-28">
+
+      <div class="grid gap-14 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
+
+        <div>
+
+          <p class="text-[10px] uppercase tracking-[0.22em] text-[rgb(30_110_100)]">
+            02 / What we build
+          </p>
+
+          <h2 class="mt-5 text-4xl font-medium tracking-[-0.04em] sm:text-5xl">
+            Built across
+            <span class="text-white/30">
+              environments.
+            </span>
+          </h2>
+
+        </div>
+
+
+        <div class="grid grid-cols-2 gap-x-8 gap-y-10">
+
+          <div class="border-t border-white/10 pt-5">
+
+            <p class="text-lg font-medium">
+              Aquatic
+            </p>
+
+            <p class="mt-2 text-sm leading-6 text-white/40">
+              Swimming pools, filtration systems and waterparks.
+            </p>
+
+          </div>
+
+
+          <div class="border-t border-white/10 pt-5">
+
+            <p class="text-lg font-medium">
+              Hospitality
+            </p>
+
+            <p class="mt-2 text-sm leading-6 text-white/40">
+              Resorts, leisure spaces and destination environments.
+            </p>
+
+          </div>
+
+
+          <div class="border-t border-white/10 pt-5">
+
+            <p class="text-lg font-medium">
+              Residential
+            </p>
+
+            <p class="mt-2 text-sm leading-6 text-white/40">
+              Farmhouses, homes and alternative structures.
+            </p>
+
+          </div>
+
+
+          <div class="border-t border-white/10 pt-5">
+
+            <p class="text-lg font-medium">
+              Specialized
+            </p>
+
+            <p class="mt-2 text-sm leading-6 text-white/40">
+              Ferrocement, domes and specialized construction.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- CTA -->
+  <FinalCTA
+    title="Planning something"
+    titleMuted="worth building?"
+    copy="Tell PBJ Infra what you're planning — from concept and engineering to construction and execution."
+    primary={{
+      label: 'Start a project',
+      href: '/contact/',
+      event: 'click_start_project',
+      params: { placement: 'projects_cta' }
+    }}
+    contact={true}
+  />
+
 </BaseLayout>

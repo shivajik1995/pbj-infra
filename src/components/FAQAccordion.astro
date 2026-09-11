@@ -1,57 +1,255 @@
 ---
-interface Props { items: { question: string; answer: string }[]; idPrefix?: string }
-const { items, idPrefix = 'faq' } = Astro.props;
+interface Props {
+  items: {
+    question: string;
+    answer: string;
+  }[];
+  idPrefix?: string;
+}
+
+const {
+  items,
+  idPrefix = 'faq'
+} = Astro.props;
 ---
+
 <div class="faq-list">
-  {items.map((item, i) => (
-    <div class="border-b border-ink/[.14]">
-      <h3>
-        <button
-          class="faq-q w-full text-left py-[26px] flex justify-between items-center gap-4 font-serif text-lg md:text-[19px]"
-          aria-expanded={i === 0 ? 'true' : 'false'}
-          aria-controls={`${idPrefix}-a-${i}`}
-          id={`${idPrefix}-q-${i}`}
+
+  {items.map((item, i) => {
+
+    const questionId = `${idPrefix}-q-${i}`;
+    const answerId = `${idPrefix}-a-${i}`;
+    const isOpen = i === 0;
+
+    return (
+      <div class="faq-item border-b border-ink/[.14]">
+
+        <h3>
+
+          <button
+            type="button"
+            class="faq-q group flex w-full items-center justify-between gap-6 py-6 text-left font-serif text-lg md:text-[19px]"
+            aria-expanded={isOpen ? 'true' : 'false'}
+            aria-controls={answerId}
+            id={questionId}
+          >
+
+            <span class="faq-question">
+              {item.question}
+            </span>
+
+            <span
+              class:list={[
+                'faq-icon',
+                'relative',
+                'flex',
+                'h-7',
+                'w-7',
+                'shrink-0',
+                'items-center',
+                'justify-center',
+                'text-accent',
+                'transition-transform',
+                'duration-300',
+                isOpen && 'is-open'
+              ]}
+              aria-hidden="true"
+            >
+              <span class="absolute h-px w-3 bg-current"></span>
+              <span class="absolute h-3 w-px bg-current"></span>
+            </span>
+
+          </button>
+
+        </h3>
+
+
+        <div
+          id={answerId}
+          role="region"
+          aria-labelledby={questionId}
+          class="faq-a grid overflow-hidden transition-[grid-template-rows,opacity] duration-300 ease-out"
+          style={`grid-template-rows:${isOpen ? '1fr' : '0fr'}; opacity:${isOpen ? '1' : '0'}`}
         >
-          <span>{item.question}</span>
-          <span class="plus font-mono text-lg text-accent shrink-0 transition-transform duration-200" aria-hidden="true">+</span>
-        </button>
-      </h3>
-      <div
-        id={`${idPrefix}-a-${i}`}
-        role="region"
-        aria-labelledby={`${idPrefix}-q-${i}`}
-        class="faq-a overflow-hidden transition-[grid-template-rows] duration-300 grid"
-        style={i === 0 ? undefined : 'grid-template-rows:0fr'}
-      >
-        <div class="min-h-0 overflow-hidden">
-          <p class="pb-6 text-ink-soft max-w-[62ch] text-[14.5px]">{item.answer}</p>
+
+          <div class="min-h-0 overflow-hidden">
+
+            <p class="max-w-[65ch] pb-7 text-[14px] leading-[1.75] text-ink-soft md:text-[14.5px]">
+              {item.answer}
+            </p>
+
+          </div>
+
         </div>
+
       </div>
-    </div>
-  ))}
+    );
+  })}
+
 </div>
 
+
+<style>
+
+  .faq-q {
+    transition:
+      color .25s ease;
+  }
+
+  .faq-q:hover {
+    color:
+      rgb(30, 110, 100);
+  }
+
+
+  .faq-question {
+    max-width:
+      850px;
+  }
+
+
+  .faq-icon {
+    transform:
+      rotate(0deg);
+  }
+
+
+  .faq-icon.is-open {
+    transform:
+      rotate(45deg);
+  }
+
+
+  .faq-a {
+    will-change:
+      grid-template-rows,
+      opacity;
+  }
+
+
+  @media (prefers-reduced-motion: reduce) {
+
+    .faq-q,
+    .faq-icon,
+    .faq-a {
+      transition:
+        none !important;
+    }
+
+  }
+
+</style>
+
+
 <script>
-  document.querySelectorAll<HTMLElement>('.faq-list').forEach((list) => {
-    const buttons = list.querySelectorAll<HTMLButtonElement>('.faq-q');
-    buttons.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const expanded = btn.getAttribute('aria-expanded') === 'true';
-        const panel = document.getElementById(btn.getAttribute('aria-controls')!)!;
-        const plus = btn.querySelector('.plus') as HTMLElement;
-        // close all in this list
-        buttons.forEach((b) => {
-          b.setAttribute('aria-expanded', 'false');
-          const p = document.getElementById(b.getAttribute('aria-controls')!)!;
-          p.style.gridTemplateRows = '0fr';
-          (b.querySelector('.plus') as HTMLElement).style.transform = 'rotate(0deg)';
+
+  document
+    .querySelectorAll<HTMLElement>('.faq-list')
+    .forEach((list) => {
+
+      const buttons =
+        Array.from(
+          list.querySelectorAll<HTMLButtonElement>('.faq-q')
+        );
+
+
+      buttons.forEach((button) => {
+
+        button.addEventListener('click', () => {
+
+          const currentlyOpen =
+            button.getAttribute('aria-expanded') === 'true';
+
+
+          buttons.forEach((otherButton) => {
+
+            const panelId =
+              otherButton.getAttribute('aria-controls');
+
+            if (!panelId) return;
+
+
+            const panel =
+              list.querySelector<HTMLElement>(
+                `#${CSS.escape(panelId)}`
+              );
+
+            const icon =
+              otherButton.querySelector<HTMLElement>(
+                '.faq-icon'
+              );
+
+
+            otherButton.setAttribute(
+              'aria-expanded',
+              'false'
+            );
+
+
+            if (panel) {
+
+              panel.style.gridTemplateRows =
+                '0fr';
+
+              panel.style.opacity =
+                '0';
+
+            }
+
+
+            icon?.classList.remove(
+              'is-open'
+            );
+
+          });
+
+
+          if (!currentlyOpen) {
+
+            const panelId =
+              button.getAttribute('aria-controls');
+
+            if (!panelId) return;
+
+
+            const panel =
+              list.querySelector<HTMLElement>(
+                `#${CSS.escape(panelId)}`
+              );
+
+            const icon =
+              button.querySelector<HTMLElement>(
+                '.faq-icon'
+              );
+
+
+            button.setAttribute(
+              'aria-expanded',
+              'true'
+            );
+
+
+            if (panel) {
+
+              panel.style.gridTemplateRows =
+                '1fr';
+
+              panel.style.opacity =
+                '1';
+
+            }
+
+
+            icon?.classList.add(
+              'is-open'
+            );
+
+          }
+
         });
-        if (!expanded) {
-          btn.setAttribute('aria-expanded', 'true');
-          panel.style.gridTemplateRows = '1fr';
-          plus.style.transform = 'rotate(45deg)';
-        }
+
       });
+
     });
-  });
+
 </script>

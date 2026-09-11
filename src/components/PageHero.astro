@@ -1,0 +1,180 @@
+---
+// Editorial hero band for inner pages — the homepage's cinematic language at
+// ~60vh instead of full screen. Breadcrumbs render inside it. The <h1> is
+// plain text always in the DOM; the line-mask reveal is layered on by
+// PageAnimations only under .js + prefers-reduced-motion:no-preference.
+import Breadcrumbs from './Breadcrumbs.astro';
+import GridTexture from './GridTexture.astro';
+
+interface Cta {
+  label: string;
+  href: string;
+  style?: 'solid' | 'line' | 'glass' | 'lt';
+  external?: boolean;
+  event?: string;
+  params?: Record<string, unknown>;
+}
+interface Props {
+  crumbs: { name: string; url: string }[];
+  eyebrow: string;
+  title: string;
+  titleMuted?: string;
+  lead?: string;
+  tone?: 'ink' | 'paper';
+  bgImage?: { src: string; alt: string };
+  ctas?: Cta[];
+  metaRight?: string;
+  size?: 'display' | 'article';
+}
+const {
+  crumbs,
+  eyebrow,
+  title,
+  titleMuted,
+  lead,
+  tone = 'ink',
+  bgImage,
+  ctas = [],
+  metaRight,
+  size = 'display',
+} = Astro.props;
+
+const isInk = tone === 'ink';
+const titleSize =
+  size === 'article'
+    ? 'text-[clamp(29px,3.8vw,50px)] leading-[1.05]'
+    : 'text-[clamp(38px,6.4vw,88px)] leading-[.9]';
+const leadColor = isInk ? 'text-paper/65' : 'text-ink/65';
+const eyebrowColor = isInk ? 'text-paper/60' : 'text-ink/55';
+const btnClass = { solid: 'btn btn-solid', line: isInk ? 'btn btn-lt' : 'btn btn-line', glass: 'btn btn-glass', lt: 'btn btn-lt' };
+---
+<section
+  class:list={[
+    'page-hero relative flex min-h-[58svh] flex-col overflow-hidden pb-14 pt-[100px] md:min-h-[64svh] md:pb-20 md:pt-[116px]',
+    isInk ? 'bg-ink text-paper' : 'bg-paper text-ink',
+  ]}
+  aria-labelledby="page-hero-title"
+  data-hero
+>
+  <script is:inline>
+    (function (s) {
+      if (s && s.parentElement) s.parentElement.classList.add('js-ready');
+    })(document.currentScript);
+  </script>
+
+  {bgImage && (
+    <div class="absolute inset-0 z-0" aria-hidden="true">
+      <img
+        src={bgImage.src}
+        alt=""
+        width="1800"
+        height="1100"
+        fetchpriority="high"
+        decoding="async"
+        class="page-hero-bg h-full w-full object-cover"
+      />
+      <div class:list={['absolute inset-0', isInk ? 'bg-ink/72' : 'bg-paper/78']}></div>
+      <div class:list={['absolute inset-0 bg-gradient-to-t', isInk ? 'from-ink via-ink/40 to-ink/10' : 'from-paper via-paper/30 to-transparent']}></div>
+    </div>
+  )}
+
+  {isInk && !bgImage && (
+    <>
+      <div class="dark-glow" aria-hidden="true"></div>
+      <div class="dark-grain" aria-hidden="true"></div>
+    </>
+  )}
+
+  <GridTexture tone={isInk ? 'dark' : 'light'} />
+
+  <div class="relative z-[3]">
+    <Breadcrumbs items={crumbs} tone={tone} offset={false} />
+  </div>
+
+  <div class="wrap relative z-[3] mt-auto pt-12">
+    <div class="flex items-start justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <span class="h-px w-9 bg-accent"></span>
+        <span class:list={['font-mono text-[9px] uppercase tracking-[.2em]', eyebrowColor]}>{eyebrow}</span>
+      </div>
+      {metaRight && (
+        <span class:list={['hidden font-mono text-[9px] uppercase tracking-[.16em] sm:block', isInk ? 'text-paper/35' : 'text-ink/35']}>{metaRight}</span>
+      )}
+    </div>
+
+    <h1
+      id="page-hero-title"
+      class:list={['page-hero-title mt-6 max-w-[1000px] font-serif tracking-[-.04em]', titleSize]}
+    >
+      <span class="mask-line block overflow-hidden"><span class="hero-title-line block">{title}{titleMuted ? ' ' : ''}</span></span>
+      {titleMuted && (
+        <span class="mask-line block overflow-hidden"><span class:list={['hero-title-line block', isInk ? 'text-paper/45' : 'text-ink/40']}>{titleMuted}</span></span>
+      )}
+    </h1>
+
+    {lead && (
+      <p class:list={['page-hero-lead mt-7 max-w-[560px] text-[14px] leading-[1.75] md:text-[15px]', leadColor]}>
+        {lead}
+      </p>
+    )}
+
+    {ctas.length > 0 && (
+      <div class="page-hero-actions mt-9 flex flex-wrap gap-3">
+        {ctas.map((c) => (
+          <a
+            href={c.href}
+            class={btnClass[c.style ?? 'solid']}
+            target={c.external ? '_blank' : undefined}
+            rel={c.external ? 'noopener noreferrer' : undefined}
+            data-analytics-event={c.event}
+            data-analytics-params={c.params ? JSON.stringify(c.params) : undefined}
+          >
+            {c.label}<span aria-hidden="true"> →</span>
+          </a>
+        ))}
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .page-hero { isolation: isolate; }
+  .page-hero-bg { filter: saturate(0.72) contrast(1.05); }
+
+  /* Depth treatment for flat bg-ink heroes (no photo): soft top bloom,
+     faint teal accent glow, fine grain — so it isn't a flat black band. */
+  .dark-glow {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(50% 60% at 85% 8%, rgba(30, 110, 100, 0.14), transparent 70%),
+      radial-gradient(60% 70% at 0% 100%, rgba(30, 110, 100, 0.07), transparent 70%),
+      radial-gradient(140% 90% at 50% -10%, rgba(246, 243, 236, 0.05), transparent 60%);
+  }
+  .dark-grain {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Pre-animation state — only once the inline script has flagged the
+     section `.js-ready`, and only when motion is allowed. No-JS and
+     reduced-motion visitors get the finished text immediately. */
+  @media (prefers-reduced-motion: no-preference) {
+    .page-hero.js-ready .hero-title-line { transform: translateY(115%); }
+    .page-hero.js-ready .page-hero-lead,
+    .page-hero.js-ready .page-hero-actions { opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .page-hero .hero-title-line { transform: none !important; }
+    .page-hero-lead,
+    .page-hero-actions { opacity: 1 !important; }
+  }
+</style>

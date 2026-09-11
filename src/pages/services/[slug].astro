@@ -1,10 +1,12 @@
 ---
 import { getCollection, getEntry, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import PageHero from '../../components/PageHero.astro';
+import PageShell from '../../components/PageShell.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+import FinalCTA from '../../components/FinalCTA.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import FAQAccordion from '../../components/FAQAccordion.astro';
-import RevealScript from '../../components/RevealScript.astro';
 import { breadcrumbSchema, serviceSchema, faqSchema } from '../../lib/schema';
 import { whatsappLink } from '../../lib/site';
 
@@ -26,6 +28,7 @@ const crumbs = [
   { name: 'Services', url: '/services/' },
   { name: d.name, url: `/services/${entry.slug}/` },
 ];
+const svc = d.name.toLowerCase();
 ---
 <BaseLayout
   title={d.seo.title}
@@ -34,85 +37,79 @@ const crumbs = [
   ogImage={d.heroImage.src}
   schema={[
     breadcrumbSchema(crumbs),
-    serviceSchema({ name: d.name, description: d.shortDescription, url: `/services/${entry.slug}/` }),
+    serviceSchema({ name: d.name, description: d.shortDescription, url: `/services/${entry.slug}/`, solutions: d.solutions }),
     ...(faqs.length ? [faqSchema(faqs)] : []),
   ]}
 >
-  <Breadcrumbs items={crumbs} />
-
-  <!-- HERO -->
-  <section class="wrap pt-8 pb-16 grid md:grid-cols-2 gap-12 items-center">
-    <div>
-      <span class="font-mono text-[11px] text-accent tracking-wide uppercase">{d.category}</span>
-      <h1 class="text-[32px] md:text-[46px] leading-tight mt-3">{d.name} Company in Pune &amp; Maharashtra</h1>
-      <p class="mt-5 text-ink-soft max-w-[52ch]">{d.shortDescription}</p>
-      <div class="flex gap-4 flex-wrap mt-8">
-        <a href={`/contact/?project=${entry.slug}`} class="btn btn-solid" data-analytics-event="click_start_project" data-analytics-params={JSON.stringify({ placement: 'service_hero', service: entry.slug })}>{d.ctaLabel} →</a>
-        <a href="/projects/" class="btn btn-line">View Projects →</a>
-      </div>
-    </div>
-    <div class="spec-frame aspect-[4/5]">
-      <span class="cA"></span><span class="cB"></span>
-      <img src={d.heroImage.src} alt={d.heroImage.alt} width={d.heroImage.width} height={d.heroImage.height} class="w-full h-full object-cover" fetchpriority="high" />
-    </div>
-  </section>
+  <PageHero
+    crumbs={crumbs}
+    tone="ink"
+    eyebrow={`Services / ${d.category}`}
+    title={d.h1 ?? `${d.name} in Pune & Maharashtra`}
+    lead={d.shortDescription}
+    bgImage={{ src: d.heroImage.src, alt: d.heroImage.alt }}
+    ctas={[
+      { label: d.ctaLabel, href: `/contact/?project=${entry.slug}`, style: 'solid', event: 'click_start_project', params: { placement: 'service_hero', service: entry.slug } },
+      { label: 'View projects', href: '/projects/', style: 'lt' },
+    ]}
+  />
 
   <!-- OVERVIEW (markdown body) -->
-  <section class="wrap pb-16 prose-content max-w-[74ch]">
-    <Content />
-  </section>
+  <PageShell tone="paper">
+    <div class="prose-content max-w-[74ch]" data-reveal>
+      <Content />
+    </div>
+  </PageShell>
 
   <!-- SOLUTIONS -->
-  <section class="py-16 bg-paper-dim">
-    <div class="wrap">
-      <h2 class="font-serif text-3xl mb-8">Types of {d.name.toLowerCase()} PBJ builds</h2>
-      <div class="grid sm:grid-cols-2 gap-6">
-        {d.solutions.map((sol) => (
-          <div class="border-l-2 border-accent pl-5 py-1">
-            <h3 class="font-serif text-lg mb-1.5">{sol.name}</h3>
-            <p class="text-[14px] text-ink-soft">{sol.description}</p>
-          </div>
-        ))}
-      </div>
+  <PageShell tone="paper-dim" labelledby="svc-solutions">
+    <SectionHeader id="svc-solutions" num="02" label="Scope" title={`What ${svc} covers`} tone="paper" />
+    <div class="mt-14 grid gap-6 sm:grid-cols-2" data-reveal-stagger>
+      {d.solutions.map((sol) => (
+        <div class="border-l-2 border-accent pl-5 py-1">
+          <h3 class="font-serif text-lg mb-1.5">{sol.name}</h3>
+          <p class="text-[14px] text-ink-soft">{sol.description}</p>
+        </div>
+      ))}
     </div>
-  </section>
+  </PageShell>
 
   <!-- WHY PBJ -->
-  <section class="wrap py-16">
-    <h2 class="font-serif text-3xl mb-8">Why PBJ for {d.name.toLowerCase()}</h2>
-    <ul class="grid sm:grid-cols-2 gap-5">
+  <PageShell tone="paper" labelledby="svc-why">
+    <SectionHeader id="svc-why" num="03" label="Advantage" title={`Why PBJ for ${svc}`} tone="paper" />
+    <ul class="mt-14 grid gap-5 sm:grid-cols-2" data-reveal-stagger>
       {d.whyPbj.map((w) => (
         <li class="flex gap-3 text-[14.5px] text-ink-soft"><span class="text-accent font-mono">—</span>{w}</li>
       ))}
     </ul>
-  </section>
+  </PageShell>
 
   <!-- PROCESS -->
-  <section class="py-16 bg-ink text-paper">
-    <div class="wrap">
-      <h2 class="font-serif text-3xl mb-8">How a {d.name.toLowerCase()} project runs</h2>
-      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-paper/[.18] border border-paper/[.18]">
-        {d.process.map((step, i) => (
-          <div class="bg-ink p-6">
-            <span class="font-mono text-accent text-sm">{String(i + 1).padStart(2, '0')}</span>
-            <h3 class="font-serif text-lg mt-3 mb-2">{step.step}</h3>
-            <p class="text-[13.5px] text-paper/65">{step.description}</p>
-          </div>
-        ))}
-      </div>
+  <PageShell tone="ink" labelledby="svc-process">
+    <SectionHeader id="svc-process" num="04" label="Process" title={`How PBJ delivers ${svc}`} tone="ink" />
+    <div class="mt-14 grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-paper/[.18] border border-paper/[.18]" data-reveal>
+      {d.process.map((step, i) => (
+        <div class="bg-ink p-6">
+          <span class="font-mono text-accent text-sm">{String(i + 1).padStart(2, '0')}</span>
+          <h3 class="font-serif text-lg mt-3 mb-2">{step.step}</h3>
+          <p class="text-[13.5px] text-paper/65">{step.description}</p>
+        </div>
+      ))}
     </div>
-  </section>
+  </PageShell>
 
   {faqs.length > 0 && (
-    <section class="wrap py-16 max-w-[880px]">
-      <h2 class="font-serif text-3xl mb-4">FAQ</h2>
-      <FAQAccordion items={faqs} idPrefix={`svc-${entry.slug}`} />
-    </section>
+    <PageShell tone="paper" labelledby="svc-faq">
+      <SectionHeader id="svc-faq" num="05" label="Common questions" title="FAQ" tone="paper" />
+      <div class="mt-12 max-w-[880px]" data-reveal>
+        <FAQAccordion items={faqs} idPrefix={`svc-${entry.slug}`} />
+      </div>
+    </PageShell>
   )}
 
   {(relatedServices.length > 0 || relatedProjects.length > 0) && (
-    <section class="py-16 bg-paper-dim">
-      <div class="wrap grid md:grid-cols-2 gap-12">
+    <PageShell tone="paper-dim">
+      <div class="grid md:grid-cols-2 gap-12" data-reveal>
         {relatedServices.length > 0 && (
           <div>
             <h2 class="font-serif text-2xl mb-6">Related services</h2>
@@ -132,7 +129,7 @@ const crumbs = [
                   name={p.data.name}
                   projectType={p.data.projectType}
                   location={p.data.location}
-                  href={p.data.status === 'published' ? `/projects/${p.slug}/` : null}
+                  href={p.data.status !== 'draft' ? `/projects/${p.slug}/` : null}
                   image={p.data.heroImage}
                 />
               ))}
@@ -140,25 +137,25 @@ const crumbs = [
           </div>
         )}
       </div>
-    </section>
+    </PageShell>
   )}
 
-  <!-- CTA -->
-  <section class="bg-ink text-paper py-20 text-center">
-    <div class="wrap">
-      <h2 class="font-serif text-3xl md:text-4xl">Planning a {d.name.toLowerCase()} project?</h2>
-      <div class="flex gap-4 justify-center flex-wrap mt-8">
-        <a href={`/contact/?project=${entry.slug}`} class="btn btn-solid" data-analytics-event="click_start_project" data-analytics-params={JSON.stringify({ placement: 'service_cta', service: entry.slug })}>{d.ctaLabel} →</a>
-        <a href={whatsappLink(d.whatsappMessage)} target="_blank" rel="noopener" class="btn btn-lt" data-analytics-event="click_whatsapp" data-analytics-params={JSON.stringify({ placement: 'service_cta', service: entry.slug })}>WhatsApp Us →</a>
-      </div>
-    </div>
-  </section>
-
-  <RevealScript />
+  <FinalCTA
+    eyebrow="Start a project"
+    title={`Planning a ${svc} project`}
+    titleMuted="in Pune, Latur or elsewhere in Maharashtra?"
+    primary={{ label: d.ctaLabel, href: `/contact/?project=${entry.slug}`, event: 'click_start_project', params: { placement: 'service_cta', service: entry.slug } }}
+    secondary={{ label: 'WhatsApp us', href: whatsappLink(d.whatsappMessage), external: true, event: 'click_whatsapp', params: { placement: 'service_cta', service: entry.slug } }}
+  />
 </BaseLayout>
 
 <style>
-  .prose-content :global(h2) { font-family: theme('fontFamily.serif'); font-size: 28px; margin: 2rem 0 1rem; }
-  .prose-content :global(p) { color: theme('colors.ink-soft'); margin-bottom: 1rem; line-height: 1.7; }
+  .prose-content :global(h2) { font-family: theme('fontFamily.serif'); font-size: clamp(26px, 3vw, 34px); margin: 2.4rem 0 1rem; letter-spacing: -0.02em; }
+  .prose-content :global(h2:first-child) { margin-top: 0; }
+  .prose-content :global(p) { color: theme('colors.ink-soft'); margin-bottom: 1rem; line-height: 1.75; }
+  .prose-content :global(ul) { margin: 0 0 1.25rem 1.1rem; list-style: disc; color: theme('colors.ink-soft'); }
+  .prose-content :global(li) { margin-bottom: 0.4rem; line-height: 1.7; }
   .prose-content :global(a) { color: theme('colors.accent'); text-decoration: underline; }
+  .prose-content :global(strong) { color: theme('colors.ink'); }
+  .prose-content :global(em) { color: theme('colors.warn'); font-style: italic; }
 </style>

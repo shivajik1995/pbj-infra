@@ -1,8 +1,10 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Breadcrumbs from '../../components/Breadcrumbs.astro';
-import RevealScript from '../../components/RevealScript.astro';
+import PageHero from '../../components/PageHero.astro';
+import PageShell from '../../components/PageShell.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+import FinalCTA from '../../components/FinalCTA.astro';
 import { breadcrumbSchema } from '../../lib/schema';
 
 const locations = await getCollection('locations');
@@ -12,20 +14,24 @@ const coverageOnly = locations.filter((l) => l.data.status === 'draft' && l.data
 const crumbs = [{ name: 'Home', url: '/' }, { name: 'Locations', url: '/locations/' }];
 ---
 <BaseLayout
-  title="Where PBJ Infra Builds | Pune, Latur & Maharashtra | PBJ Infra"
-  description="PBJ Infra is headquartered in Pune with a major hub in Latur, and project coverage across Maharashtra and India. See verified location pages and service coverage."
+  title="Where PBJ Infra Builds | Pune, Latur & Maharashtra"
+  description="PBJ Infra is headquartered in Pune with a major operational hub in Latur, and project coverage across Maharashtra and India. See verified location pages and service coverage."
   path="/locations/"
   schema={[breadcrumbSchema(crumbs)]}
 >
-  <Breadcrumbs items={crumbs} />
-  <div class="wrap pt-8 pb-14">
-    <h1 class="text-[32px] md:text-[48px] max-w-[20ch]">From Pune to projects across India.</h1>
-    <p class="mt-5 max-w-[62ch] text-ink-soft">Dedicated location pages are only published where PBJ has verified, on-the-ground project or HQ evidence — not generated for every city PBJ could theoretically serve. See docs/seo-architecture.md for the policy behind this.</p>
-  </div>
+  <PageHero
+    crumbs={crumbs}
+    tone="ink"
+    eyebrow="Locations / Coverage"
+    title="From Pune and Latur"
+    titleMuted="to projects across India."
+    lead="PBJ Infra is headquartered in Phursungi, Pune, with a major operational hub in Latur. Dedicated location pages are published only where PBJ has verified, on-the-ground project or office evidence — not generated for every city PBJ could theoretically serve."
+    ctas={[{ label: 'Start a project', href: '/contact/', style: 'solid', event: 'click_start_project', params: { placement: 'locations_hero' } }]}
+  />
 
-  <div class="wrap pb-12">
-    <h2 class="font-serif text-2xl mb-6">Verified locations</h2>
-    <div class="grid sm:grid-cols-2 gap-5">
+  <PageShell tone="paper" labelledby="loc-verified">
+    <SectionHeader id="loc-verified" num="01" label="On the ground" title="Verified locations" tone="paper" />
+    <div class="mt-14 grid sm:grid-cols-2 gap-5" data-reveal-stagger>
       {published.map((l) => (
         <a href={`/locations/${l.slug}/`} class="block border border-ink/[.14] hover:border-accent transition-colors p-7">
           <span class="font-mono text-[11px] text-accent tracking-wide uppercase">{l.data.role}</span>
@@ -35,12 +41,12 @@ const crumbs = [{ name: 'Home', url: '/' }, { name: 'Locations', url: '/location
         </a>
       ))}
     </div>
-  </div>
+  </PageShell>
 
   {withEvidence.length > 0 && (
-    <div class="wrap pb-12">
-      <h2 class="font-serif text-2xl mb-6">In progress — has verified project evidence</h2>
-      <div class="grid sm:grid-cols-2 gap-5">
+    <PageShell tone="paper-dim" labelledby="loc-progress">
+      <SectionHeader id="loc-progress" num="02" label="Evidence, page pending" title="In progress — has verified project evidence" tone="paper" />
+      <div class="mt-14 grid sm:grid-cols-2 gap-5" data-reveal-stagger>
         {withEvidence.map((l) => (
           <div class="border border-dashed border-ink/[.14] p-7">
             <span class="font-mono text-[11px] text-warn tracking-wide uppercase">{l.data.role} · page in development</span>
@@ -49,19 +55,24 @@ const crumbs = [{ name: 'Home', url: '/' }, { name: 'Locations', url: '/location
           </div>
         ))}
       </div>
-    </div>
+    </PageShell>
   )}
 
-  <div class="wrap pb-20">
-    <h2 class="font-serif text-2xl mb-4">Broader service coverage</h2>
-    <p class="text-ink-soft text-[14px] max-w-[68ch] mb-6">These regions are listed as coverage areas on pbjinfra.com but don't yet have project-level or address-level evidence published — shown here as a coverage table, not as individual pages, to avoid thin or duplicate content.</p>
-    <div class="flex flex-wrap gap-3">
+  <PageShell tone="ink" labelledby="loc-coverage">
+    <SectionHeader id="loc-coverage" num="03" label="Wider reach" title="Broader service coverage" intro="These regions are listed as coverage areas on pbjinfra.com but don't yet have project-level or address-level evidence published — shown here as a coverage table, not as individual pages, to avoid thin or duplicate content." tone="ink" />
+    <div class="mt-12 flex flex-wrap gap-3" data-reveal>
       {coverageOnly.map((l) => (
-        <span class="font-mono text-xs border border-ink/[.14] px-3.5 py-2 text-ink-soft">{l.data.name} <span class="text-ink/40">· {l.data.role}</span></span>
+        <span class="font-mono text-xs border border-paper/[.18] px-3.5 py-2 text-paper/70">{l.data.name} <span class="text-paper/35">· {l.data.role}</span></span>
       ))}
     </div>
-    <p class="font-mono text-[11px] text-ink/45 mt-6">Illustrative coverage list — reflects the regions stated on pbjinfra.com. Individual pages will be added once PBJ can supply project or office evidence for a given city.</p>
-  </div>
+    <p class="font-mono text-[11px] text-paper/40 mt-6">Illustrative coverage list — reflects the regions stated on pbjinfra.com. Individual pages will be added once PBJ can supply project or office evidence for a given city.</p>
+  </PageShell>
 
-  <RevealScript />
+  <FinalCTA
+    title="Building somewhere"
+    titleMuted="in Maharashtra?"
+    copy="If PBJ Infra doesn't have a page for your city yet, that doesn't mean it can't build there — tell us where and what you're planning."
+    primary={{ label: 'Start a project', href: '/contact/', event: 'click_start_project', params: { placement: 'locations_cta' } }}
+    contact={true}
+  />
 </BaseLayout>

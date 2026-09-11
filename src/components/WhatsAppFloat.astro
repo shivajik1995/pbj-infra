@@ -3,14 +3,75 @@ import { whatsappLink } from '../lib/site';
 interface Props { message: string; }
 const { message } = Astro.props;
 ---
-<a
-  href={whatsappLink(message)}
-  class="hidden md:flex fixed bottom-[22px] right-[22px] z-[90] bg-accent text-paper w-14 h-14 rounded-full items-center justify-center shadow-[0_8px_24px_rgba(20,23,26,.28)]"
-  aria-label="Chat on WhatsApp"
-  data-analytics-event="click_whatsapp"
-  data-analytics-params={JSON.stringify({ placement: 'float' })}
-  target="_blank"
-  rel="noopener"
->
-  <svg width="26" height="26" viewBox="0 0 24 24" fill="#F6F3EC" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.39 1.26 4.81L2 22l5.42-1.36c1.36.72 2.9 1.13 4.62 1.13 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm5.5 14.2c-.23.65-1.15 1.19-1.9 1.35-.5.1-1.16.19-3.38-.72-2.84-1.16-4.67-4.04-4.81-4.23-.14-.19-1.15-1.53-1.15-2.92s.72-2.06.98-2.35c.23-.26.5-.32.67-.32h.48c.15 0 .36-.06.56.43.23.55.77 1.9.83 2.04.07.14.11.3.02.48-.35.71-.72.68-.4 1.2.99 1.66 2.02 2.32 3.53 3.08.26.13.42.11.57-.06.16-.18.65-.75.83-1.01.17-.26.35-.21.58-.13.24.08 1.53.72 1.79.85.26.13.43.19.5.3.06.11.06.62-.17 1.27z"/></svg>
-</a>
+<div class="wa-hitzone hidden md:flex flex-row-reverse fixed bottom-[22px] right-[22px] z-[90] items-end gap-3 pt-10 pl-10">
+  <a
+    href={whatsappLink(message)}
+    class="wa-fab relative flex bg-accent text-paper w-14 h-14 rounded-full items-center justify-center shadow-[0_8px_24px_rgba(20,23,26,.28)]"
+    aria-label="Chat on WhatsApp"
+    data-analytics-event="click_whatsapp"
+    data-analytics-params={JSON.stringify({ placement: 'float' })}
+    target="_blank"
+    rel="noopener"
+  >
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="#F6F3EC" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.39 1.26 4.81L2 22l5.42-1.36c1.36.72 2.9 1.13 4.62 1.13 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm5.5 14.2c-.23.65-1.15 1.19-1.9 1.35-.5.1-1.16.19-3.38-.72-2.84-1.16-4.67-4.04-4.81-4.23-.14-.19-1.15-1.53-1.15-2.92s.72-2.06.98-2.35c.23-.26.5-.32.67-.32h.48c.15 0 .36-.06.56.43.23.55.77 1.9.83 2.04.07.14.11.3.02.48-.35.71-.72.68-.4 1.2.99 1.66 2.02 2.32 3.53 3.08.26.13.42.11.57-.06.16-.18.65-.75.83-1.01.17-.26.35-.21.58-.13.24.08 1.53.72 1.79.85.26.13.43.19.5.3.06.11.06.62-.17 1.27z"/></svg>
+  </a>
+  <span class="wa-bubble glass-paper text-ink font-mono text-xs tracking-wide uppercase px-4 py-2.5 rounded-full shadow-[0_8px_24px_rgba(20,23,26,.16)] whitespace-nowrap" aria-hidden="true">Don&rsquo;t be shy, let&rsquo;s connect →</span>
+</div>
+
+<style>
+  /* Decorative nudge toward the WhatsApp CTA: a soft pulsing ring on the
+     button plus a bubble that surfaces periodically to invite a message.
+     Both are pure CSS (no JS needed) and fully gated behind
+     prefers-reduced-motion: no-preference — under reduced motion the ring
+     stays invisible and the bubble only appears on hover/focus (a discrete
+     state change, not an animation), so nothing moves for those users. */
+  .wa-fab {
+    position: relative;
+  }
+  .wa-fab::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 9999px;
+    border: 2px solid theme('colors.accent');
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .wa-bubble {
+    opacity: 0;
+    transform: translateX(6px);
+  }
+  /* The bubble reveals as soon as the cursor gets near the button, not
+     only when hovering the button itself — `.wa-hitzone` extends an
+     invisible hover area (via top/left padding) beyond the visible fab,
+     so approaching from the page content already triggers it. Hover/focus
+     always reveals it immediately, motion preference aside — this is a
+     discrete state, not a repeating animation. */
+  .wa-hitzone:hover .wa-bubble,
+  .wa-fab:focus-visible + .wa-bubble {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .wa-fab::after {
+      animation: wa-ping 2.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+    .wa-bubble {
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      animation: wa-bubble-cycle 9s ease-in-out infinite;
+    }
+  }
+
+  @keyframes wa-ping {
+    0% { transform: scale(0.92); opacity: 0.55; }
+    70% { transform: scale(1.35); opacity: 0; }
+    100% { opacity: 0; }
+  }
+
+  @keyframes wa-bubble-cycle {
+    0%, 35% { opacity: 1; transform: translateX(0); }
+    45%, 100% { opacity: 0; transform: translateX(6px); }
+  }
+</style>

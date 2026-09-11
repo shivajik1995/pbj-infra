@@ -2,17 +2,28 @@
 // Visible breadcrumb trail. The matching BreadcrumbList JSON-LD is built
 // from the same `items` array by the calling page (src/lib/schema.ts
 // breadcrumbSchema) so the two never drift apart.
-interface Props { items: { name: string; url: string }[] }
-const { items } = Astro.props;
+//   tone   — "ink" for placement on a dark hero, "paper" (default) otherwise
+//   offset — reserve top space for the fixed header (default true); set false
+//            when rendered inside a hero that already clears the header
+interface Props {
+  items: { name: string; url: string }[];
+  tone?: 'ink' | 'paper';
+  offset?: boolean;
+}
+const { items, tone = 'paper', offset = true } = Astro.props;
+
+const base = tone === 'ink' ? 'text-paper/55' : 'text-ink-soft/70';
+const link = tone === 'ink' ? 'hover:text-paper' : 'hover:text-accent';
+const current = tone === 'ink' ? 'text-paper' : 'text-ink';
 ---
-<nav aria-label="Breadcrumb" class="wrap pt-[110px] md:pt-[130px]">
-  <ol class="flex flex-wrap items-center gap-2 font-mono text-[11px] text-ink-soft/70">
+<nav aria-label="Breadcrumb" class:list={['wrap', offset && 'pt-[110px] md:pt-[130px]']}>
+  <ol class:list={['flex flex-wrap items-center gap-2 font-mono text-[11px]', base]}>
     {items.map((item, i) => (
       <li class="flex items-center gap-2">
         {i > 0 && <span aria-hidden="true">/</span>}
         {i === items.length - 1
-          ? <span aria-current="page" class="text-ink">{item.name}</span>
-          : <a href={item.url} class="hover:text-accent">{item.name}</a>}
+          ? <span aria-current="page" class={current}>{item.name}</span>
+          : <a href={item.url} class={link}>{item.name}</a>}
       </li>
     ))}
   </ol>

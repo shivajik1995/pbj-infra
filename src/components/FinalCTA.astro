@@ -1,0 +1,137 @@
+---
+// Closing call-to-action in the homepage Section-08 style: dark, big serif,
+// accent-fill button, optional direct-contact strip. Replaces the ad-hoc
+// `bg-ink text-paper py-20 text-center` blocks across inner pages.
+import GridTexture from './GridTexture.astro';
+import { whatsappLink, telLink, mailtoLink } from '../lib/site';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  titleMuted?: string;
+  copy?: string;
+  primary: { label: string; href: string; event?: string; params?: Record<string, unknown> };
+  secondary?: { label: string; href: string; external?: boolean; event?: string; params?: Record<string, unknown> };
+  contact?: boolean;
+  coverageNote?: string;
+  whatsappMessage?: string;
+}
+const {
+  eyebrow = 'Start a project',
+  title,
+  titleMuted,
+  copy,
+  primary,
+  secondary,
+  contact = false,
+  coverageNote = 'Pune · Latur · Maharashtra · India',
+  whatsappMessage = 'Hi PBJ Infra, I have a project in mind.',
+} = Astro.props;
+---
+<section class="final-cta relative flex min-h-[68svh] flex-col justify-between overflow-hidden bg-ink py-14 text-paper md:py-20" aria-labelledby="final-cta-title">
+  <div class="final-cta-glow" aria-hidden="true"></div>
+  <div class="final-cta-grain" aria-hidden="true"></div>
+  <GridTexture tone="dark" />
+
+  <div class="wrap relative z-[3] flex flex-1 flex-col justify-between gap-12">
+    <div class="flex items-center gap-3">
+      <span class="h-px w-8 bg-accent"></span>
+      <span class="font-mono text-[9px] uppercase tracking-[.2em] text-paper/45">{eyebrow}</span>
+    </div>
+
+    <div class="max-w-[1100px]" data-reveal>
+      <h2 id="final-cta-title" class="font-serif text-[clamp(46px,8.5vw,120px)] leading-[.82] tracking-[-.05em]">
+        {title}{titleMuted && <>{' '}<span class="block text-paper/35">{titleMuted}</span></>}
+      </h2>
+
+      {copy && <p class="mt-8 max-w-[520px] text-[14px] leading-[1.75] text-paper/55 md:text-[15px]">{copy}</p>}
+
+      <div class="mt-9 flex flex-wrap gap-3">
+        <a
+          href={primary.href}
+          class="cta-button group relative inline-flex items-center gap-6 overflow-hidden border border-paper/30 px-7 py-5 md:px-9 md:py-6"
+          data-analytics-event={primary.event}
+          data-analytics-params={primary.params ? JSON.stringify(primary.params) : undefined}
+        >
+          <span class="relative z-[2] font-mono text-[10px] uppercase tracking-[.18em]">{primary.label}</span>
+          <span class="relative z-[2] text-[18px] transition-transform duration-500 group-hover:translate-x-2">↗</span>
+          <span class="cta-button-fill absolute inset-0 origin-left scale-x-0 bg-accent transition-transform duration-500 ease-out group-hover:scale-x-100"></span>
+        </a>
+        {secondary && (
+          <a
+            href={secondary.href}
+            class="btn btn-lt"
+            target={secondary.external ? '_blank' : undefined}
+            rel={secondary.external ? 'noopener noreferrer' : undefined}
+            data-analytics-event={secondary.event}
+            data-analytics-params={secondary.params ? JSON.stringify(secondary.params) : undefined}
+          >{secondary.label} →</a>
+        )}
+      </div>
+    </div>
+
+    {contact && (
+      <div class="border-t border-paper/15 pt-7">
+        <div class="grid gap-7 md:grid-cols-[1fr_auto] md:items-end">
+          <div>
+            <span class="font-mono text-[8px] uppercase tracking-[.18em] text-paper/35">Project coverage</span>
+            <p class="mt-2 font-serif text-[20px] md:text-[22px]">{coverageNote}</p>
+          </div>
+          <div class="flex flex-wrap gap-5">
+            <a href={whatsappLink(whatsappMessage)} target="_blank" rel="noopener noreferrer" class="cta-contact group" data-analytics-event="click_whatsapp" data-analytics-params={JSON.stringify({ placement: 'final_cta' })}>
+              <span>WhatsApp</span><span class="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
+            </a>
+            <a href={telLink()} class="cta-contact group" data-analytics-event="click_phone">
+              <span>Call</span><span class="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
+            </a>
+            <a href={mailtoLink()} class="cta-contact group" data-analytics-event="click_email">
+              <span>Email</span><span class="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .final-cta {
+    isolation: isolate;
+    background-image:
+      radial-gradient(140% 90% at 50% -10%, rgba(246, 243, 236, 0.05), transparent 60%);
+    border-top: 1px solid rgba(246, 243, 236, 0.06);
+  }
+  .final-cta-glow {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(38% 55% at 82% 12%, rgba(30, 110, 100, 0.14), transparent 70%),
+      radial-gradient(45% 60% at 8% 92%, rgba(30, 110, 100, 0.07), transparent 70%);
+  }
+  .final-cta-grain {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .cta-button { isolation: isolate; transition: border-color .35s ease, color .35s ease; }
+  .cta-button:hover { border-color: rgb(30, 110, 100); color: #fff; }
+  .cta-button-fill { z-index: 0; }
+  .cta-contact {
+    display: inline-flex; align-items: center; gap: 9px; padding-bottom: 7px;
+    border-bottom: 1px solid rgba(246, 243, 236, 0.2);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 9px; text-transform: uppercase; letter-spacing: .15em;
+    color: rgba(246, 243, 236, 0.55);
+    transition: color .3s ease, border-color .3s ease;
+  }
+  .cta-contact:hover { color: rgb(246, 243, 236); border-color: rgb(30, 110, 100); }
+  @media (prefers-reduced-motion: reduce) {
+    .cta-button-fill, .cta-contact span { transition: none !important; }
+  }
+</style>

@@ -1,35 +1,69 @@
 ---
-status: "draft"
+status: "published"
 name: "Swimming Pool Tiles"
 slug: "swimming-pool-tiles"
+h1: "Pool Tiling & Finishing"
 category: "Aquatic"
-shortDescription: "Ceramic, glass mosaic and natural stone tiling for pool shells and surrounds."
+shortDescription: "The finishing stage of a pool build — ceramic, porcelain, glass mosaic and natural-stone tiling for the shell, waterline and surround, plus coping and deck finishes, executed by PBJ's in-house team."
 heroImage:
-  src: "https://pbjinfra.com/assets/images/swimming-pool.jpg"
-  alt: "Mosaic pool tiling installed by PBJ Infra"
-  width: 1600
-  height: 1000
+  src: "/images/projects/lagoon-pool-blue-tile.jpg"
+  alt: "Swimming pool finished in blue glass mosaic tiling by PBJ Infra"
+  width: 1376
+  height: 768
 solutions:
-  - name: "Ceramic, glass mosaic & natural stone"
-    description: "Tiling options for the pool shell and surrounding deck, selected as part of the finishing stage of a pool build."
+  - name: "Full-shell tiling"
+    description: "The entire pool interior tiled in ceramic, porcelain or glass mosaic — the most durable and colour-stable pool finish."
+  - name: "Waterline & feature bands"
+    description: "A tiled waterline band and feature detailing over a plaster or aggregate interior, where a fully tiled shell is not required."
+  - name: "Glass mosaic"
+    description: "Small-format glass mosaic for deep, reflective colour and for tiling the curves of infinity edges, steps and lagoon forms."
+  - name: "Natural stone"
+    description: "Stone tiling and cladding for surrounds, walls and raised spa edges, selected for wet-area slip resistance."
+  - name: "Coping & deck finishes"
+    description: "Pool coping, non-slip deck tiling and the transition detail between water and surround."
 whyPbj:
-  - "Tiling is the final stage of PBJ's own in-house pool build process, not an outsourced finish."
-  - "Applied on both new pool construction and lagoon-style naturalistic pools."
+  - "Tiling is the final stage of PBJ Infra's own in-house pool build process — not a finish handed to a separate contractor after the shell is done."
+  - "Because the same team builds the shell and lays the tile, the substrate is prepared correctly for tiling and the waterproofing and tile bed work together."
+  - "Applied across PBJ's conventional, infinity and lagoon pools; covered by the 5-year structural warranty on the shell it sits on."
 process:
   - step: "Consultation"
-    description: "Tile material and finish selected alongside overall pool design."
+    description: "Tile material, format and colour chosen alongside the overall pool design and budget."
   - step: "Design & planning"
-    description: "Tiling plan finalized as part of the pool's 3D visualization."
+    description: "The tiling scheme — full shell, waterline, feature bands — finalised as part of the pool's 3D visualisation, with setting-out for mosaics on curved surfaces."
   - step: "Construction"
-    description: "Applied after structural and filtration work is complete and tested."
+    description: "Laid after the structural shell and filtration are complete and the shell has been water-tested, on a correctly prepared and waterproofed substrate."
   - step: "Handover"
-    description: "Final finish inspection at project handover."
-relatedServices: ["swimming-pool-construction"]
+    description: "Final finish inspection at project handover, with grout and sealant cure guidance."
+relatedServices: ["swimming-pool-construction", "lagoon-pool-construction", "pool-filtration-systems"]
+relatedProjects: ["natural-lagoon-pool"]
+relatedLocations: ["pune"]
+faq: ["pool-timeline", "design-and-build", "warranty"]
 ctaLabel: "Get a Pool Consultation"
 whatsappMessage: "Hi PBJ Infra, I'm interested in discussing swimming pool tiling."
 seo:
-  title: "Swimming Pool Tiles | PBJ Infra"
-  description: "Ceramic, glass mosaic and natural stone swimming pool tiling by PBJ Infra."
+  title: "Swimming Pool Tiling & Finishing | PBJ Infra"
+  description: "Pool tiling and finishing by PBJ Infra — ceramic, porcelain, glass mosaic and natural-stone shell, waterline, coping and deck finishes, laid in-house in Pune."
 ---
 
-Content item in progress — currently covered within [Swimming Pool Construction](/services/swimming-pool-construction/). Draft and unlinked until dedicated page content is written.
+## Overview
+
+The tile is the part of a pool people actually touch and look at every day, and it is also the part that most exposes shortcuts in everything underneath it. Tiles laid on a substrate that was not prepared, or over waterproofing that was an afterthought, lift and craze within a few seasons. Because PBJ Infra's own team builds the shell and then tiles it, the substrate is flat and sound, the waterproofing and the tile adhesive are chosen to work together, and the setting-out for mosaics around steps, benches and infinity edges is planned from the 3D model.
+
+This service covers the finishing stage of a PBJ pool build, and tiling or re-tiling work on existing pools where the shell is sound.
+
+## PBJ's approach
+
+Tiling happens after the structural shell and filtration are complete and the pool has held water. The substrate is checked and prepared, waterproofing is confirmed, and the tile is laid to a setting-out plan rather than started from a corner and adjusted at the end. Glass mosaic — the finish that best follows curves — gets particular attention on infinity edges, steps and lagoon shapes.
+
+## Technical considerations
+
+- **Full shell vs waterline band:** a fully tiled shell is the most durable and colour-stable finish; a waterline band over plaster is a lower-cost route with a shorter finish life.
+- **Glass vs ceramic mosaic:** glass gives richer colour and follows tight curves; ceramic is more forgiving to lay and lower cost.
+- **Slip resistance:** deck and step tiles are specified for wet-area grip, not chosen on looks alone.
+- **Grout and movement:** the right grout and movement joints stop a large tiled surface from cracking as it expands and contracts.
+
+## Related work
+
+Tiling is the finishing layer on PBJ Infra's [swimming pool construction](/services/swimming-pool-construction/) and [lagoon pool construction](/services/lagoon-pool-construction/), and works with the [pool filtration](/services/pool-filtration-systems/) installed earlier in the same build. See the [Natural Lagoon Pool](/projects/natural-lagoon-pool/) for a naturalistic finish in practice.
+
+[Talk to PBJ about pool tiling →](/contact/?project=swimming-pool-tiles)

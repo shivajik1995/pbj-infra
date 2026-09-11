@@ -1,8 +1,9 @@
 ---
 import { getCollection, getEntry, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Breadcrumbs from '../../components/Breadcrumbs.astro';
-import RevealScript from '../../components/RevealScript.astro';
+import PageHero from '../../components/PageHero.astro';
+import PageShell from '../../components/PageShell.astro';
+import FinalCTA from '../../components/FinalCTA.astro';
 import { breadcrumbSchema, articleSchema } from '../../lib/schema';
 import { whatsappLink } from '../../lib/site';
 
@@ -23,6 +24,7 @@ const crumbs = [
   { name: 'Resources', url: '/resources/' },
   { name: d.title, url: `/resources/${entry.slug}/` },
 ];
+const published = d.publishDate.toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' });
 ---
 <BaseLayout
   title={d.seo.title}
@@ -34,24 +36,29 @@ const crumbs = [
     articleSchema({ headline: d.title, description: d.dek, url: `/resources/${entry.slug}/`, image: d.heroImage.src, datePublished: d.publishDate, dateModified: d.updatedDate }),
   ]}
 >
-  <Breadcrumbs items={crumbs} />
-  <article class="wrap pt-8 pb-4 max-w-[74ch]">
-    <h1 class="text-[30px] md:text-[44px] leading-tight">{d.title}</h1>
-    <p class="mt-4 text-ink-soft text-lg">{d.dek}</p>
-    <p class="font-mono text-[11px] text-ink/45 mt-4">Published {d.publishDate.toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-  </article>
+  <PageHero
+    crumbs={crumbs}
+    tone="paper"
+    size="article"
+    eyebrow="Resources / Guide"
+    metaRight={`Published ${published}`}
+    title={d.title}
+    lead={d.dek}
+  />
 
-  <div class="wrap pb-10">
-    <img src={d.heroImage.src} alt={d.heroImage.alt} width={d.heroImage.width} height={d.heroImage.height} class="w-full max-h-[480px] object-cover" />
-  </div>
+  <section class="bg-paper">
+    <img src={d.heroImage.src} alt={d.heroImage.alt} width={d.heroImage.width} height={d.heroImage.height} class="w-full max-h-[520px] object-cover" fetchpriority="high" decoding="async" />
+  </section>
 
-  <div class="wrap pb-16 prose-content max-w-[74ch]">
-    <Content />
-  </div>
+  <PageShell tone="paper">
+    <div class="prose-content max-w-[74ch]" data-reveal>
+      <Content />
+    </div>
+  </PageShell>
 
   {(relatedServices.length > 0 || relatedProjects.length > 0) && (
-    <section class="py-16 bg-paper-dim">
-      <div class="wrap flex flex-wrap gap-10">
+    <PageShell tone="paper-dim">
+      <div class="flex flex-wrap gap-x-10 gap-y-4" data-reveal>
         {relatedServices.map((s) => s && (
           <a href={s.data.status === 'published' ? `/services/${s.slug}/` : '/services/'} class="font-mono text-sm text-accent hover:underline">Related service: {s.data.name} →</a>
         ))}
@@ -59,27 +66,24 @@ const crumbs = [
           <a href={p.data.status === 'published' ? `/projects/${p.slug}/` : '/projects/'} class="font-mono text-sm text-accent hover:underline">Related project: {p.data.name} →</a>
         ))}
       </div>
-    </section>
+    </PageShell>
   )}
 
-  <section class="bg-ink text-paper py-20 text-center">
-    <div class="wrap">
-      <h2 class="font-serif text-3xl md:text-4xl">Ready to start planning?</h2>
-      <div class="flex gap-4 justify-center flex-wrap mt-8">
-        <a href="/contact/" class="btn btn-solid" data-analytics-event="click_start_project" data-analytics-params={JSON.stringify({ placement: 'article_cta' })}>Start Your Project →</a>
-        <a href={whatsappLink('Hi PBJ Infra, I read your article and would like to discuss a project.')} target="_blank" rel="noopener" class="btn btn-lt" data-analytics-event="click_whatsapp">WhatsApp Us →</a>
-      </div>
-    </div>
-  </section>
-
-  <RevealScript />
+  <FinalCTA
+    eyebrow="Start a project"
+    title="Ready to start"
+    titleMuted="planning?"
+    primary={{ label: 'Start your project', href: '/contact/', event: 'click_start_project', params: { placement: 'article_cta' } }}
+    secondary={{ label: 'WhatsApp us', href: whatsappLink('Hi PBJ Infra, I read your article and would like to discuss a project.'), external: true, event: 'click_whatsapp' }}
+  />
 </BaseLayout>
 
 <style>
-  .prose-content :global(h2) { font-family: theme('fontFamily.serif'); font-size: 26px; margin: 1.75rem 0 0.75rem; }
-  .prose-content :global(p) { color: theme('colors.ink-soft'); margin-bottom: 1rem; line-height: 1.7; }
-  .prose-content :global(ul) { margin: 0 0 1rem 1.25rem; list-style: disc; color: theme('colors.ink-soft'); }
-  .prose-content :global(li) { margin-bottom: 0.4rem; }
+  .prose-content :global(h2) { font-family: theme('fontFamily.serif'); font-size: clamp(24px, 2.8vw, 32px); margin: 2.2rem 0 0.75rem; letter-spacing: -0.02em; }
+  .prose-content :global(h2:first-child) { margin-top: 0; }
+  .prose-content :global(p) { color: theme('colors.ink-soft'); margin-bottom: 1rem; line-height: 1.75; }
+  .prose-content :global(ul) { margin: 0 0 1.25rem 1.1rem; list-style: disc; color: theme('colors.ink-soft'); }
+  .prose-content :global(li) { margin-bottom: 0.4rem; line-height: 1.7; }
   .prose-content :global(a) { color: theme('colors.accent'); text-decoration: underline; }
   .prose-content :global(strong) { color: theme('colors.ink'); }
 </style>

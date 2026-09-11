@@ -1,9 +1,11 @@
 ---
 import { getCollection, getEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import PageHero from '../../components/PageHero.astro';
+import PageShell from '../../components/PageShell.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+import FinalCTA from '../../components/FinalCTA.astro';
 import FAQAccordion from '../../components/FAQAccordion.astro';
-import RevealScript from '../../components/RevealScript.astro';
 import { breadcrumbSchema, faqSchema } from '../../lib/schema';
 import { SITE } from '../../lib/site';
 
@@ -11,6 +13,14 @@ const team = await getCollection('team');
 const faqSlugs = ['permits', 'design-and-build', 'warranty', 'locations-served'];
 const faqs = (await Promise.all(faqSlugs.map((id) => getEntry('faq', id)))).map((f) => f!.data);
 const crumbs = [{ name: 'Home', url: '/' }, { name: 'About', url: '/about/' }];
+
+const stats = [
+  ['2009', 'Operating continuously since'],
+  ['5 / 2 Yrs', 'Structural / equipment warranty'],
+  [SITE.gst, 'GST registration'],
+  [SITE.udyam, 'UDYAM registration'],
+];
+const developers = ['Panchshil Realty', 'Godrej Properties', 'Nyati Group', 'Kolte Patil Developers', 'Majestique Landmarks', 'Ajmera Group', 'Mahindra Lifespaces', 'D.Y. Patil'];
 ---
 <BaseLayout
   title="About PBJ Infra | Construction Company Since 2009"
@@ -18,43 +28,60 @@ const crumbs = [{ name: 'Home', url: '/' }, { name: 'About', url: '/about/' }];
   path="/about/"
   schema={[breadcrumbSchema(crumbs), faqSchema(faqs)]}
 >
-  <Breadcrumbs items={crumbs} />
+  <PageHero
+    crumbs={crumbs}
+    tone="ink"
+    eyebrow="About / PBJ Infra"
+    title="Built on-site,"
+    titleMuted="not on adjectives."
+    lead={SITE.description}
+    ctas={[
+      { label: 'Start a project', href: '/contact/', style: 'solid', event: 'click_start_project', params: { placement: 'about_hero' } },
+      { label: 'See projects', href: '/projects/', style: 'lt' },
+    ]}
+  />
 
-  <section class="wrap pt-8 pb-16">
-    <h1 class="text-[32px] md:text-[48px] max-w-[20ch]">Built on-site, not on adjectives.</h1>
-    <p class="mt-6 max-w-[64ch] text-ink-soft text-lg">{SITE.description}</p>
-  </section>
-
-  <section class="py-16 bg-paper-dim">
-    <div class="wrap grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-ink/[.14] border border-ink/[.14]">
-      {[
-        ['2009', 'Operating continuously since'],
-        ['5 / 2 Yrs', 'Structural / equipment warranty'],
-        [SITE.gst, 'GST registration'],
-        [SITE.udyam, 'UDYAM registration'],
-      ].map(([v, l]) => (
-        <div class="bg-paper p-7">
+  <PageShell tone="ink">
+    <div class="flex items-center gap-3" data-reveal>
+      <span class="h-px w-8 bg-accent"></span>
+      <span class="font-mono text-[9px] uppercase tracking-[.2em] text-paper/45">01 / On the record</span>
+    </div>
+    <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-paper/[.14] border border-paper/[.14]" data-reveal-stagger>
+      {stats.map(([v, l]) => (
+        <div class="bg-ink p-7">
           <div class="font-serif text-2xl">{v}</div>
-          <div class="font-mono text-[10.5px] tracking-wide uppercase text-ink/50 mt-2">{l}</div>
+          <div class="font-mono text-[10.5px] tracking-wide uppercase text-paper/50 mt-2">{l}</div>
         </div>
       ))}
     </div>
-  </section>
+  </PageShell>
 
-  <section class="wrap py-16 max-w-[74ch]">
-    <h2 class="font-serif text-3xl mb-5">How PBJ works</h2>
-    <p class="text-ink-soft mb-4 leading-relaxed">PBJ Infra handles design, structural engineering, construction and finishing under one in-house team — 3D visualization and transparent cost estimation before ground is broken, then site preparation, structural work, systems (filtration, waterproofing, mechanical) and finishing carried out and checked in sequence, with regular progress updates back to the client.</p>
-    <p class="text-ink-soft leading-relaxed">Permits, approvals and regulatory compliance with local building authorities are handled directly by PBJ, and every build carries a 5-year structural warranty and 2-year equipment warranty covering defects in materials or workmanship under normal use.</p>
-  </section>
+  <PageShell tone="paper" labelledby="about-how">
+    <SectionHeader id="about-how" num="02" label="Method" title="How PBJ works" tone="paper" />
+    <div class="mt-12 max-w-[74ch]" data-reveal>
+      <p class="text-ink-soft mb-4 leading-relaxed">PBJ Infra handles design, structural engineering, construction and finishing under one in-house team — 3D visualisation and transparent cost estimation before ground is broken, then site preparation, structural work, systems (filtration, waterproofing, mechanical) and finishing carried out and checked in sequence, with regular progress updates back to the client. The work spans <a href="/services/swimming-pool-construction/" class="text-accent underline">swimming pools</a>, <a href="/services/waterpark-construction/" class="text-accent underline">waterparks</a>, <a href="/services/resort-construction/" class="text-accent underline">resorts</a>, <a href="/services/farmhouse-construction/" class="text-accent underline">farmhouses</a> and <a href="/services/ferrocement-dome/" class="text-accent underline">specialised structures</a> — see all <a href="/services/" class="text-accent underline">services</a>.</p>
+      <p class="text-ink-soft leading-relaxed">Permits, approvals and regulatory compliance with local building authorities are handled directly by PBJ, and every build carries a 5-year structural warranty and 2-year equipment warranty covering defects in materials or workmanship under normal use.</p>
+    </div>
+  </PageShell>
 
-  <section class="py-16">
-    <div class="wrap">
-      <h2 class="font-serif text-3xl mb-10">Behind every build, there's a team.</h2>
+  <PageShell tone="paper-dim" labelledby="about-clients">
+    <SectionHeader id="about-clients" num="03" label="Track record" title="Who PBJ has built for" intro="Alongside private clients, PBJ Infra has worked on projects for established Pune-region property developers. The names below are listed in PBJ's own client section on pbjinfra.com." tone="paper" />
+    <ul class="mt-12 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-4" data-reveal-stagger>
+      {developers.map((name) => (
+        <li class="border-l-2 border-accent pl-4 font-serif text-lg">{name}</li>
+      ))}
+    </ul>
+    <p class="font-mono text-[11px] text-ink/45 mt-6">Written project references and completion dates for these engagements would strengthen this section — a content item for the PBJ team.</p>
+  </PageShell>
+
+  <PageShell tone="paper" labelledby="about-team">
+    <SectionHeader id="about-team" num="04" label="People" title="Behind every build," titleMuted="there's a team." tone="paper" />
+    <div class="mt-14 flex flex-col gap-16" data-reveal>
       {team.map((member) => (
         <div class="grid md:grid-cols-[.7fr_1.3fr] gap-12 items-center">
           <div class="spec-frame aspect-[4/5]">
             <span class="cA"></span><span class="cB"></span>
-            <img src={member.data.photo.src} alt={member.data.photo.alt} width={member.data.photo.width} height={member.data.photo.height} class="w-full h-full object-cover" loading="lazy" />
+            <img src={member.data.photo.src} alt={member.data.photo.alt} width={member.data.photo.width} height={member.data.photo.height} class="w-full h-full object-cover" loading="lazy" decoding="async" />
           </div>
           <div>
             <span class="font-mono text-[11px] text-accent tracking-wide uppercase">{member.data.role}</span>
@@ -69,21 +96,20 @@ const crumbs = [{ name: 'Home', url: '/' }, { name: 'About', url: '/about/' }];
         </div>
       ))}
     </div>
-  </section>
+  </PageShell>
 
-  <section class="wrap py-16 max-w-[880px]">
-    <h2 class="font-serif text-3xl mb-4">FAQ</h2>
-    <FAQAccordion items={faqs} idPrefix="about-faq" />
-  </section>
-
-  <section class="bg-ink text-paper py-20 text-center">
-    <div class="wrap">
-      <h2 class="font-serif text-3xl md:text-4xl">Have a project in mind?</h2>
-      <div class="flex gap-4 justify-center flex-wrap mt-8">
-        <a href="/contact/" class="btn btn-solid" data-analytics-event="click_start_project" data-analytics-params={JSON.stringify({ placement: 'about_cta' })}>Start Your Project →</a>
-      </div>
+  <PageShell tone="paper-dim" labelledby="about-faq">
+    <SectionHeader id="about-faq" label="Common questions" title="FAQ" tone="paper" />
+    <div class="mt-12 max-w-[880px]" data-reveal>
+      <FAQAccordion items={faqs} idPrefix="about-faq" />
     </div>
-  </section>
+  </PageShell>
 
-  <RevealScript />
+  <FinalCTA
+    title="Have a project"
+    titleMuted="in mind?"
+    copy="Tell PBJ Infra what you're planning — from the first conversation to execution."
+    primary={{ label: 'Start your project', href: '/contact/', event: 'click_start_project', params: { placement: 'about_cta' } }}
+    contact={true}
+  />
 </BaseLayout>
