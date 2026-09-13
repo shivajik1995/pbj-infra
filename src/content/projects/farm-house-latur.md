@@ -27,7 +27,7 @@ contentGaps:
   - "Client brief (weekend home, retirement home, rental/events use) is not documented and shapes how the case study reads."
 relatedService: "farmhouse-construction"
 relatedLocation: "latur"
-relatedProjects: ["natural-lagoon-pool", "rabbit-dome-house"]
+relatedProjects: ["latur-water-park", "jalashay-resort-panshet"]
 seo:
   title: "Farm House, Latur | PBJ Infra Project"
   description: "PBJ Infra's Farm House near Latur — a custom rural residence built with its own site infrastructure, blending rustic materials with modern amenities."

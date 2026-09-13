@@ -35,7 +35,7 @@ contentGaps:
   - "Pool surface area, volume and depth profile are not yet documented — PBJ team to supply for a technical section."
   - "Client brief and site context (why the raised-island layout was chosen) are not yet documented and would complete the case study."
 relatedService: "resort-construction"
-relatedProjects: ["jalashay-resort-panshet", "takawe-resort-kamshet", "natural-lagoon-pool"]
+relatedProjects: ["jalashay-resort-panshet", "takawe-resort-kamshet", "aandra-lakestay-resort-pune"]
 seo:
   title: "Hotel AK Gemak, Kolhapur | PBJ Infra Project"
   description: "PBJ Infra's swimming pool and poolside leisure deck at Hotel AK Gemak, Kolhapur — completed 2023."

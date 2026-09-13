@@ -7,10 +7,10 @@ coordinates: { lat: 18.4702, lng: 73.9758 }
 address: "Flat No. 101, Shantai Niwas, Phursungi, Pune 412308"
 intro: "PBJ Infra is headquartered in Phursungi, Pune, and has operated continuously from the city since 2009. Pune is where the founder, core site team and equipment are based, and the region with the deepest concentration of completed PBJ projects — from residential infinity pools to specialised ferrocement structures."
 servicesOffered: ["swimming-pool-construction", "pool-filtration-systems", "swimming-pool-tiles", "lagoon-pool-construction", "ferrocement-dome", "ferro-concrete-design", "land-development"]
-relatedProjects: ["rabbit-dome-house", "jalashay-resort-panshet", "takawe-resort-kamshet", "aandra-lakestay-resort-pune"]
+relatedProjects: ["jalashay-resort-panshet", "takawe-resort-kamshet", "aandra-lakestay-resort-pune"]
 localNotes:
   - "PBJ's registered office and primary site team operate out of Phursungi, Pune 412308."
-  - "The Rabbit Dome House (a completed ferrocement dome residence) and a Luxury Infinity Pool are both attributed to Pune on pbjinfra.com's portfolio; the Rabbit Dome House now has a full case study, while the Luxury Infinity Pool is pending a location confirmation."
+  - "The Rabbit Dome House (a completed ferrocement dome residence) and a Luxury Infinity Pool are both attributed to Pune on pbjinfra.com's portfolio; neither currently has a published case study here — the Luxury Infinity Pool is pending a location confirmation."
   - "Building permits and regulatory compliance for Pune-region projects are handled directly by PBJ rather than routed through a third party."
 faq: ["locations-served", "permits", "warranty", "design-and-build"]
 seo:
@@ -26,7 +26,7 @@ Pune is PBJ Infra's home base — the address on file, the team's daily starting
 
 ## Verified Pune project history
 
-The [Rabbit Dome House](/projects/rabbit-dome-house/) — a completed ferrocement dome residence in Pune — is PBJ Infra's built reference for specialised thin-shell work. A Luxury Infinity Pool is also attributed to a Pune residence on PBJ's portfolio, though the source site is inconsistent on whether it is Pune or Mumbai, so its case study is held back until PBJ confirms the location. See [/projects/](/projects/) for what is published.
+The Rabbit Dome House — a completed ferrocement dome residence in Pune — is PBJ Infra's built reference for specialised thin-shell work. A Luxury Infinity Pool is also attributed to a Pune residence on PBJ's portfolio, though the source site is inconsistent on whether it is Pune or Mumbai, so its case study is held back until PBJ confirms the location. See [/projects/](/projects/) for what is published.
 
 ## How Pune projects are run
 

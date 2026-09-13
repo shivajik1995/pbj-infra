@@ -42,7 +42,7 @@ contentGaps:
   - "The completion year is not confirmed, and the gallery still leads with a visualisation — a final built photograph of the finished, lit gateway would complete the case study."
 relatedService: "ferro-concrete-design"
 relatedLocation: "bengaluru"
-relatedProjects: ["akaya-resort-gokarna", "rabbit-dome-house"]
+relatedProjects: ["akaya-resort-gokarna", "jalashay-resort-panshet"]
 seo:
   title: "Mi Casa Entrance Gateway, Kanakapura | PBJ Infra"
   description: "Case study: the sculptural free-form entrance gateway and boundary wall PBJ Infra built for the Mi Casa development at Kanakapura, near Bengaluru."
@@ -50,7 +50,7 @@ seo:
 
 ## Project overview
 
-Mi Casa is a residential development at Kanakapura, on the southern edge of Bengaluru. PBJ Infra's scope was its entrance — a sculptural, free-form boundary wall with a continuous wave profile, a large circular portal ringed by a brick voussoir arch, curved flanking pillars, and the entrance gates. The form is deliberately organic, closer to the shells PBJ builds at [AKAYA Resort](/projects/akaya-resort-gokarna/) and the [Rabbit Dome House](/projects/rabbit-dome-house/) than to a conventional compound wall, and it carries the development's nautilus emblem at its centre.
+Mi Casa is a residential development at Kanakapura, on the southern edge of Bengaluru. PBJ Infra's scope was its entrance — a sculptural, free-form boundary wall with a continuous wave profile, a large circular portal ringed by a brick voussoir arch, curved flanking pillars, and the entrance gates. The form is deliberately organic, closer to the shells PBJ builds at [AKAYA Resort](/projects/akaya-resort-gokarna/) and the Rabbit Dome House than to a conventional compound wall, and it carries the development's nautilus emblem at its centre.
 
 It draws on PBJ's [ferro concrete design](/services/ferro-concrete-design/) capability — building a curved, sculptural surface over blockwork and a shaped armature, then rendering and finishing it by hand.
 

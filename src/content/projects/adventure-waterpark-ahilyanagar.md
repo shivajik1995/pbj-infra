@@ -66,7 +66,7 @@ relatedService: "waterpark-construction"
 
 relatedProjects:
   - "farm-house-latur"
-  - "natural-lagoon-pool"
+  - "latur-water-park"
 
 seo:
   title: "Adventure Waterpark, Ahilyanagar | PBJ Infra Project"

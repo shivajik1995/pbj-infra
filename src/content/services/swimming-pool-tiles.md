@@ -35,7 +35,7 @@ process:
   - step: "Handover"
     description: "Final finish inspection at project handover, with grout and sealant cure guidance."
 relatedServices: ["swimming-pool-construction", "lagoon-pool-construction", "pool-filtration-systems"]
-relatedProjects: ["natural-lagoon-pool"]
+relatedProjects: ["takawe-resort-kamshet", "hotel-ak-gemak-kolhapur"]
 relatedLocations: ["pune"]
 faq: ["pool-timeline", "design-and-build", "warranty"]
 ctaLabel: "Get a Pool Consultation"
@@ -64,6 +64,6 @@ Tiling happens after the structural shell and filtration are complete and the po
 
 ## Related work
 
-Tiling is the finishing layer on PBJ Infra's [swimming pool construction](/services/swimming-pool-construction/) and [lagoon pool construction](/services/lagoon-pool-construction/), and works with the [pool filtration](/services/pool-filtration-systems/) installed earlier in the same build. See the [Natural Lagoon Pool](/projects/natural-lagoon-pool/) for a naturalistic finish in practice.
+Tiling is the finishing layer on PBJ Infra's [swimming pool construction](/services/swimming-pool-construction/) and [lagoon pool construction](/services/lagoon-pool-construction/), and works with the [pool filtration](/services/pool-filtration-systems/) installed earlier in the same build. The mosaic-tiled pools at [Takawe Resort](/projects/takawe-resort-kamshet/) and [Hotel AK Gemak](/projects/hotel-ak-gemak-kolhapur/) show the finish in practice, and PBJ's Natural Lagoon Pool in Chatrapati Sambhaji Nagar carries it under a naturalistic form.
 
 [Talk to PBJ about pool tiling →](/contact/?project=swimming-pool-tiles)

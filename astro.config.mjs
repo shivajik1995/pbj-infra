@@ -19,11 +19,15 @@ export default defineConfig({
   site: 'https://www.pbjinfra.com',
   output: 'static',
   adapter: node({ mode: 'standalone' }),
-  // Permanent redirects for renamed URLs. The Adventure Waterpark project was
-  // published under a "-latur" slug before its location was confirmed as
-  // Ahilyanagar, Maharashtra.
+  // Permanent redirects for renamed and retired URLs. The Adventure Waterpark
+  // project was published under a "-latur" slug before its location was
+  // confirmed as Ahilyanagar, Maharashtra. The Rabbit Dome House and Natural
+  // Lagoon Pool case studies were retired; both were live and indexed, so their
+  // URLs point at the projects hub rather than 404ing.
   redirects: {
     '/projects/adventure-waterpark-latur': '/projects/adventure-waterpark-ahilyanagar',
+    '/projects/rabbit-dome-house': '/projects/',
+    '/projects/natural-lagoon-pool': '/projects/',
   },
   integrations: [
     tailwind({ applyBaseStyles: false }),

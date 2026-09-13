@@ -57,7 +57,7 @@ contentGaps:
   - "The client brief, the number of dome cottages, individual dome spans and floor areas, and the completion year are not documented here. PBJ team to supply."
   - "The gallery mixes finished visualisations with on-site construction photos — a set of final built photographs would make the case study fully first-hand."
 relatedService: "ferrocement-dome"
-relatedProjects: ["rabbit-dome-house", "jalashay-resort-panshet"]
+relatedProjects: ["jalashay-resort-panshet", "mi-casa-kanakapura"]
 seo:
   title: "AKAYA Resort, Gokarna | PBJ Infra Project"
   description: "Case study: AKAYA Resort, Gokarna — a cluster of ferrocement thin-shell dome cottages on the Karnataka coast, built by PBJ Infra."
@@ -67,7 +67,7 @@ seo:
 
 AKAYA Resort sits inland from the beaches of Gokarna, on the Karnataka coast, and is built as a cluster of ferrocement thin-shell dome cottages rather than conventional rooms. Each cottage is a monolithic mortar shell — column-free, curved in every direction, with door and window openings and a tunnel-form entrance shaped into the geometry. PBJ Infra built the shells and the connecting site works, set among an existing coconut and areca grove.
 
-It is the larger companion to PBJ's [Rabbit Dome House](/projects/rabbit-dome-house/) in Pune — the same [ferrocement dome](/services/ferrocement-dome/) and [ferro concrete design](/services/ferro-concrete-design/) technique, repeated across a whole site and carried out of Maharashtra to the Karnataka coast.
+It is the larger companion to PBJ's Rabbit Dome House in Pune — the same [ferrocement dome](/services/ferrocement-dome/) and [ferro concrete design](/services/ferro-concrete-design/) technique, repeated across a whole site and carried out of Maharashtra to the Karnataka coast.
 
 ## Client requirement
 

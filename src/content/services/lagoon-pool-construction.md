@@ -33,7 +33,7 @@ process:
   - step: "Handover"
     description: "Water-balance sign-off, a maintenance walkthrough covering the planted areas, and warranty documentation."
 relatedServices: ["swimming-pool-construction", "swimming-pool-tiles", "pool-filtration-systems"]
-relatedProjects: ["natural-lagoon-pool"]
+relatedProjects: ["takawe-resort-kamshet", "aandra-lakestay-resort-pune"]
 relatedLocations: ["pune"]
 faq: ["pool-timeline", "design-and-build", "warranty", "cost"]
 ctaLabel: "Get a Lagoon Pool Consultation"
@@ -62,7 +62,7 @@ PBJ Infra designs the lagoon form, the beach-entry grading, the rockwork and the
 
 ## Related work
 
-PBJ Infra's [Natural Lagoon Pool](/projects/natural-lagoon-pool/) in Chatrapati Sambhaji Nagar is a completed example. Lagoon pools pair naturally with [farmhouse construction](/services/farmhouse-construction/) and [resort construction](/services/resort-construction/), and use the same [pool filtration](/services/pool-filtration-systems/) and [pool tiling and finishing](/services/swimming-pool-tiles/) work as conventional pools.
+PBJ Infra's Natural Lagoon Pool in Chatrapati Sambhaji Nagar is a completed example, and the free-form pool at [Takawe Resort](/projects/takawe-resort-kamshet/) near Pune shows the same curved-shell approach on a resort site. Lagoon pools pair naturally with [farmhouse construction](/services/farmhouse-construction/) and [resort construction](/services/resort-construction/), and use the same [pool filtration](/services/pool-filtration-systems/) and [pool tiling and finishing](/services/swimming-pool-tiles/) work as conventional pools.
 
 *Content required: PBJ team to supply the surface area, water volume and finish detail of the Natural Lagoon Pool for this page.*
 

@@ -33,7 +33,7 @@ process:
   - step: "Handover"
     description: "Structural inspection, waterproofing check and warranty documentation."
 relatedServices: ["ferro-concrete-design", "land-development"]
-relatedProjects: ["rabbit-dome-house", "akaya-resort-gokarna"]
+relatedProjects: ["akaya-resort-gokarna"]
 relatedLocations: ["pune"]
 faq: ["specialized-structures", "ferrocement-dome-cost-factors", "design-and-build", "warranty"]
 ctaLabel: "Discuss a Dome Structure"
@@ -62,7 +62,7 @@ PBJ Infra treats a dome as a structural-engineering problem first. Shell thickne
 
 ## Related work
 
-The [Rabbit Dome House](/projects/rabbit-dome-house/) in Pune is PBJ Infra's completed single-dome residence, and [AKAYA Resort](/projects/akaya-resort-gokarna/) at Gokarna is the same technique built as a cluster of dome cottages across a whole resort site. This work is closely related to PBJ's [ferro concrete design](/services/ferro-concrete-design/) service, and dome structures on rural land often pair with [land development](/services/land-development/).
+The Rabbit Dome House in Pune is PBJ Infra's completed single-dome residence, and [AKAYA Resort](/projects/akaya-resort-gokarna/) at Gokarna is the same technique built as a cluster of dome cottages across a whole resort site. This work is closely related to PBJ's [ferro concrete design](/services/ferro-concrete-design/) service, and dome structures on rural land often pair with [land development](/services/land-development/).
 
 *Content required: PBJ team to supply dome spans, floor areas and construction periods for the Rabbit Dome House and AKAYA Resort so this page can cite them.*
 
