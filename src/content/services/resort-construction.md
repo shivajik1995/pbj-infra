@@ -35,7 +35,7 @@ process:
   - step: "Handover"
     description: "Snagging, systems commissioning, an operations walkthrough and warranty documentation."
 relatedServices: ["waterpark-construction", "swimming-pool-construction", "farmhouse-construction", "land-development"]
-relatedProjects: ["jalashay-resort-panshet", "adventure-waterpark-ahilyanagar"]
+relatedProjects: ["jalashay-resort-panshet", "takawe-resort-kamshet", "adventure-waterpark-ahilyanagar", "hotel-ak-gemak-kolhapur"]
 relatedLocations: ["pune", "latur"]
 faq: ["design-and-build", "permits", "warranty", "cost"]
 ctaLabel: "Plan Your Resort Project"
@@ -64,7 +64,7 @@ PBJ works a resort as a phased programme. Site infrastructure and access come fi
 
 ## Related work
 
-PBJ Infra's [Jalashay Resort](/projects/jalashay-resort-panshet/) at Panshet is a completed, operating example of this service — a lakeside resort where PBJ delivered the retaining and site works, the main hall, a guest block and villa cottages, an infinity-edge pool and the full landscaping as one contract. The [Adventure Waterpark](/projects/adventure-waterpark-ahilyanagar/) in Ahilyanagar shows the same team delivering hospitality-scale aquatic infrastructure and safety systems.
+PBJ Infra's [Jalashay Resort](/projects/jalashay-resort-panshet/) at Panshet is a completed, operating example of this service — a lakeside resort where PBJ delivered the retaining and site works, the main hall, a guest block and villa cottages, an infinity-edge pool and the full landscaping as one contract. The [Adventure Waterpark](/projects/adventure-waterpark-ahilyanagar/) in Ahilyanagar shows the same team delivering hospitality-scale aquatic infrastructure and safety systems, and [Hotel AK Gemak](/projects/hotel-ak-gemak-kolhapur/) in Kolhapur shows the same pool-and-leisure-deck discipline at a hotel property. [Takawe Resort](/projects/takawe-resort-kamshet/) at Kamshet is a completed free-form resort pool near Pune.
 
 Resort projects typically combine [swimming pool construction](/services/swimming-pool-construction/), [lagoon pool construction](/services/lagoon-pool-construction/), [waterpark construction](/services/waterpark-construction/) and [land development](/services/land-development/) within one contract.
 

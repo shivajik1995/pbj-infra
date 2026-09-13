@@ -71,7 +71,7 @@ contentGaps:
   - "Site data (plot area, built-up area, pool dimensions, water source) is not confirmed. PBJ team to supply."
 relatedService: "resort-construction"
 relatedLocation: "pune"
-relatedProjects: ["adventure-waterpark-ahilyanagar", "natural-lagoon-pool"]
+relatedProjects: ["adventure-waterpark-ahilyanagar", "takawe-resort-kamshet", "hotel-ak-gemak-kolhapur"]
 seo:
   title: "Jalashay Resort, Panshet | PBJ Infra Project"
   description: "Case study: Jalashay Resort on the Panshet backwaters near Pune — main hall, villa cottages and an infinity-edge pool, built end to end by PBJ Infra."

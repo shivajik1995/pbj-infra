@@ -7,7 +7,7 @@ coordinates: { lat: 18.4702, lng: 73.9758 }
 address: "Flat No. 101, Shantai Niwas, Phursungi, Pune 412308"
 intro: "PBJ Infra is headquartered in Phursungi, Pune, and has operated continuously from the city since 2009. Pune is where the founder, core site team and equipment are based, and the region with the deepest concentration of completed PBJ projects — from residential infinity pools to specialised ferrocement structures."
 servicesOffered: ["swimming-pool-construction", "pool-filtration-systems", "swimming-pool-tiles", "lagoon-pool-construction", "ferrocement-dome", "ferro-concrete-design", "land-development"]
-relatedProjects: ["rabbit-dome-house", "jalashay-resort-panshet"]
+relatedProjects: ["rabbit-dome-house", "jalashay-resort-panshet", "takawe-resort-kamshet"]
 localNotes:
   - "PBJ's registered office and primary site team operate out of Phursungi, Pune 412308."
   - "The Rabbit Dome House (a completed ferrocement dome residence) and a Luxury Infinity Pool are both attributed to Pune on pbjinfra.com's portfolio; the Rabbit Dome House now has a full case study, while the Luxury Infinity Pool is pending a location confirmation."

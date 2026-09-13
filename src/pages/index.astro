@@ -75,7 +75,7 @@ const developers: [string, string][] = [
 ];
 
 const projects = await getCollection('projects');
-const projectOrder = ['adventure-waterpark-ahilyanagar', 'jalashay-resort-panshet', 'akaya-resort-gokarna', 'mi-casa-kanakapura', 'latur-water-park', 'luxury-infinity-pool', 'rabbit-dome-house', 'natural-lagoon-pool',
+const projectOrder = ['adventure-waterpark-ahilyanagar', 'jalashay-resort-panshet', 'akaya-resort-gokarna', 'takawe-resort-kamshet', 'hotel-ak-gemak-kolhapur', 'mi-casa-kanakapura', 'latur-water-park', 'luxury-infinity-pool', 'rabbit-dome-house', 'natural-lagoon-pool',
 'farm-house-latur'];
 const orderedProjects = projectOrder.map((slug) => projects.find((p) => p.slug === slug)!).filter(Boolean);
 
