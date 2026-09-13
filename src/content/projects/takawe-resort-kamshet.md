@@ -29,7 +29,7 @@ contentGaps:
   - "Site video footage from this build exists but is not yet published on the page — see the project photo folder."
 relatedService: "resort-construction"
 relatedLocation: "pune"
-relatedProjects: ["jalashay-resort-panshet", "hotel-ak-gemak-kolhapur"]
+relatedProjects: ["jalashay-resort-panshet", "aandra-lakestay-resort-pune", "hotel-ak-gemak-kolhapur"]
 seo:
   title: "Takawe Resort, Kamshet | PBJ Infra Project"
   description: "PBJ Infra's free-form resort pool at Takawe Resort, Kamshet near Pune — mosaic-tiled with a shallow lobe, completed 2024."
