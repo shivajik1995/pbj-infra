@@ -35,7 +35,7 @@ process:
 relatedServices: ["ferro-concrete-design", "land-development"]
 relatedProjects: ["rabbit-dome-house", "akaya-resort-gokarna"]
 relatedLocations: ["pune"]
-faq: ["specialized-structures", "design-and-build", "warranty", "cost"]
+faq: ["specialized-structures", "ferrocement-dome-cost-factors", "design-and-build", "warranty"]
 ctaLabel: "Discuss a Dome Structure"
 whatsappMessage: "Hi PBJ Infra, I'm interested in discussing a ferrocement dome structure."
 seo:

@@ -9,12 +9,30 @@ import LeadForm from '../../components/LeadForm.astro';
 import { breadcrumbSchema, faqSchema } from '../../lib/schema';
 import { SITE, whatsappLink, telLink, mailtoLink } from '../../lib/site';
 
-const faqSlugs = ['cost', 'pool-timeline', 'permits', 'warranty', 'locations-served', 'design-and-build', 'specialized-structures'];
-const faqs = (await Promise.all(faqSlugs.map((id) => getEntry('faq', id)))).map((f) => f!.data);
-const crumbs = [{ name: 'Home', url: '/' }, { name: 'Contact', url: '/contact/' }];
+const faqSlugs = [
+  'cost',
+  'pool-timeline',
+  'permits',
+  'warranty',
+  'locations-served',
+  'design-and-build',
+  'specialized-structures',
+];
 
-const mapQuery = encodeURIComponent(`${SITE.address.streetAddress}, ${SITE.address.addressLocality} ${SITE.address.postalCode}`);
+const faqs = (
+  await Promise.all(faqSlugs.map((id) => getEntry('faq', id)))
+).map((f) => f!.data);
+
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Contact', url: '/contact/' },
+];
+
+const mapQuery = encodeURIComponent(
+  `${SITE.address.streetAddress}, ${SITE.address.addressLocality} ${SITE.address.postalCode}`
+);
 ---
+
 <BaseLayout
   title="Contact PBJ Infra | Start Your Construction Project"
   description="Get in touch with PBJ Infra — call, WhatsApp or send your project details for a free consultation. Based in Phursungi, Pune."
@@ -27,46 +45,364 @@ const mapQuery = encodeURIComponent(`${SITE.address.streetAddress}, ${SITE.addre
     eyebrow="Contact / Start a project"
     title="Have a project in mind?"
     titleMuted="Let's build it."
-    lead="Tell us what you're planning and our team will help you understand the next steps. No fixed pricing is published — every project gets a consultation and a project-specific quote."
+    lead="Tell us what you're planning and we'll help you understand the next steps. Every project is reviewed individually before we prepare a quote."
     ctas={[
-      { label: 'WhatsApp us', href: whatsappLink('Hi PBJ Infra, I would like to discuss a project.'), style: 'solid', external: true, event: 'click_whatsapp', params: { placement: 'contact_hero' } },
-      { label: 'Call', href: telLink(), style: 'lt', event: 'click_phone' },
+      {
+        label: 'WhatsApp us',
+        href: whatsappLink('Hi PBJ Infra, I would like to discuss a project.'),
+        style: 'solid',
+        external: true,
+        event: 'click_whatsapp',
+        params: { placement: 'contact_hero' },
+      },
+      {
+        label: 'Call',
+        href: telLink(),
+        style: 'lt',
+        event: 'click_phone',
+      },
     ]}
   />
 
-  <PageShell tone="paper">
-    <div class="grid lg:grid-cols-[1fr_1fr] gap-12 items-start" data-reveal>
-      <div>
-        <LeadForm />
-      </div>
-      <div class="flex flex-col gap-8">
-        <div class="border border-ink/[.14] p-7">
-          <h2 class="font-serif text-xl mb-5">Direct contact</h2>
-          <ul class="flex flex-col gap-3.5 font-mono text-sm">
-            <li><a href={telLink()} data-analytics-event="click_phone" class="hover:text-accent">{SITE.phoneDisplay}</a></li>
-            <li><a href={mailtoLink()} data-analytics-event="click_email" class="hover:text-accent">{SITE.email}</a></li>
-            <li><a href={whatsappLink('Hi PBJ Infra, I would like to discuss a project.')} target="_blank" rel="noopener" data-analytics-event="click_whatsapp" data-analytics-params={JSON.stringify({ placement: 'contact_page' })} class="hover:text-accent">WhatsApp →</a></li>
-          </ul>
-          <p class="text-[13px] text-ink-soft mt-5">{SITE.address.streetAddress}, {SITE.address.addressLocality} {SITE.address.postalCode}</p>
-          <p class="font-mono text-xs text-ink/50 mt-2">{SITE.hours}</p>
+  <!-- ===================================================== -->
+  <!-- GET IN TOUCH -->
+  <!-- ===================================================== -->
+
+  <PageShell tone="paper" labelledby="contact-methods">
+    <SectionHeader
+      id="contact-methods"
+      num="01"
+      label="Get in touch"
+      title="Three ways to"
+      titleMuted="reach the same team."
+      intro="Call, message us on WhatsApp, or send your project details below — pick whichever is easiest right now."
+      tone="paper"
+    />
+
+    <div class="mt-14 grid gap-5 sm:grid-cols-3" data-reveal-stagger>
+      <a
+        href={telLink()}
+        class="method-card group"
+        data-analytics-event="click_phone"
+      >
+        <span class="method-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.5 2.5.8 3.8.9.6 0 1 .5 1 1v3.3c0 .6-.5 1-1 1C10.7 21.2 2.8 13.3 2.8 3.8c0-.6.5-1 1-1h3.3c.6 0 1 .4 1 1 .1 1.3.4 2.6.9 3.8.2.4.1.8-.2 1.1L6.6 10.8Z"></path></svg>
+        </span>
+        <h3 class="method-title">Call us</h3>
+        <p class="method-detail">{SITE.phoneDisplay}</p>
+        <p class="method-note">Speak with the team directly about your project.</p>
+        <span class="method-link">Call now <span aria-hidden="true">→</span></span>
+      </a>
+
+      <a
+        href={whatsappLink('Hi PBJ Infra, I would like to discuss a project.')}
+        target="_blank"
+        rel="noopener"
+        class="method-card group"
+        data-analytics-event="click_whatsapp"
+        data-analytics-params={JSON.stringify({ placement: 'contact_page' })}
+      >
+        <span class="method-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-1.3 4.5c-1.6 2.5-4.5 4-7.7 4a9 9 0 0 1-2.6-.4L4 21l1.4-3.9A8.4 8.4 0 0 1 3.5 12 8.5 8.5 0 0 1 12 3.5 8.5 8.5 0 0 1 21 11.5Z"></path></svg>
+        </span>
+        <h3 class="method-title">WhatsApp us</h3>
+        <p class="method-detail">Usually the fastest reply</p>
+        <p class="method-note">Share photos, a sketch or a quick brief to start.</p>
+        <span class="method-link">Start a chat <span aria-hidden="true">→</span></span>
+      </a>
+
+      <a
+        href={mailtoLink()}
+        class="method-card group"
+        data-analytics-event="click_email"
+      >
+        <span class="method-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5.5" width="18" height="13" rx="1.5"></rect><path d="M3.5 6.5 12 13l8.5-6.5"></path></svg>
+        </span>
+        <h3 class="method-title">Email us</h3>
+        <p class="method-detail method-detail--email">{SITE.email}</p>
+        <p class="method-note">Best for longer briefs, drawings or documents.</p>
+        <span class="method-link">Send an email <span aria-hidden="true">→</span></span>
+      </a>
+    </div>
+  </PageShell>
+
+  <!-- ===================================================== -->
+  <!-- PROJECT ENQUIRY -->
+  <!-- ===================================================== -->
+
+  <PageShell tone="paper-dim" labelledby="contact-form">
+    <SectionHeader
+      id="contact-form"
+      num="02"
+      label="Project enquiry"
+      title="Tell us what"
+      titleMuted="you're building."
+      intro="You don't need a finished plan. Project type, location, rough size and timeline are enough for us to start."
+      tone="paper"
+    />
+
+    <div class="mx-auto mt-14 max-w-[760px]" data-reveal>
+      <LeadForm />
+
+      <div class="steps-row">
+        <div class="steps-row-item">
+          <span class="step-no">1</span>
+          <p>We read through the project details you've shared.</p>
         </div>
-        <div class="border border-ink/[.14] overflow-hidden aspect-[4/3]">
-          <iframe
-            title="PBJ Infra location — Phursungi, Pune"
-            src={`https://www.google.com/maps?q=${mapQuery}&output=embed`}
-            class="w-full h-full border-0"
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-          ></iframe>
+        <div class="steps-row-item">
+          <span class="step-no">2</span>
+          <p>Our team calls or messages you to understand the requirement.</p>
+        </div>
+        <div class="steps-row-item">
+          <span class="step-no">3</span>
+          <p>We agree on the next step — a site visit, a proposal, or more questions.</p>
         </div>
       </div>
     </div>
   </PageShell>
 
-  <PageShell tone="paper-dim" labelledby="contact-faq" id="faq">
-    <SectionHeader id="contact-faq" label="Before you ask" title="FAQ" tone="paper" />
-    <div class="mt-12 max-w-[880px]" data-reveal>
+  <!-- ===================================================== -->
+  <!-- WHERE TO FIND US -->
+  <!-- ===================================================== -->
+
+  <PageShell tone="paper" labelledby="contact-find-us">
+    <SectionHeader
+      id="contact-find-us"
+      num="03"
+      label="Where to find us"
+      title="Come see us,"
+      titleMuted="or find us on the map."
+      intro="PBJ Infra is based in Pune and takes on projects across India."
+      tone="paper"
+    />
+
+    <div class="find-us-grid mt-14" data-reveal>
+      <div class="info-card">
+        <span class="info-label">Our office</span>
+        <p class="info-title">{SITE.address.addressLocality}, Maharashtra</p>
+        <p class="info-copy">
+          {SITE.address.streetAddress}<br />
+          {SITE.address.postalCode}
+        </p>
+        <p class="info-footnote">Based in Pune — taking on projects across India.</p>
+      </div>
+
+      <div class="map-card">
+        <iframe
+          title="PBJ Infra location — Phursungi, Pune"
+          src={`https://www.google.com/maps?q=${mapQuery}&output=embed`}
+          class="map-iframe"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </div>
+    </div>
+  </PageShell>
+
+  <!-- ===================================================== -->
+  <!-- FAQ -->
+  <!-- ===================================================== -->
+
+  <PageShell tone="paper-dim" labelledby="contact-faq">
+    <SectionHeader
+      id="contact-faq"
+      num="04"
+      label="Before you ask"
+      title="Common questions."
+      intro="A few practical answers before the first conversation."
+      tone="paper"
+    />
+    <div class="mx-auto mt-12 max-w-[880px]" data-reveal>
       <FAQAccordion items={faqs} idPrefix="contact-faq" />
     </div>
   </PageShell>
 </BaseLayout>
+
+<style>
+  /* ---- Method cards (Call / WhatsApp / Email) -------------------------- */
+  .method-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.75rem;
+    border-radius: 1rem;
+    text-decoration: none;
+    color: theme('colors.ink');
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(20, 23, 26, 0.1);
+    box-shadow: 0 1px 2px rgba(20, 23, 26, 0.03), 0 16px 32px -20px rgba(20, 23, 26, 0.18);
+    transition: border-color 0.25s ease, transform 0.25s ease;
+  }
+  .method-card:hover {
+    border-color: theme('colors.accent');
+    transform: translateY(-3px);
+  }
+  .method-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    color: theme('colors.accent');
+    background: theme('colors.accent-lt');
+  }
+  .method-icon svg { width: 21px; height: 21px; }
+  .method-title {
+    margin-top: 1.5rem;
+    font-family: theme('fontFamily.serif');
+    font-size: 1.25rem;
+  }
+  .method-detail {
+    margin-top: 0.35rem;
+    font-family: theme('fontFamily.mono');
+    font-size: 13px;
+    color: theme('colors.ink');
+  }
+  .method-detail--email { overflow-wrap: anywhere; }
+  .method-note {
+    margin-top: 0.6rem;
+    color: theme('colors.ink-soft');
+    font-size: 13px;
+    line-height: 1.65;
+  }
+  .method-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 1.5rem;
+    font-family: theme('fontFamily.mono');
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: theme('colors.ink');
+    transition: color 0.25s ease, gap 0.25s ease;
+  }
+  .method-card:hover .method-link {
+    color: theme('colors.accent');
+    gap: 9px;
+  }
+
+  /* ---- Project enquiry: what happens next, below the form --------------- */
+  .steps-row {
+    margin-top: 3rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid rgba(20, 23, 26, 0.1);
+    display: grid;
+    gap: 1.75rem;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .steps-row-item {
+    display: grid;
+    grid-template-columns: 22px 1fr;
+    gap: 0.75rem;
+    align-items: baseline;
+  }
+
+  .steps-row-item p {
+    margin: 0;
+    color: theme('colors.ink-soft');
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .step-no {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: theme('colors.accent-lt');
+    color: theme('colors.accent');
+    font-family: theme('fontFamily.mono');
+    font-size: 10px;
+  }
+
+  /* ---- Where to find us: office card + map ------------------------------ */
+  .find-us-grid {
+    display: grid;
+    gap: clamp(1.5rem, 4vw, 3rem);
+    grid-template-columns: minmax(280px, 0.85fr) minmax(0, 1.15fr);
+    align-items: stretch;
+  }
+
+  .info-label {
+    display: block;
+    font-family: theme('fontFamily.mono');
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: theme('colors.accent');
+  }
+
+  .info-card {
+    padding: 2rem;
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(20, 23, 26, 0.1);
+  }
+
+  .info-title {
+    margin-top: 0.85rem;
+    font-family: theme('fontFamily.serif');
+    font-size: 1.6rem;
+  }
+
+  .info-copy {
+    margin-top: 0.5rem;
+    color: theme('colors.ink-soft');
+    font-size: 13.5px;
+    line-height: 1.7;
+  }
+
+  .info-footnote {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(20, 23, 26, 0.1);
+    color: theme('colors.ink-soft');
+    font-size: 12.5px;
+    line-height: 1.6;
+  }
+
+  .map-card {
+    position: relative;
+    min-height: 280px;
+    overflow: hidden;
+    border-radius: 1rem;
+    border: 1px solid rgba(20, 23, 26, 0.1);
+    background: theme('colors.paper-dim');
+  }
+
+  .map-iframe {
+    width: 100%;
+    height: 100%;
+    min-height: 280px;
+    border: 0;
+    filter: grayscale(0.85) contrast(0.96);
+  }
+
+  @media (max-width: 1023px) {
+    .steps-row {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .find-us-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .map-card,
+    .map-iframe {
+      min-height: 320px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .method-card {
+      transition: none;
+    }
+  }
+</style>

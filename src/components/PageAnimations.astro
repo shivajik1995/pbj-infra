@@ -47,7 +47,7 @@
           // Hero headline line-mask reveal + lead/actions fade (on load)
           const heroLines = document.querySelectorAll<HTMLElement>('[data-hero] .hero-title-line');
           if (heroLines.length) {
-            gsap.to(heroLines, { yPercent: 0, duration: 1, stagger: 0.1, ease: 'power4.out', delay: 0.08 });
+            gsap.to(heroLines, { y: 0, duration: 1, stagger: 0.1, ease: 'power4.out', delay: 0.08 });
             gsap.to(
               document.querySelectorAll<HTMLElement>('[data-hero] .page-hero-lead, [data-hero] .page-hero-actions'),
               { opacity: 1, duration: 0.6, stagger: 0.12, ease: 'power3.out', delay: 0.5 },
@@ -104,7 +104,7 @@
       run();
     } else {
       window.addEventListener('load', () => {
-        if ('requestIdleCallback' in window) {
+        if (typeof (window as any).requestIdleCallback === 'function') {
           (window as any).requestIdleCallback(run, { timeout: 1200 });
         } else {
           window.setTimeout(run, 200);

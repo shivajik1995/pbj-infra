@@ -38,7 +38,7 @@ process:
 relatedServices: ["resort-construction", "swimming-pool-construction", "pool-filtration-systems"]
 relatedProjects: ["adventure-waterpark-ahilyanagar", "latur-water-park"]
 relatedLocations: ["latur", "pune"]
-faq: ["design-and-build", "permits", "warranty", "cost"]
+faq: ["waterpark-safety-systems", "design-and-build", "permits", "warranty", "cost"]
 ctaLabel: "Discuss Your Waterpark Project"
 whatsappMessage: "Hi PBJ Infra, I'm interested in discussing a waterpark project."
 seo:

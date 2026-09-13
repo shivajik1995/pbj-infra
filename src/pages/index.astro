@@ -23,17 +23,55 @@ const primaryServices = [
   { name: 'Land Development', url: '/services/land-development/' },
 ];
 
+// "What We Build" capability showcase — sticky-left / scrolling-right index,
+// same pattern as the project navigator on /projects/. One card per row.
+const buildCapabilities = [
+  {
+    key: 'aquatic',
+    category: 'Aquatic',
+    name: 'Swimming Pools',
+    description: 'From private pools to destination-scale aquatic environments.',
+    image: 'https://pbjinfra.com/assets/images/swimming-pool.jpg',
+    alt: 'A completed swimming pool with mosaic tiling, built by PBJ Infra',
+  },
+  {
+    key: 'hospitality',
+    category: 'Hospitality',
+    name: 'Resorts & Destinations',
+    description: 'Built environments designed around experience, flow and place.',
+    image: 'https://pbjinfra.com/assets/images/resort.jpg',
+    alt: 'A resort building beside a landscaped pool, built by PBJ Infra',
+  },
+  {
+    key: 'recreation',
+    category: 'Recreation',
+    name: 'Waterparks',
+    description: 'Complex aquatic infrastructure engineered for high-use environments.',
+    image: 'https://pbjinfra.com/assets/images/waterpark-construction-services.jpg',
+    alt: 'Waterpark slides and attraction pools built by PBJ Infra',
+  },
+  {
+    key: 'specialized',
+    category: 'Specialized',
+    name: 'Bespoke Structures',
+    description: "Custom structural solutions for projects that don't fit a template.",
+    image: 'https://pbjinfra.com/assets/images/DOM.jpeg',
+    alt: 'A curved ferrocement dome structure built by PBJ Infra',
+  },
+];
+
 // Developers whose projects PBJ Infra has worked with, per pbjinfra.com's
-// own clients section. Names only — not styled as endorsements or reviews.
-const developers = [
-  'Panchshil Realty',
-  'Godrej Properties',
-  'Nyati Group',
-  'Kolte Patil Developers',
-  'Majestique Landmarks',
-  'Ajmera Group',
-  'Mahindra Lifespaces',
-  'D.Y. Patil',
+// own clients section — same [name, type] shape and copy as the /about/
+// page's `clients` list, so both render the identical marquee.
+const developers: [string, string][] = [
+  ['Panchshil Realty', 'Real estate development'],
+  ['Godrej Properties', 'Real estate development'],
+  ['Nyati Group', 'Real estate development'],
+  ['Kolte Patil Developers', 'Real estate development'],
+  ['Majestique Landmarks', 'Real estate development'],
+  ['Ajmera Group', 'Real estate development'],
+  ['Mahindra Lifespaces', 'Real estate development'],
+  ['D.Y. Patil', 'Institutional / development'],
 ];
 
 const projects = await getCollection('projects');
@@ -71,14 +109,16 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
   <section id="projects" class="projects-showcase relative overflow-hidden bg-ink text-paper py-24 md:py-36"
     aria-labelledby="projects-title">
 
+    <!-- Ambient glow — same teal dark-glow recipe used on every bg-ink
+         PageHero site-wide, so this section reads as the same dark
+         surface language rather than a one-off treatment. -->
+
+    <div class="projects-glow absolute inset-0" aria-hidden="true"></div>
+
+
     <!-- Background technical grid -->
 
     <div class="projects-grid absolute inset-0" aria-hidden="true"></div>
-
-
-    <!-- Ambient glow -->
-
-    <div class="projects-glow absolute inset-0" aria-hidden="true"></div>
 
 
     <div class="wrap relative z-[2]">
@@ -92,7 +132,7 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
         <div class="flex items-center gap-3">
           <span class="h-px w-8 bg-accent"></span>
-          <span class="font-mono text-[9px] uppercase tracking-[.24em] text-paper/45">
+          <span class="font-mono text-[12px] uppercase tracking-[.24em] text-paper/45">
             02 / Signature Projects
           </span>
           <span class="h-px w-8 bg-accent"></span>
@@ -101,7 +141,7 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
         <h2 id="projects-title"
           class="projects-title mx-auto mt-7 max-w-[16ch] font-serif text-[clamp(42px,6vw,82px)] leading-[.92] tracking-[-.04em]">
           Built environments,
-          <span class="text-paper/45">
+          <span class="heading-accent">
             not just structures.
           </span>
         </h2>
@@ -129,13 +169,13 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
             <a href={href}
               class="project-item group grid gap-7 border-t border-paper/[.14] py-10 md:grid-cols-[80px_1fr_1.2fr_100px] md:items-center md:py-14">
 
-              <div class="project-number font-mono text-[10px] text-paper/30">
+              <div class="project-number font-mono text-[12px] text-paper/30">
                 {String(i + 1).padStart(2, '0')}
               </div>
 
               <div>
 
-                <span class="project-category font-mono text-[9px] uppercase tracking-[.16em] text-accent">
+                <span class="project-category font-mono text-[12px] uppercase tracking-[.16em] text-accent">
                   {p.data.projectType}
                 </span>
 
@@ -143,7 +183,7 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
                   {p.data.name}
                 </h3>
 
-                <p class="project-location mt-3 font-mono text-[9px] uppercase tracking-[.12em] text-paper/35">
+                <p class="project-location mt-3 font-mono text-[12px] uppercase tracking-[.12em] text-paper/35">
                   {p.data.location}
                 </p>
 
@@ -171,7 +211,7 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
                     →
                   </span>
 
-                  <span class="font-mono text-[9px] uppercase tracking-[.15em]">
+                  <span class="font-mono text-[12px] uppercase tracking-[.15em]">
                     {inProgress ? 'View progress' : hasPage ? 'View project' : 'Case study in development'}
                   </span>
 
@@ -200,12 +240,12 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
       <div class="projects-footer flex justify-between items-center pt-10">
 
-        <span class="font-mono text-[9px] uppercase tracking-[.16em] text-paper/30">
+        <span class="font-mono text-[12px] uppercase tracking-[.16em] text-paper/30">
           Selected PBJ work
         </span>
 
         <a href="/projects/"
-          class="projects-all group flex items-center gap-3 font-mono text-[10px] uppercase tracking-[.15em]">
+          class="projects-all group flex items-center gap-3 font-mono text-[12px] uppercase tracking-[.15em]">
 
           <span>
             Explore all projects
@@ -227,6 +267,9 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
   <style>
     /* ==========================================================
      BACKGROUND
+     (.heading-accent — the shared teal accent + glow treatment
+     used on every heading's highlighted phrase — lives globally
+     in src/styles/global.css.)
   ========================================================== */
 
     .projects-showcase {
@@ -234,15 +277,24 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
     }
 
 
+    .projects-glow {
+
+      background:
+        radial-gradient(50% 60% at 85% 8%, rgba(30, 110, 100, .14), transparent 70%),
+        radial-gradient(60% 70% at 0% 100%, rgba(30, 110, 100, .07), transparent 70%),
+        radial-gradient(140% 90% at 50% -10%, rgba(246, 243, 236, .05), transparent 60%);
+    }
+
+
     .projects-grid {
 
-      opacity: .045;
+      opacity: .035;
 
       background-image:
-        linear-gradient(rgba(246, 243, 236, .35) 1px,
+        linear-gradient(rgba(246, 243, 236, .4) 1px,
           transparent 1px),
         linear-gradient(90deg,
-          rgba(246, 243, 236, .35) 1px,
+          rgba(246, 243, 236, .4) 1px,
           transparent 1px);
 
       background-size:
@@ -251,18 +303,9 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
       mask-image:
         linear-gradient(to bottom,
           transparent,
-          black 15%,
-          black 80%,
+          black 10%,
+          black 90%,
           transparent);
-    }
-
-
-    .projects-glow {
-
-      background:
-        radial-gradient(circle at 75% 30%,
-          rgba(30, 110, 100, .12),
-          transparent 30%);
     }
 
 
@@ -449,7 +492,7 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
 <section
   id="services"
-  class="build-section relative overflow-hidden bg-paper text-ink py-24 md:py-36"
+  class="build-section relative overflow-clip bg-paper text-ink py-24 md:py-36"
   aria-labelledby="build-title"
 >
 
@@ -467,7 +510,7 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
       <div class="flex items-center gap-3">
         <span class="h-px w-8 bg-accent"></span>
-        <span class="font-mono text-[9px] uppercase tracking-[.24em] text-ink/45">
+        <span class="font-mono text-[12px] uppercase tracking-[.24em] text-ink/45">
           03 / What We Build
         </span>
         <span class="h-px w-8 bg-accent"></span>
@@ -478,7 +521,7 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
         class="build-title mx-auto mt-7 max-w-[16ch] font-serif text-[clamp(44px,6vw,82px)] leading-[.92] tracking-[-.045em]"
       >
         Spaces with a purpose.
-        <span class="text-ink/35">
+        <span class="heading-accent">
           Built with precision.
         </span>
       </h2>
@@ -492,346 +535,143 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
 
     <!-- =====================================================
-         INTERACTIVE BUILD INDEX
+         CAPABILITY INDEX — sticky left panel, scrolling right
+         column of cards. Same pattern as the project navigator
+         on /projects/ (.projects-panel / .projects-cards-stack).
     ====================================================== -->
 
-    <div
-      class="build-interface mt-20 grid gap-10 lg:grid-cols-[.8fr_1.5fr]"
-    >
+    <div class="build-showcase mt-20">
 
+      <aside class="build-panel" aria-label="PBJ Infra capabilities">
+        <div class="build-sticky">
 
-      <!-- ===================================================
-           CATEGORY LIST
-      ==================================================== -->
-
-      <div
-        class="build-list"
-        role="list"
-      >
-
-
-        <!-- ITEM 01 -->
-
-        <button
-          type="button"
-          class="build-item is-active group"
-          data-build="aquatic"
-          role="listitem"
-          aria-pressed="true"
-        >
-
-          <span class="build-number">
-            01
-          </span>
-
-
-          <span class="build-item-content">
-
-            <span class="build-category">
-              Aquatic
-            </span>
-
-            <span class="build-name">
-              Swimming Pools
-            </span>
-
-            <span class="build-description">
-              From private pools to destination-scale aquatic environments.
-            </span>
-
-          </span>
-
-
-          <span class="build-item-arrow">
-            ↗
-          </span>
-
-        </button>
-
-
-        <!-- ITEM 02 -->
-
-        <button
-          type="button"
-          class="build-item group"
-          data-build="hospitality"
-          role="listitem"
-          aria-pressed="false"
-        >
-
-          <span class="build-number">
-            02
-          </span>
-
-
-          <span class="build-item-content">
-
-            <span class="build-category">
-              Hospitality
-            </span>
-
-            <span class="build-name">
-              Resorts & Destinations
-            </span>
-
-            <span class="build-description">
-              Built environments designed around experience, flow and place.
-            </span>
-
-          </span>
-
-
-          <span class="build-item-arrow">
-            ↗
-          </span>
-
-        </button>
-
-
-        <!-- ITEM 03 -->
-
-        <button
-          type="button"
-          class="build-item group"
-          data-build="recreation"
-          role="listitem"
-          aria-pressed="false"
-        >
-
-          <span class="build-number">
-            03
-          </span>
-
-
-          <span class="build-item-content">
-
-            <span class="build-category">
-              Recreation
-            </span>
-
-            <span class="build-name">
-              Waterparks
-            </span>
-
-            <span class="build-description">
-              Complex aquatic infrastructure engineered for high-use environments.
-            </span>
-
-          </span>
-
-
-          <span class="build-item-arrow">
-            ↗
-          </span>
-
-        </button>
-
-
-        <!-- ITEM 04 -->
-
-        <button
-          type="button"
-          class="build-item group"
-          data-build="specialized"
-          role="listitem"
-          aria-pressed="false"
-        >
-
-          <span class="build-number">
-            04
-          </span>
-
-
-          <span class="build-item-content">
-
-            <span class="build-category">
-              Specialized
-            </span>
-
-            <span class="build-name">
-              Bespoke Structures
-            </span>
-
-            <span class="build-description">
-              Custom structural solutions for projects that don't fit a template.
-            </span>
-
-          </span>
-
-
-          <span class="build-item-arrow">
-            ↗
-          </span>
-
-        </button>
-
-
-      </div>
-
-
-      <!-- ===================================================
-           VISUAL STAGE
-      ==================================================== -->
-
-      <div class="build-stage relative min-h-[460px] overflow-hidden bg-ink md:min-h-[600px]">
-
-        <!-- IMAGE 01 -->
-
-        <div
-          class="build-visual is-active"
-          data-visual="aquatic"
-        >
-
-          <img
-            src="https://pbjinfra.com/assets/images/swimming-pool.jpg"
-            alt="A completed swimming pool with mosaic tiling, built by PBJ Infra"
-            loading="lazy"
-            decoding="async"
-            width="1400"
-            height="1000"
-          />
-
-        </div>
-
-
-        <!-- IMAGE 02 -->
-
-        <div
-          class="build-visual"
-          data-visual="hospitality"
-        >
-
-          <img
-            src="https://pbjinfra.com/assets/images/resort.jpg"
-            alt="A resort building beside a landscaped pool, built by PBJ Infra"
-            loading="lazy"
-            decoding="async"
-            width="1400"
-            height="1000"
-          />
-
-        </div>
-
-
-        <!-- IMAGE 03 -->
-
-        <div
-          class="build-visual"
-          data-visual="recreation"
-        >
-
-          <img
-            src="https://pbjinfra.com/assets/images/waterpark-construction-services.jpg"
-            alt="Waterpark slides and attraction pools built by PBJ Infra"
-            loading="lazy"
-            decoding="async"
-            width="1400"
-            height="1000"
-          />
-
-        </div>
-
-
-        <!-- IMAGE 04 -->
-
-        <div
-          class="build-visual"
-          data-visual="specialized"
-        >
-
-          <img
-            src="https://pbjinfra.com/assets/images/DOM.jpeg"
-            alt="A curved ferrocement dome structure built by PBJ Infra"
-            loading="lazy"
-            decoding="async"
-            width="1400"
-            height="1000"
-          />
-
-        </div>
-
-
-        <!-- Visual overlay -->
-
-        <div class="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-black/10"></div>
-
-
-        <!-- Technical frame -->
-
-        <div class="build-frame absolute inset-5 border border-paper/25 md:inset-7"></div>
-
-
-        <!-- Image metadata -->
-
-        <div class="absolute left-7 top-7 z-[4]">
-
-          <span class="font-mono text-[8px] uppercase tracking-[.2em] text-paper/50">
-            PBJ INFRA / BUILT ENVIRONMENT
-          </span>
-
-        </div>
-
-
-        <!-- Bottom label -->
-
-        <div class="build-stage-label absolute bottom-7 left-7 right-7 z-[4] flex items-end justify-between">
-
-          <div>
-
-            <span
-              id="build-stage-category"
-              class="font-mono text-[9px] uppercase tracking-[.2em] text-accent"
-            >
-              Aquatic
-            </span>
-
-            <div
-              id="build-stage-title"
-              class="mt-2 font-serif text-[34px] leading-none text-paper md:text-[48px]"
-            >
-              Swimming Pools
-            </div>
-
+          <div class="build-number-wrap">
+            <span class="build-number-current" data-build-number>01</span>
+            <span class="build-number-line"></span>
           </div>
 
+          <p class="build-label">Capability</p>
 
-          <div class="font-mono text-[9px] text-paper/45">
-            01 / 04
+          <h3 class="build-panel-title" data-build-title>
+            {buildCapabilities[0].name}
+          </h3>
+
+          <p class="build-panel-description" data-build-description>
+            {buildCapabilities[0].description}
+          </p>
+
+          <div class="build-meta">
+            <span class="build-meta-line"></span>
+            <span><strong data-build-count>{String(buildCapabilities.length).padStart(2, '0')}</strong> capabilities</span>
+          </div>
+
+          <div class="build-scroll-indicator">
+            <div class="build-scroll-track"><span></span></div>
+            <span>Scroll to explore</span>
           </div>
 
         </div>
+      </aside>
 
+      <div class="build-cards-column">
+        <div class="build-cards-stack" data-build-stack>
+          {buildCapabilities.map((item, i) => (
+            <article
+              class="build-rectangle"
+              data-build-card
+              data-build-index={i}
+              data-build-number={String(i + 1).padStart(2, '0')}
+              data-build-category={item.category}
+              data-build-name={item.name}
+              data-build-description={item.description}
+            >
+              <div class="build-card-image">
+                <img
+                  src={item.image}
+                  alt={item.alt}
+                  loading={i < 1 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  width="1400"
+                  height="1000"
+                />
+
+                <div class="build-card-image-shade"></div>
+
+                <div class="build-card-number">{String(i + 1).padStart(2, '0')}</div>
+              </div>
+
+              <div class="build-card-content">
+                <span class="build-card-topline">{item.category}</span>
+
+                <h3 class="build-card-title">{item.name}</h3>
+
+                <p class="build-card-copy">{item.description}</p>
+
+                <div class="build-card-footer">
+                  <span>View capability</span>
+                  <span class="build-card-arrow">↗</span>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
 
     </div>
 
 
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     SECTION 03B — CAPABILITIES CTA
+     One merged, dark section: the "team" statement, a clear
+     primary CTA to /services/, and the full crawlable service
+     index — replaces the old subtle text-link + bare nav pair.
+========================================================== -->
+
+<section
+  id="capabilities"
+  class="capabilities-cta relative overflow-clip bg-ink text-paper py-20 md:py-28"
+  aria-labelledby="capabilities-title"
+>
+
+  <div class="capabilities-grid absolute inset-0" aria-hidden="true"></div>
+
+  <div class="wrap relative z-[2]">
+
     <!-- =====================================================
-         BOTTOM STATEMENT
+         STATEMENT + CLEAR CTA
     ====================================================== -->
 
-    <div
-      class="build-footer mt-16 flex flex-col gap-5 border-t border-ink/15 pt-7 md:flex-row md:items-center md:justify-between"
-    >
+    <div class="flex flex-col gap-8 border-b border-paper/15 pb-12 md:flex-row md:items-end md:justify-between md:gap-10">
 
-      <p class="max-w-[650px] font-serif text-[22px] leading-[1.15] tracking-[-.02em] md:text-[28px]">
+      <p
+        id="capabilities-title"
+        class="max-w-[650px] font-serif text-[28px] leading-[1.15] tracking-[-.02em] md:text-[36px]"
+      >
         One team from the first idea
-        <span class="text-ink/35">to the finished environment.</span>
+        <span class="text-paper/40">to the finished environment.</span>
       </p>
-
 
       <a
         href="/services/"
-        class="group flex items-center gap-3 font-mono text-[9px] uppercase tracking-[.16em]"
+        class="capabilities-cta-btn group relative inline-flex shrink-0 items-center gap-6 overflow-hidden border border-paper/30 px-7 py-5"
+        data-analytics-event="click_explore_capabilities"
+        data-analytics-params={JSON.stringify({ placement: 'homepage_build_section' })}
       >
 
-        <span>
+        <span class="relative z-[2] font-mono text-[12px] uppercase tracking-[.18em]">
           Explore our capabilities
         </span>
 
-        <span class="transition-transform duration-300 group-hover:translate-x-1">
+        <span class="relative z-[2] text-[18px] transition-transform duration-500 group-hover:translate-x-2">
           →
         </span>
+
+        <span class="capabilities-cta-fill absolute inset-0 origin-left scale-x-0 bg-accent transition-transform duration-500 ease-out group-hover:scale-x-100"></span>
 
       </a>
 
@@ -842,16 +682,16 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
          FULL SERVICE INDEX — crawlable links to every service page
     ====================================================== -->
 
-    <nav aria-label="All construction services" class="build-services mt-14 border-t border-ink/15 pt-8">
+    <nav aria-label="All construction services" class="mt-12">
 
-      <span class="font-mono text-[9px] uppercase tracking-[.2em] text-ink/40">
+      <span class="font-mono text-[12px] uppercase tracking-[.2em] text-paper/40">
         Every service PBJ Infra offers
       </span>
 
       <ul class="mt-6 grid gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
         {primaryServices.map((s) => (
           <li>
-            <a href={s.url} class="group inline-flex items-center gap-2 font-serif text-[17px] tracking-[-.01em] text-ink/80 hover:text-ink">
+            <a href={s.url} class="group inline-flex items-center gap-2 font-serif text-[17px] tracking-[-.01em] text-paper/80 hover:text-paper">
               {s.name}
               <span class="font-mono text-accent transition-transform duration-300 group-hover:translate-x-1">→</span>
             </a>
@@ -864,6 +704,75 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
   </div>
 
 </section>
+
+
+<style>
+
+  .capabilities-cta {
+    isolation: isolate;
+  }
+
+  .capabilities-grid {
+
+    opacity: .035;
+
+    background-image:
+      linear-gradient(rgba(246, 243, 236, .4) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(246, 243, 236, .4) 1px, transparent 1px);
+
+    background-size: 80px 80px;
+
+    mask-image:
+      linear-gradient(to bottom, transparent, black 20%, black 85%, transparent);
+  }
+
+  .capabilities-cta-btn {
+
+    isolation: isolate;
+
+    transition:
+      border-color .35s ease,
+      color .35s ease;
+  }
+
+  .capabilities-cta-btn:hover {
+
+    border-color: rgb(30,110,100);
+
+    color: white;
+  }
+
+  .capabilities-cta-fill {
+
+    z-index: 0;
+  }
+
+  @media (max-width: 640px) {
+
+    .capabilities-grid {
+
+      background-size: 55px 55px;
+    }
+
+    .capabilities-cta-btn {
+
+      width: 100%;
+
+      justify-content: space-between;
+    }
+
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+
+    .capabilities-cta-fill {
+
+      transition: none !important;
+    }
+
+  }
+
+</style>
 
 
 <style>
@@ -906,252 +815,502 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
 
   /* ==========================================================
-     BUILD ITEMS
+     CAPABILITY SHOWCASE — sticky left panel, scrolling right
+     column. Same mechanic as .projects-showcase on /projects/.
   ========================================================== */
 
-  .build-item {
+  .build-showcase {
+
+    display: grid;
+
+    grid-template-columns:
+      minmax(220px, .62fr) minmax(0, 1.38fr);
+
+    gap: clamp(2.5rem, 6vw, 5rem);
+
+    align-items: stretch;
+  }
+
+
+  .build-panel {
+
+    min-width: 0;
+
+    align-self: stretch;
+
+    padding-left: clamp(1.5rem, 3vw, 2.5rem);
+
+    border-left: 1px solid rgba(20,23,26,.09);
+  }
+
+
+  .build-sticky {
+
+    position: sticky;
+
+    top: 7rem;
+
+    min-height: calc(100vh - 7rem);
+
+    padding: 2.5rem 0 3rem;
+
+    display: flex;
+
+    flex-direction: column;
+  }
+
+
+  .build-number-wrap {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 1rem;
+  }
+
+
+  .build-number-current {
+
+    font-family:
+      ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      monospace;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    letter-spacing: .16em;
+
+    color: rgb(30,110,100);
+  }
+
+
+  .build-number-line {
+
+    width: 3rem;
+
+    height: 1px;
+
+    background: rgba(30,110,100,.35);
+  }
+
+
+  .build-label {
+
+    margin-top: 3rem;
+
+    font-family:
+      ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      monospace;
+
+    font-size: 10px;
+
+    letter-spacing: .22em;
+
+    text-transform: uppercase;
+
+    color: rgba(20,23,26,.35);
+  }
+
+
+  .build-panel-title {
+
+    max-width: 20rem;
+
+    margin-top: .9rem;
+
+    font-family:
+      Georgia,
+      serif;
+
+    font-size: clamp(2rem, 3.4vw, 3rem);
+
+    font-weight: 500;
+
+    line-height: .98;
+
+    letter-spacing: -.04em;
+
+    transition:
+      opacity .25s ease,
+      transform .35s cubic-bezier(.2,.65,.25,1);
+  }
+
+
+  .build-panel-description {
+
+    max-width: 20rem;
+
+    margin-top: 1.1rem;
+
+    font-size: 13px;
+
+    line-height: 1.7;
+
+    color: rgba(20,23,26,.48);
+
+    transition:
+      opacity .25s ease,
+      transform .35s cubic-bezier(.2,.65,.25,1);
+  }
+
+
+  .build-meta {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: .8rem;
+
+    margin-top: 1.75rem;
+
+    font-family:
+      ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      monospace;
+
+    font-size: 10px;
+
+    letter-spacing: .16em;
+
+    text-transform: uppercase;
+
+    color: rgba(20,23,26,.4);
+  }
+
+  .build-meta strong {
+
+    color: rgba(20,23,26,.85);
+
+    font-weight: 600;
+  }
+
+
+  .build-meta-line {
+
+    width: 2rem;
+
+    height: 1px;
+
+    background: rgba(20,23,26,.2);
+  }
+
+
+  .build-scroll-indicator {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: .75rem;
+
+    margin-top: auto;
+
+    padding-top: 3rem;
+
+    font-family:
+      ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      monospace;
+
+    font-size: 9px;
+
+    letter-spacing: .16em;
+
+    text-transform: uppercase;
+
+    color: rgba(20,23,26,.3);
+  }
+
+
+  .build-scroll-track {
+
+    position: relative;
+
+    width: 2rem;
+
+    height: 1px;
+
+    overflow: hidden;
+
+    background: rgba(20,23,26,.15);
+  }
+
+
+  .build-scroll-track span {
+
+    position: absolute;
+
+    inset: 0 auto 0 0;
+
+    width: 50%;
+
+    background: rgb(30,110,100);
+
+    animation: buildScrollPulse 1.8s ease-in-out infinite;
+  }
+
+
+  @keyframes buildScrollPulse {
+    0%, 100% { transform: translateX(-100%); }
+    50% { transform: translateX(100%); }
+  }
+
+
+  .build-cards-column {
+
+    min-width: 0;
+  }
+
+
+  .build-cards-stack {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 2rem;
+  }
+
+
+  .build-rectangle {
 
     position: relative;
 
     display: grid;
 
     grid-template-columns:
-      35px 1fr 25px;
+      minmax(0, 1.1fr) minmax(0, .9fr);
 
-    gap: 18px;
+    min-height: 320px;
+
+    overflow: hidden;
+
+    background: rgba(20,23,26,.02);
+
+    border: 1px solid rgba(20,23,26,.1);
+
+    transition:
+      border-color .35s ease,
+      box-shadow .45s ease;
+  }
+
+
+  .build-rectangle.is-active {
+
+    border-color: rgba(30,110,100,.3);
+
+    box-shadow: 0 22px 60px rgba(17,17,17,.07);
+  }
+
+
+  .build-card-image {
+
+    position: relative;
+
+    min-height: 320px;
+
+    overflow: hidden;
+
+    background: #d8d5cd;
+  }
+
+
+  .build-card-image img {
+
+    display: block;
 
     width: 100%;
 
-    padding:
-      25px 0;
+    height: 100%;
 
-    text-align: left;
-
-    border-top:
-      1px solid rgba(20,23,26,.14);
-
-    cursor: pointer;
-
-    transition:
-      opacity .3s ease;
-  }
-
-
-  .build-item:last-child {
-
-    border-bottom:
-      1px solid rgba(20,23,26,.14);
-  }
-
-
-  .build-item:not(.is-active) {
-
-    opacity:
-      .42;
-  }
-
-
-  .build-item:hover,
-  .build-item.is-active {
-
-    opacity:
-      1;
-  }
-
-
-  .build-number {
-
-    padding-top:
-      4px;
-
-    font-family:
-      ui-monospace,
-      SFMono-Regular,
-      Menlo,
-      monospace;
-
-    font-size:
-      9px;
-
-    color:
-      rgba(20,23,26,.35);
-  }
-
-
-  .build-item-content {
-
-    display:
-      flex;
-
-    flex-direction:
-      column;
-  }
-
-
-  .build-category {
-
-    font-family:
-      ui-monospace,
-      SFMono-Regular,
-      Menlo,
-      monospace;
-
-    font-size:
-      8px;
-
-    text-transform:
-      uppercase;
-
-    letter-spacing:
-      .18em;
-
-    color:
-      rgb(30,110,100);
-  }
-
-
-  .build-name {
-
-    margin-top:
-      7px;
-
-    font-family:
-      Georgia,
-      serif;
-
-    font-size:
-      clamp(24px,3vw,36px);
-
-    line-height:
-      .95;
-
-    letter-spacing:
-      -.025em;
-  }
-
-
-  .build-description {
-
-    max-width:
-      430px;
-
-    margin-top:
-      9px;
-
-    font-size:
-      12px;
-
-    line-height:
-      1.6;
-
-    color:
-      rgba(20,23,26,.48);
-  }
-
-
-  .build-item-arrow {
-
-    align-self:
-      center;
-
-    font-size:
-      18px;
-
-    color:
-      rgba(20,23,26,.3);
-
-    transition:
-      transform .4s cubic-bezier(.2,.7,.2,1),
-      color .3s ease;
-  }
-
-
-  .build-item:hover
-  .build-item-arrow,
-  .build-item.is-active
-  .build-item-arrow {
-
-    transform:
-      translate(3px,-3px);
-
-    color:
-      rgb(30,110,100);
-  }
-
-
-  /* ==========================================================
-     VISUAL STAGE
-  ========================================================== */
-
-  .build-stage {
-
-    isolation: isolate;
-  }
-
-
-  .build-visual {
-
-    position:
-      absolute;
-
-    inset:
-      0;
-
-    opacity:
-      0;
-
-    visibility:
-      hidden;
-  }
-
-
-  .build-visual.is-active {
-
-    opacity:
-      1;
-
-    visibility:
-      visible;
-  }
-
-
-  .build-visual img {
-
-    width:
-      100%;
-
-    height:
-      100%;
-
-    object-fit:
-      cover;
+    object-fit: cover;
 
     filter:
       saturate(.78)
       contrast(1.05);
 
-    transform:
-      scale(1.04);
+    transform: scale(1.04);
 
-    transition:
-      transform 1.2s cubic-bezier(.2,.7,.2,1);
+    transition: transform 1.2s cubic-bezier(.2,.65,.25,1);
   }
 
 
-  .build-visual.is-active img {
+  .build-rectangle:hover .build-card-image img {
 
-    transform:
-      scale(1);
+    transform: scale(1.09);
   }
 
 
-  .build-frame {
+  .build-card-image-shade {
 
-    z-index:
-      3;
+    position: absolute;
 
-    pointer-events:
-      none;
+    inset: 0;
+
+    background: linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.4));
+
+    pointer-events: none;
+  }
+
+
+  .build-card-number {
+
+    position: absolute;
+
+    left: 1rem;
+
+    top: 1rem;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 2.15rem;
+
+    height: 2.15rem;
+
+    border: 1px solid rgba(255,255,255,.3);
+
+    border-radius: 999px;
+
+    background: rgba(0,0,0,.24);
+
+    color: #fff;
+
+    font-family:
+      ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      monospace;
+
+    font-size: 9px;
+
+    backdrop-filter: blur(12px);
+  }
+
+
+  .build-card-content {
+
+    display: flex;
+
+    min-width: 0;
+
+    flex-direction: column;
+
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+
+  .build-card-topline {
+
+    font-family:
+      ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      monospace;
+
+    font-size: 10px;
+
+    font-weight: 600;
+
+    letter-spacing: .18em;
+
+    text-transform: uppercase;
+
+    color: rgb(30,110,100);
+  }
+
+
+  .build-card-title {
+
+    margin-top: 1rem;
+
+    font-family:
+      Georgia,
+      serif;
+
+    font-size: clamp(1.6rem, 2.6vw, 2.35rem);
+
+    font-weight: 500;
+
+    line-height: 1;
+
+    letter-spacing: -.03em;
+  }
+
+
+  .build-card-copy {
+
+    max-width: 26rem;
+
+    margin-top: 1rem;
+
+    font-size: 13px;
+
+    line-height: 1.7;
+
+    color: rgba(20,23,26,.48);
+  }
+
+
+  .build-card-footer {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 1rem;
+
+    margin-top: auto;
+
+    padding-top: 1.2rem;
+
+    border-top: 1px solid rgba(20,23,26,.1);
+
+    font-family:
+      ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      monospace;
+
+    font-size: 10px;
+
+    font-weight: 500;
+
+    letter-spacing: .16em;
+
+    text-transform: uppercase;
+
+    color: rgba(20,23,26,.42);
+  }
+
+
+  .build-card-arrow {
+
+    color: rgb(30,110,100);
+
+    font-size: 1rem;
+
+    transition: transform .3s ease;
+  }
+
+
+  .build-rectangle:hover .build-card-arrow {
+
+    transform: translate(3px,-3px);
   }
 
 
@@ -1161,16 +1320,24 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
   @media (max-width: 1023px) {
 
-    .build-interface {
+    .build-showcase {
 
-      grid-template-columns:
-        1fr;
+      grid-template-columns: 1fr;
+
+      gap: 0;
     }
 
-    .build-stage {
+    /* The sticky capability panel is desktop-only — on mobile it
+       becomes an unwanted duplicate block before the cards. */
+    .build-panel {
 
-      min-height:
-        480px;
+      display: none;
+    }
+
+    .build-rectangle {
+
+      grid-template-columns:
+        minmax(0, 1.1fr) minmax(0, .9fr);
     }
 
   }
@@ -1184,28 +1351,19 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
         55px 55px;
     }
 
-    .build-item {
+    .build-rectangle {
 
-      padding:
-        20px 0;
+      grid-template-columns: 1fr;
     }
 
-    .build-description {
+    .build-card-image {
 
-      max-width:
-        300px;
+      min-height: 220px;
     }
 
-    .build-stage {
+    .build-card-copy {
 
-      min-height:
-        390px;
-    }
-
-    .build-frame {
-
-      inset:
-        15px;
+      max-width: 100%;
     }
 
   }
@@ -1213,8 +1371,10 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
   @media (prefers-reduced-motion: reduce) {
 
-    .build-visual img,
-    .build-item-arrow {
+    .build-card-image img,
+    .build-card-arrow,
+    .build-panel-title,
+    .build-panel-description {
 
       transition:
         none !important;
@@ -1230,193 +1390,78 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
 <script>
 
-  const buildSection =
-    document.querySelector<HTMLElement>(
-      '.build-section'
+  // Sticky left panel + scrolling right column — same mechanic as the
+  // project navigator on /projects/ (an IntersectionObserver tracks which
+  // card is centred in view and updates the sticky panel's text).
+  const buildCards = Array.from(
+    document.querySelectorAll<HTMLElement>('[data-build-card]')
+  );
+
+  const buildNumber = document.querySelector<HTMLElement>('[data-build-number]');
+  const buildTitle = document.querySelector<HTMLElement>('[data-build-title]');
+  const buildDescription = document.querySelector<HTMLElement>('[data-build-description]');
+
+  const reduceBuildMotion = window.matchMedia(
+    '(prefers-reduced-motion: reduce)'
+  ).matches;
+
+  let activeBuildIndex = -1;
+
+  const setActiveBuild = (card: HTMLElement) => {
+    const index = Number(card.dataset.buildIndex || 0);
+    if (index === activeBuildIndex) return;
+
+    activeBuildIndex = index;
+
+    if (buildNumber) {
+      buildNumber.textContent = card.dataset.buildNumber || '01';
+    }
+
+    if (buildTitle) {
+      buildTitle.textContent = card.dataset.buildName || '';
+    }
+
+    if (buildDescription) {
+      buildDescription.textContent = card.dataset.buildDescription || '';
+    }
+
+    buildCards.forEach((item, i) => {
+      item.classList.toggle('is-active', i === index);
+    });
+
+    if (!reduceBuildMotion) {
+      [buildNumber, buildTitle, buildDescription].forEach((el) => {
+        if (!el) return;
+        el.animate(
+          [
+            { opacity: 0.25, transform: 'translateY(7px)' },
+            { opacity: 1, transform: 'translateY(0)' },
+          ],
+          { duration: 320, easing: 'cubic-bezier(.2,.65,.25,1)' },
+        );
+      });
+    }
+  };
+
+  if (buildCards.length) {
+    const buildObserver = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+        if (visible.length) {
+          setActiveBuild(visible[0].target as HTMLElement);
+        }
+      },
+      {
+        threshold: [0.08, 0.2, 0.45, 0.65],
+        rootMargin: '-22% 0px -55% 0px',
+      },
     );
 
-
-  if (buildSection) {
-
-    const items =
-      Array.from(
-        buildSection.querySelectorAll<HTMLButtonElement>(
-          '.build-item'
-        )
-      );
-
-
-    const visuals =
-      Array.from(
-        buildSection.querySelectorAll<HTMLElement>(
-          '.build-visual'
-        )
-      );
-
-
-    const stageCategory =
-      buildSection.querySelector<HTMLElement>(
-        '#build-stage-category'
-      );
-
-
-    const stageTitle =
-      buildSection.querySelector<HTMLElement>(
-        '#build-stage-title'
-      );
-
-
-    const stageNumber =
-      buildSection.querySelector<HTMLElement>(
-        '.build-stage-label .font-mono:last-child'
-      );
-
-
-    const content = {
-
-      aquatic: {
-        category: 'Aquatic',
-        title: 'Swimming Pools',
-        number: '01 / 04'
-      },
-
-      hospitality: {
-        category: 'Hospitality',
-        title: 'Resorts & Destinations',
-        number: '02 / 04'
-      },
-
-      recreation: {
-        category: 'Recreation',
-        title: 'Waterparks',
-        number: '03 / 04'
-      },
-
-      specialized: {
-        category: 'Specialized',
-        title: 'Bespoke Structures',
-        number: '04 / 04'
-      }
-
-    };
-
-
-    const activate =
-      (key: string) => {
-
-        items.forEach(
-          (item) => {
-
-            const active =
-              item.dataset.build === key;
-
-            item.classList.toggle(
-              'is-active',
-              active
-            );
-
-            item.setAttribute(
-              'aria-pressed',
-              String(active)
-            );
-
-          }
-        );
-
-
-        visuals.forEach(
-          (visual) => {
-
-            visual.classList.toggle(
-              'is-active',
-              visual.dataset.visual === key
-            );
-
-          }
-        );
-
-
-        const data =
-          content[key as keyof typeof content];
-
-        if (!data) return;
-
-
-        if (stageCategory) {
-
-          stageCategory.textContent =
-            data.category;
-
-        }
-
-
-        if (stageTitle) {
-
-          stageTitle.textContent =
-            data.title;
-
-        }
-
-
-        if (stageNumber) {
-
-          stageNumber.textContent =
-            data.number;
-
-        }
-
-      };
-
-
-    items.forEach(
-      (item) => {
-
-        item.addEventListener(
-          'mouseenter',
-          () => {
-
-            if (
-              window.matchMedia(
-                '(hover: hover)'
-              ).matches
-            ) {
-
-              activate(
-                item.dataset.build || 'aquatic'
-              );
-
-            }
-
-          }
-        );
-
-
-        item.addEventListener(
-          'focus',
-          () => {
-
-            activate(
-              item.dataset.build || 'aquatic'
-            );
-
-          }
-        );
-
-
-        item.addEventListener(
-          'click',
-          () => {
-
-            activate(
-              item.dataset.build || 'aquatic'
-            );
-
-          }
-        );
-
-      }
-    );
-
+    buildCards.forEach((card) => buildObserver.observe(card));
+    setActiveBuild(buildCards[0]);
   }
 
 </script>
@@ -1450,7 +1495,7 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
       <div class="flex items-center gap-3">
         <span class="h-px w-8 bg-accent"></span>
-        <span class="font-mono text-[9px] uppercase tracking-[.24em] text-ink/45">
+        <span class="font-mono text-[12px] uppercase tracking-[.24em] text-ink/45">
           04 / Client Trust
         </span>
         <span class="h-px w-8 bg-accent"></span>
@@ -1461,7 +1506,7 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
         class="trust-title mx-auto mt-7 max-w-[16ch] font-serif text-[clamp(44px,6vw,82px)] leading-[.92] tracking-[-.045em]"
       >
         Built right.
-        <span class="text-ink/35">
+        <span class="heading-accent">
           Trusted by clients.
         </span>
       </h2>
@@ -1499,7 +1544,7 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
               G
             </span>
 
-            <span class="font-mono text-[9px] uppercase tracking-[.16em] text-ink/50">
+            <span class="font-mono text-[12px] uppercase tracking-[.16em] text-ink/50">
               Google Reviews
             </span>
 
@@ -1527,13 +1572,13 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
             <p
               id="google-review-count"
-              class="mt-4 font-mono text-[9px] uppercase tracking-[.14em] text-ink/40"
+              class="mt-4 font-mono text-[12px] uppercase tracking-[.14em] text-ink/40"
             >
               {gCountDisplay}
             </p>
 
             {!googleReviews.available && (
-              <span class="mt-3 inline-block font-mono text-[9px] uppercase tracking-[.14em] text-warn border border-warn px-2.5 py-1">
+              <span class="mt-3 inline-block font-mono text-[12px] uppercase tracking-[.14em] text-warn border border-warn px-2.5 py-1">
                 Integration Pending
               </span>
             )}
@@ -1547,7 +1592,7 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
           href={gProfileUrl}
           target="_blank"
           rel="noopener noreferrer"
-          class="group mt-10 flex w-fit items-center gap-3 border-b border-ink/25 pb-2 font-mono text-[9px] uppercase tracking-[.15em]"
+          class="group mt-10 flex w-fit items-center gap-3 border-b border-ink/25 pb-2 font-mono text-[12px] uppercase tracking-[.15em]"
         >
 
           <span>
@@ -1573,14 +1618,14 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
         <div class="flex items-center justify-between">
 
-          <span class="font-mono text-[9px] uppercase tracking-[.16em] text-ink/35">
+          <span class="font-mono text-[12px] uppercase tracking-[.16em] text-ink/35">
             Client voice
           </span>
 
 
           <span
             id="review-counter"
-            class="font-mono text-[9px] text-ink/30"
+            class="font-mono text-[12px] text-ink/30"
           >
             {gReviews.length > 0 ? `01 / ${String(gReviews.length).padStart(2, '0')}` : ''}
           </span>
@@ -1610,14 +1655,14 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
             <div
               id="review-author"
-              class="font-mono text-[10px] uppercase tracking-[.14em]"
+              class="font-mono text-[12px] uppercase tracking-[.14em]"
             >
               {gReviews[0]?.authorName ?? 'Awaiting connection'}
             </div>
 
             <div
               id="review-source"
-              class="mt-2 font-mono text-[9px] uppercase tracking-[.12em] text-ink/35"
+              class="mt-2 font-mono text-[12px] uppercase tracking-[.12em] text-ink/35"
             >
               {gReviews[0] ? 'Google Review' : ''}
             </div>
@@ -1657,7 +1702,7 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
       <div class="trust-stat border-b border-ink/15 py-7 md:border-b-0 md:border-r md:pr-8">
 
-        <span class="font-mono text-[9px] uppercase tracking-[.15em] text-ink/35">
+        <span class="font-mono text-[12px] uppercase tracking-[.15em] text-ink/35">
           Experience
         </span>
 
@@ -1670,7 +1715,7 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
       <div class="trust-stat border-b border-ink/15 py-7 md:border-b-0 md:px-8 md:border-r">
 
-        <span class="font-mono text-[9px] uppercase tracking-[.15em] text-ink/35">
+        <span class="font-mono text-[12px] uppercase tracking-[.15em] text-ink/35">
           Coverage
         </span>
 
@@ -1683,7 +1728,7 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
       <div class="trust-stat py-7 md:pl-8">
 
-        <span class="font-mono text-[9px] uppercase tracking-[.15em] text-ink/35">
+        <span class="font-mono text-[12px] uppercase tracking-[.15em] text-ink/35">
           Approach
         </span>
 
@@ -2049,7 +2094,7 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
         <div class="flex items-center gap-3">
           <span class="h-px w-8 bg-accent"></span>
-          <span class="font-mono text-[9px] uppercase tracking-[.24em] text-ink/45">
+          <span class="font-mono text-[12px] uppercase tracking-[.24em] text-ink/45">
             Trusted on real projects
           </span>
           <span class="h-px w-8 bg-accent"></span>
@@ -2059,7 +2104,8 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
           id="developers-title"
           class="mx-auto mt-7 max-w-[18ch] font-serif text-[clamp(30px,4vw,52px)] leading-[1.02] tracking-[-.03em]"
         >
-          Developers PBJ Infra has built for.
+          Developers PBJ Infra has
+          <span class="heading-accent">built for.</span>
         </h2>
 
         <p class="mx-auto mt-6 max-w-[600px] text-[14px] leading-[1.7] text-ink/55">
@@ -2070,19 +2116,150 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
       </div>
 
-      <ul class="mt-10 grid grid-cols-2 gap-x-8 gap-y-4 sm:grid-cols-3 lg:grid-cols-4">
-        {developers.map((name) => (
-          <li class="border-l border-accent/60 pl-4 font-serif text-[18px] tracking-[-.01em] text-ink/80">
-            {name}
-          </li>
-        ))}
-      </ul>
-
     </div>
 
   </div>
 
+  <!-- Horizontal, infinite-scroll marquee — same pattern as the client
+       list on /about/ (.client-marquee), duplicated once for a seamless
+       loop and paused on hover/focus. -->
+  <div class="developers-marquee" aria-label="PBJ Infra client names">
+    <div class="developers-marquee-track">
+      {[...developers, ...developers].map(([name, type], index) => (
+        <div class="developer-logo-card" aria-label={`${name} — ${type}`}>
+          <div class="developer-logo-mark" aria-hidden="true">
+            <span>{String((index % developers.length) + 1).padStart(2, '0')}</span>
+            <i></i>
+          </div>
+          <div class="developer-logo-name">{name}</div>
+          <div class="developer-logo-type">{type}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <p class="developers-note">Client names are retained as supplied in PBJ Infra's own client section.</p>
+
 </section>
+
+
+<style>
+
+  .developers-marquee {
+    position: relative;
+    width: 100vw;
+    margin: 3.5rem 0 0 calc(50% - 50vw);
+    overflow: hidden;
+    border-top: 1px solid rgba(20,23,26,.1);
+    border-bottom: 1px solid rgba(20,23,26,.1);
+    background: theme('colors.paper');
+  }
+
+  .developers-marquee::before,
+  .developers-marquee::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 12vw;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .developers-marquee::before {
+    left: 0;
+    background: linear-gradient(90deg, theme('colors.paper'), transparent);
+  }
+
+  .developers-marquee::after {
+    right: 0;
+    background: linear-gradient(270deg, theme('colors.paper'), transparent);
+  }
+
+  .developers-marquee-track {
+    display: flex;
+    width: max-content;
+    animation: developers-marquee-left 34s linear infinite;
+    will-change: transform;
+  }
+
+  .developers-marquee:hover .developers-marquee-track,
+  .developers-marquee:focus-within .developers-marquee-track {
+    animation-play-state: paused;
+  }
+
+  .developer-logo-card {
+    flex: 0 0 260px;
+    min-height: 175px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.5rem;
+    border-right: 1px solid rgba(20,23,26,.1);
+    background: theme('colors.paper');
+  }
+
+  .developer-logo-mark {
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+    color: rgb(30,110,100);
+  }
+
+  .developer-logo-mark span {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 9px;
+    letter-spacing: .14em;
+  }
+
+  .developer-logo-mark i {
+    display: block;
+    width: 28px;
+    height: 1px;
+    background: rgb(30,110,100);
+  }
+
+  .developer-logo-name {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.35rem;
+    line-height: 1.1;
+    font-weight: 400;
+  }
+
+  .developer-logo-type {
+    color: rgba(20,23,26,.42);
+    font-size: 10px;
+    line-height: 1.5;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+  }
+
+  .developers-note {
+    margin-top: 1.2rem;
+    color: rgba(20,23,26,.4);
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-align: center;
+  }
+
+  @keyframes developers-marquee-left {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  @media (max-width: 640px) {
+    .developers-marquee-track {
+      animation-duration: 28s;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .developers-marquee-track {
+      animation: none;
+    }
+  }
+
+</style>
 
 <!-- =========================================================
      SECTION 05 — HOW WE BUILD
@@ -2090,46 +2267,31 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
 <section
   id="process"
-  class="process-section relative overflow-hidden bg-ink text-paper py-24 md:py-36"
+  class="process-section relative overflow-clip bg-ink text-paper"
   aria-labelledby="process-title"
 >
-
   <!-- Technical background -->
-
-  <div
-    class="process-grid absolute inset-0"
-    aria-hidden="true"
-  ></div>
-
+  <div class="process-grid absolute inset-0" aria-hidden="true"></div>
 
   <div class="wrap relative z-[2]">
 
-
     <!-- =====================================================
-         HEADER
+         SECTION INTRO
     ====================================================== -->
 
-    <div class="process-header flex flex-col items-center py-10 text-center md:py-16">
+    <div class="process-intro-wrap">
 
-      <div class="flex items-center gap-3">
-        <span class="h-px w-8 bg-accent"></span>
-        <span class="font-mono text-[9px] uppercase tracking-[.24em] text-paper/40">
-          05 / How We Build
-        </span>
-        <span class="h-px w-8 bg-accent"></span>
+      <div class="process-intro-label">
+        <span class="process-intro-line"></span>
+        <span>05 / How We Build</span>
       </div>
 
-      <h2
-        id="process-title"
-        class="process-title mx-auto mt-7 max-w-[16ch] font-serif text-[clamp(44px,6vw,82px)] leading-[.92] tracking-[-.045em]"
-      >
+      <h2 id="process-title" class="process-main-title">
         From first idea
-        <span class="text-paper/35">
-          to finished environment.
-        </span>
+        <span class="heading-accent">to finished environment.</span>
       </h2>
 
-      <p class="process-intro mx-auto mt-7 max-w-[610px] text-[14px] leading-[1.75] text-paper/50 md:text-[15px]">
+      <p class="process-main-copy">
         A structured approach keeps every project moving with clarity —
         from understanding the requirement to delivering the finished build.
       </p>
@@ -2138,299 +2300,1840 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
 
     <!-- =====================================================
-         PROCESS TIMELINE
+         STICKY PROCESS EXPERIENCE
     ====================================================== -->
 
-    <div class="process-timeline relative mt-20 md:mt-28">
+    <div class="process-layout">
+
+      <!-- ===================================================
+           LEFT — STICKY NAVIGATION
+      ==================================================== -->
+
+      <aside class="process-sidebar" aria-label="Construction process">
+
+        <div class="process-sidebar-sticky">
+
+          <div class="process-sidebar-top">
+
+            <span class="process-kicker">
+              PROJECT FLOW
+            </span>
+
+            <span class="process-count">
+              04 STAGES
+            </span>
+
+          </div>
 
 
-      <!-- Timeline rail -->
+          <div class="process-sidebar-title">
 
-      <div
-        class="process-rail absolute left-[17px] top-0 bottom-0 w-px bg-paper/[.14] md:left-1/2 md:-translate-x-1/2"
-        aria-hidden="true"
-      >
+            <span class="process-sidebar-number" data-process-number>
+              01
+            </span>
 
-        <div
-          class="process-progress absolute left-0 top-0 h-0 w-full bg-accent"
-        ></div>
+            <h3 data-process-title>
+              Understand
+            </h3>
+
+          </div>
+
+
+          <p class="process-sidebar-description" data-process-description>
+            Start with the requirement, the site and the intended experience
+            before any construction begins.
+          </p>
+
+
+          <!-- Process navigation -->
+
+          <nav class="process-navigation">
+
+            <a
+              href="#process-01"
+              class="process-nav-item is-active"
+              data-process-nav="01"
+            >
+              <span class="process-nav-number">01</span>
+              <span class="process-nav-name">Understand</span>
+              <span class="process-nav-line"></span>
+            </a>
+
+            <a
+              href="#process-02"
+              class="process-nav-item"
+              data-process-nav="02"
+            >
+              <span class="process-nav-number">02</span>
+              <span class="process-nav-name">Engineer</span>
+              <span class="process-nav-line"></span>
+            </a>
+
+            <a
+              href="#process-03"
+              class="process-nav-item"
+              data-process-nav="03"
+            >
+              <span class="process-nav-number">03</span>
+              <span class="process-nav-name">Build</span>
+              <span class="process-nav-line"></span>
+            </a>
+
+            <a
+              href="#process-04"
+              class="process-nav-item"
+              data-process-nav="04"
+            >
+              <span class="process-nav-number">04</span>
+              <span class="process-nav-name">Deliver</span>
+              <span class="process-nav-line"></span>
+            </a>
+
+          </nav>
+
+
+          <div class="process-sidebar-footer">
+
+            <span class="process-footer-line"></span>
+
+            <span>
+              DESIGN → BUILD → COMPLETE
+            </span>
+
+          </div>
+
+        </div>
+
+      </aside>
+
+
+      <!-- ===================================================
+           RIGHT — PROCESS CONTENT
+      ==================================================== -->
+
+      <div class="process-content">
+
+
+        <!-- =================================================
+             01 — UNDERSTAND
+        ================================================== -->
+
+        <article
+          id="process-01"
+          class="process-panel"
+          data-process-step="01"
+          data-title="Understand"
+          data-description="Start with the requirement, the site and the intended experience before any construction begins."
+        >
+
+          <div class="process-panel-header">
+
+            <span class="process-panel-index">
+              01 / DISCOVERY
+            </span>
+
+            <span class="process-panel-status">
+              START
+            </span>
+
+          </div>
+
+
+          <div class="process-panel-grid">
+
+            <div class="process-panel-copy">
+
+              <h3>
+                Understand
+                <span class="heading-accent">before building.</span>
+              </h3>
+
+              <p>
+                We begin with the brief, site conditions, requirements,
+                expectations and intended experience of the project.
+              </p>
+
+              <div class="process-spec">
+
+                <div>
+                  <span>INPUT</span>
+                  <strong>Site + Brief</strong>
+                </div>
+
+                <div>
+                  <span>FOCUS</span>
+                  <strong>Requirement</strong>
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="process-visual">
+
+              <div class="technical-card discovery-card">
+
+                <div class="technical-card-header">
+                  <span>PBJ / 01</span>
+                  <span>DISCOVERY</span>
+                </div>
+
+                <div class="discovery-visual">
+
+                  <div class="discovery-axis axis-x"></div>
+                  <div class="discovery-axis axis-y"></div>
+
+                  <div class="discovery-point point-a">
+                    <i></i>
+                    <span>SITE</span>
+                  </div>
+
+                  <div class="discovery-point point-b">
+                    <i></i>
+                    <span>BRIEF</span>
+                  </div>
+
+                  <div class="discovery-point point-c">
+                    <i></i>
+                    <span>NEED</span>
+                  </div>
+
+                  <div class="discovery-connection connection-a"></div>
+                  <div class="discovery-connection connection-b"></div>
+
+                </div>
+
+                <div class="technical-card-footer">
+                  <span>01</span>
+                  <span>UNDERSTAND THE PROJECT</span>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </article>
+
+
+        <!-- =================================================
+             02 — ENGINEER
+        ================================================== -->
+
+        <article
+          id="process-02"
+          class="process-panel"
+          data-process-step="02"
+          data-title="Engineer"
+          data-description="Translate the idea into practical planning, technical coordination and an execution strategy."
+        >
+
+          <div class="process-panel-header">
+
+            <span class="process-panel-index">
+              02 / PLANNING
+            </span>
+
+            <span class="process-panel-status">
+              PLAN
+            </span>
+
+          </div>
+
+
+          <div class="process-panel-grid">
+
+            <div class="process-panel-copy">
+
+              <h3>
+                Engineer
+                <span class="heading-accent">the way forward.</span>
+              </h3>
+
+              <p>
+                Design decisions are translated into practical planning,
+                technical coordination, material selection and execution strategy.
+              </p>
+
+              <div class="process-spec">
+
+                <div>
+                  <span>INPUT</span>
+                  <strong>Concept</strong>
+                </div>
+
+                <div>
+                  <span>OUTPUT</span>
+                  <strong>Execution Plan</strong>
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="process-visual">
+
+              <div class="technical-card blueprint-card">
+
+                <div class="technical-card-header">
+                  <span>PBJ / 02</span>
+                  <span>ENGINEERING</span>
+                </div>
+
+                <div class="blueprint-visual">
+
+                  <div class="blueprint-box blueprint-a"></div>
+                  <div class="blueprint-box blueprint-b"></div>
+                  <div class="blueprint-box blueprint-c"></div>
+
+                  <div class="blueprint-cross cross-a"></div>
+                  <div class="blueprint-cross cross-b"></div>
+
+                  <span class="blueprint-tag tag-a">
+                    PLAN
+                  </span>
+
+                  <span class="blueprint-tag tag-b">
+                    DETAIL
+                  </span>
+
+                  <span class="blueprint-tag tag-c">
+                    BUILD
+                  </span>
+
+                </div>
+
+                <div class="technical-card-footer">
+                  <span>02</span>
+                  <span>COORDINATE THE BUILD</span>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </article>
+
+
+        <!-- =================================================
+             03 — BUILD
+        ================================================== -->
+
+        <article
+          id="process-03"
+          class="process-panel"
+          data-process-step="03"
+          data-title="Build"
+          data-description="Construction moves to site with attention to workmanship, sequencing, quality and project requirements."
+        >
+
+          <div class="process-panel-header">
+
+            <span class="process-panel-index">
+              03 / CONSTRUCTION
+            </span>
+
+            <span class="process-panel-status">
+              BUILD
+            </span>
+
+          </div>
+
+
+          <div class="process-panel-grid">
+
+            <div class="process-panel-copy">
+
+              <h3>
+                Build
+                <span class="heading-accent">with control.</span>
+              </h3>
+
+              <p>
+                Our team coordinates execution on site with attention to
+                workmanship, sequencing, quality and project requirements.
+              </p>
+
+              <div class="process-spec">
+
+                <div>
+                  <span>FOCUS</span>
+                  <strong>Execution</strong>
+                </div>
+
+                <div>
+                  <span>CONTROL</span>
+                  <strong>Quality</strong>
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="process-visual">
+
+              <div class="technical-card construction-card">
+
+                <div class="technical-card-header">
+                  <span>PBJ / 03</span>
+                  <span>CONSTRUCTION</span>
+                </div>
+
+                <div class="construction-visual">
+
+                  <div class="construction-floor floor-one"></div>
+                  <div class="construction-floor floor-two"></div>
+                  <div class="construction-floor floor-three"></div>
+
+                  <div class="construction-column column-one"></div>
+                  <div class="construction-column column-two"></div>
+                  <div class="construction-column column-three"></div>
+
+                  <div class="construction-ground"></div>
+
+                  <span class="construction-tag">
+                    STRUCTURE
+                  </span>
+
+                </div>
+
+                <div class="technical-card-footer">
+                  <span>03</span>
+                  <span>TURN PLANS INTO REALITY</span>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </article>
+
+
+        <!-- =================================================
+             04 — DELIVER
+        ================================================== -->
+
+        <article
+          id="process-04"
+          class="process-panel"
+          data-process-step="04"
+          data-title="Deliver"
+          data-description="The finished environment is reviewed, completed and handed over with the details that matter."
+        >
+
+          <div class="process-panel-header">
+
+            <span class="process-panel-index">
+              04 / HANDOVER
+            </span>
+
+            <span class="process-panel-status">
+              COMPLETE
+            </span>
+
+          </div>
+
+
+          <div class="process-panel-grid">
+
+            <div class="process-panel-copy">
+
+              <h3>
+                Deliver
+                <span class="heading-accent">with confidence.</span>
+              </h3>
+
+              <p>
+                The finished environment is reviewed, completed and handed
+                over with the details that matter.
+              </p>
+
+              <div class="process-spec">
+
+                <div>
+                  <span>FINAL</span>
+                  <strong>Review</strong>
+                </div>
+
+                <div>
+                  <span>OUTPUT</span>
+                  <strong>Handover</strong>
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="process-visual">
+
+              <div class="technical-card completion-card">
+
+                <div class="technical-card-header">
+                  <span>PBJ / 04</span>
+                  <span>HANDOVER</span>
+                </div>
+
+                <div class="completion-visual">
+
+                  <div class="completion-orbit orbit-one"></div>
+                  <div class="completion-orbit orbit-two"></div>
+
+                  <div class="completion-core">
+                    <span>✓</span>
+                  </div>
+
+                  <span class="completion-word">
+                    COMPLETE
+                  </span>
+
+                </div>
+
+                <div class="technical-card-footer">
+                  <span>04</span>
+                  <span>FINISHED ENVIRONMENT</span>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </article>
 
       </div>
 
-
-      <!-- ===================================================
-           STEP 01
-      ==================================================== -->
-
-      <article
-        class="process-step relative grid gap-8 pb-20 md:grid-cols-2 md:gap-20 md:pb-28"
-        data-step="01"
-      >
-
-        <div class="pl-14 md:pr-20 md:pl-0 md:text-right">
-
-          <span class="process-step-label font-mono text-[9px] uppercase tracking-[.2em] text-accent">
-            01 / Discovery
-          </span>
-
-          <h3 class="mt-4 font-serif text-[clamp(32px,4vw,52px)] leading-[.92] tracking-[-.035em]">
-            Understand
-          </h3>
-
-          <p class="mt-5 text-[13px] leading-[1.7] text-paper/45">
-            We begin with the brief, site conditions, requirements,
-            expectations and intended experience of the project.
-          </p>
-
-        </div>
-
-
-        <div class="process-marker absolute left-[17px] top-0 flex h-[35px] w-[35px] -translate-x-1/2 items-center justify-center rounded-full border border-paper/25 bg-ink md:left-1/2">
-
-          <span class="font-mono text-[8px]">
-            01
-          </span>
-
-        </div>
-
-
-        <div class="process-visual md:pl-20">
-
-          <div class="process-diagram">
-
-            <span class="diagram-line line-a"></span>
-            <span class="diagram-line line-b"></span>
-            <span class="diagram-line line-c"></span>
-
-            <span class="diagram-node node-a"></span>
-            <span class="diagram-node node-b"></span>
-
-            <span class="diagram-label label-a">
-              SITE
-            </span>
-
-            <span class="diagram-label label-b">
-              BRIEF
-            </span>
-
-          </div>
-
-        </div>
-
-      </article>
-
-
-      <!-- ===================================================
-           STEP 02
-      ==================================================== -->
-
-      <article
-        class="process-step relative grid gap-8 pb-20 md:grid-cols-2 md:gap-20 md:pb-28"
-        data-step="02"
-      >
-
-        <div class="order-2 pl-14 md:order-1 md:pr-20 md:pl-0">
-
-          <div class="process-visual process-visual-right">
-
-            <div class="process-diagram blueprint">
-
-              <span class="blueprint-box box-a"></span>
-              <span class="blueprint-box box-b"></span>
-              <span class="blueprint-box box-c"></span>
-
-              <span class="blueprint-dimension dimension-a">
-                ───── 12.4m ─────
-              </span>
-
-              <span class="blueprint-dimension dimension-b">
-                8.2m
-              </span>
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div class="order-1 pl-14 md:order-2 md:pl-20">
-
-          <span class="process-step-label font-mono text-[9px] uppercase tracking-[.2em] text-accent">
-            02 / Planning
-          </span>
-
-          <h3 class="mt-4 font-serif text-[clamp(32px,4vw,52px)] leading-[.92] tracking-[-.035em]">
-            Engineer
-          </h3>
-
-          <p class="mt-5 text-[13px] leading-[1.7] text-paper/45">
-            Design decisions are translated into practical planning,
-            technical coordination, material selection and execution strategy.
-          </p>
-
-        </div>
-
-
-        <div class="process-marker absolute left-[17px] top-0 flex h-[35px] w-[35px] -translate-x-1/2 items-center justify-center rounded-full border border-paper/25 bg-ink md:left-1/2">
-
-          <span class="font-mono text-[8px]">
-            02
-          </span>
-
-        </div>
-
-      </article>
-
-
-      <!-- ===================================================
-           STEP 03
-      ==================================================== -->
-
-      <article
-        class="process-step relative grid gap-8 pb-20 md:grid-cols-2 md:gap-20 md:pb-28"
-        data-step="03"
-      >
-
-        <div class="pl-14 md:pr-20 md:pl-0 md:text-right">
-
-          <span class="process-step-label font-mono text-[9px] uppercase tracking-[.2em] text-accent">
-            03 / Construction
-          </span>
-
-          <h3 class="mt-4 font-serif text-[clamp(32px,4vw,52px)] leading-[.92] tracking-[-.035em]">
-            Build
-          </h3>
-
-          <p class="mt-5 text-[13px] leading-[1.7] text-paper/45">
-            Our team coordinates execution on site with attention to
-            workmanship, sequencing, quality and project requirements.
-          </p>
-
-        </div>
-
-
-        <div class="process-marker absolute left-[17px] top-0 flex h-[35px] w-[35px] -translate-x-1/2 items-center justify-center rounded-full border border-paper/25 bg-ink md:left-1/2">
-
-          <span class="font-mono text-[8px]">
-            03
-          </span>
-
-        </div>
-
-
-        <div class="process-visual md:pl-20">
-
-          <div class="process-diagram construction">
-
-            <span class="building-floor floor-1"></span>
-            <span class="building-floor floor-2"></span>
-            <span class="building-floor floor-3"></span>
-
-            <span class="building-column column-1"></span>
-            <span class="building-column column-2"></span>
-            <span class="building-column column-3"></span>
-
-            <span class="construction-label">
-              STRUCTURE
-            </span>
-
-          </div>
-
-        </div>
-
-      </article>
-
-
-      <!-- ===================================================
-           STEP 04
-      ==================================================== -->
-
-      <article
-        class="process-step relative grid gap-8 md:grid-cols-2 md:gap-20"
-        data-step="04"
-      >
-
-        <div class="order-2 pl-14 md:order-1 md:pr-20 md:pl-0">
-
-          <div class="process-visual process-visual-right">
-
-            <div class="process-diagram completion">
-
-              <span class="completion-ring"></span>
-
-              <span class="completion-check">
-                ✓
-              </span>
-
-              <span class="completion-label">
-                COMPLETE
-              </span>
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div class="order-1 pl-14 md:order-2 md:pl-20">
-
-          <span class="process-step-label font-mono text-[9px] uppercase tracking-[.2em] text-accent">
-            04 / Handover
-          </span>
-
-          <h3 class="mt-4 font-serif text-[clamp(32px,4vw,52px)] leading-[.92] tracking-[-.035em]">
-            Deliver
-          </h3>
-
-          <p class="mt-5 text-[13px] leading-[1.7] text-paper/45">
-            The finished environment is reviewed, completed and handed
-            over with the details that matter.
-          </p>
-
-        </div>
-
-
-        <div class="process-marker absolute left-[17px] top-0 flex h-[35px] w-[35px] -translate-x-1/2 items-center justify-center rounded-full border border-paper/25 bg-ink md:left-1/2">
-
-          <span class="font-mono text-[8px]">
-            04
-          </span>
-
-        </div>
-
-      </article>
-
-
     </div>
 
-
-    <!-- =====================================================
-         BOTTOM STATEMENT
-    ====================================================== -->
-
-    <div class="mt-24 border-t border-paper/[.14] pt-8">
-
-      <p class="max-w-[800px] font-serif text-[25px] leading-[1.15] tracking-[-.025em] md:text-[36px]">
-
-        Good construction isn't only about
-        <span class="text-paper/35">
-          what's built.
-        </span>
-
-        It's about
-        <span class="text-accent">
-          how it's built.
-        </span>
-
-      </p>
-
-    </div>
 
   </div>
-
 </section>
+
+
+<style>
+  /* =========================================================
+     ROOT
+  ========================================================= */
+
+  .process-section {
+    --process-accent: rgb(30 110 100);
+    --process-paper: #f3f0e8;
+  }
+
+
+  /* =========================================================
+     TECHNICAL BACKGROUND
+  ========================================================= */
+
+  .process-grid {
+    opacity: .24;
+
+    background-image:
+      linear-gradient(
+        rgba(255,255,255,.045) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        rgba(255,255,255,.045) 1px,
+        transparent 1px
+      );
+
+    background-size: 80px 80px;
+
+    mask-image:
+      linear-gradient(
+        to bottom,
+        transparent,
+        black 10%,
+        black 90%,
+        transparent
+      );
+  }
+
+
+  /* =========================================================
+     INTRO
+  ========================================================= */
+
+  .process-intro-wrap {
+    max-width: 850px;
+    margin-inline: auto;
+    padding-block: 4rem 6rem;
+    text-align: center;
+  }
+
+  .process-intro-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .8rem;
+
+    color: rgba(243,240,232,.4);
+
+    font:
+      10px ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      Monaco,
+      Consolas,
+      monospace;
+
+    letter-spacing: .2em;
+    text-transform: uppercase;
+  }
+
+  .process-intro-line {
+    width: 32px;
+    height: 1px;
+    background: var(--process-accent);
+  }
+
+  .process-main-title {
+    max-width: 15ch;
+    margin: 1.75rem auto 0;
+
+    font:
+      400 clamp(3rem, 6vw, 5.2rem)/.91
+      Georgia,
+      'Times New Roman',
+      serif;
+
+    letter-spacing: -.045em;
+  }
+
+  .process-main-title span {
+    display: block;
+  }
+
+  .process-main-copy {
+    max-width: 610px;
+    margin: 1.75rem auto 0;
+
+    color: rgba(243,240,232,.48);
+
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+
+  /* =========================================================
+     MAIN LAYOUT
+  ========================================================= */
+
+  .process-layout {
+    display: grid;
+    grid-template-columns:
+      minmax(250px, .72fr)
+      minmax(0, 1.28fr);
+
+    gap: clamp(4rem, 8vw, 8rem);
+
+    align-items: start;
+  }
+
+
+  /* =========================================================
+     LEFT STICKY PANEL
+  ========================================================= */
+
+  .process-sidebar {
+    min-width: 0;
+    align-self: stretch;
+
+    padding-left: 3rem;
+
+    border-left:
+      1px solid rgba(255,255,255,.09);
+  }
+
+  .process-sidebar-sticky {
+    position: sticky;
+    top: 7rem;
+
+    padding-block: 3rem 5rem;
+  }
+
+  .process-sidebar-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+    padding-bottom: 1.4rem;
+
+    border-bottom:
+      1px solid rgba(255,255,255,.1);
+  }
+
+  .process-kicker,
+  .process-count {
+    color: rgba(243,240,232,.35);
+
+    font:
+      9px ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      Monaco,
+      Consolas,
+      monospace;
+
+    letter-spacing: .14em;
+  }
+
+  .process-sidebar-title {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+
+    margin-top: 3rem;
+  }
+
+  .process-sidebar-number {
+    color: var(--process-accent);
+
+    font:
+      11px ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      Monaco,
+      Consolas,
+      monospace;
+
+    letter-spacing: .1em;
+  }
+
+  .process-sidebar-title h3 {
+    margin: 0;
+
+    font:
+      400 clamp(2.4rem, 4vw, 4rem)/.95
+      Georgia,
+      'Times New Roman',
+      serif;
+
+    letter-spacing: -.04em;
+
+    transition:
+      opacity .4s ease,
+      transform .5s cubic-bezier(.2,.65,.25,1);
+  }
+
+  .process-sidebar-description {
+    max-width: 34ch;
+
+    margin-top: 1.5rem;
+
+    color: rgba(243,240,232,.48);
+
+    font-size: 13px;
+    line-height: 1.75;
+
+    transition:
+      opacity .4s ease,
+      transform .5s cubic-bezier(.2,.65,.25,1);
+  }
+
+
+  /* =========================================================
+     PROCESS NAVIGATION
+  ========================================================= */
+
+  .process-navigation {
+    display: flex;
+    flex-direction: column;
+
+    margin-top: 3rem;
+
+    border-top:
+      1px solid rgba(255,255,255,.1);
+  }
+
+  .process-nav-item {
+    position: relative;
+
+    display: grid;
+    grid-template-columns: 34px 1fr auto;
+
+    align-items: center;
+
+    gap: .75rem;
+
+    min-height: 52px;
+
+    color: rgba(243,240,232,.32);
+
+    border-bottom:
+      1px solid rgba(255,255,255,.08);
+
+    text-decoration: none;
+
+    transition:
+      color .35s ease,
+      padding-left .4s cubic-bezier(.2,.65,.25,1);
+  }
+
+  .process-nav-number {
+    font:
+      9px ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      Monaco,
+      Consolas,
+      monospace;
+  }
+
+  .process-nav-name {
+    font-size: 12px;
+  }
+
+  .process-nav-line {
+    width: 0;
+    height: 1px;
+
+    background: var(--process-accent);
+
+    transition: width .45s ease;
+  }
+
+  .process-nav-item:hover,
+  .process-nav-item.is-active {
+    color: var(--process-paper);
+    padding-left: .35rem;
+  }
+
+  .process-nav-item.is-active .process-nav-number {
+    color: var(--process-accent);
+  }
+
+  .process-nav-item.is-active .process-nav-line {
+    width: 28px;
+  }
+
+
+  /* =========================================================
+     SIDEBAR FOOTER
+  ========================================================= */
+
+  .process-sidebar-footer {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+
+    margin-top: 4rem;
+
+    color: rgba(243,240,232,.25);
+
+    font:
+      8px ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      Monaco,
+      Consolas,
+      monospace;
+
+    letter-spacing: .12em;
+  }
+
+  .process-footer-line {
+    width: 28px;
+    height: 1px;
+    background: var(--process-accent);
+  }
+
+
+  /* =========================================================
+     RIGHT CONTENT
+  ========================================================= */
+
+  .process-content {
+    min-width: 0;
+  }
+
+  .process-panel {
+    min-height: 720px;
+
+    padding-block: 3rem 8rem;
+
+    border-top:
+      1px solid rgba(255,255,255,.1);
+  }
+
+  .process-panel:first-child {
+    border-top: 0;
+    padding-top: 3rem;
+  }
+
+  .process-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 4rem;
+  }
+
+  .process-panel-index,
+  .process-panel-status {
+    color: rgba(243,240,232,.35);
+
+    font:
+      9px ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      Monaco,
+      Consolas,
+      monospace;
+
+    letter-spacing: .15em;
+  }
+
+  .process-panel-status {
+    color: var(--process-accent);
+  }
+
+  .process-panel-grid {
+    display: grid;
+
+    grid-template-columns:
+      minmax(0, .8fr)
+      minmax(0, 1.2fr);
+
+    gap: clamp(2rem, 5vw, 5rem);
+
+    align-items: center;
+  }
+
+  .process-panel-copy h3 {
+    margin: 0;
+
+    font:
+      400 clamp(2.5rem, 5vw, 4.8rem)/.92
+      Georgia,
+      'Times New Roman',
+      serif;
+
+    letter-spacing: -.045em;
+  }
+
+  .process-panel-copy h3 span {
+    display: block;
+  }
+
+  .process-panel-copy > p {
+    max-width: 42ch;
+
+    margin-top: 1.6rem;
+
+    color: rgba(243,240,232,.47);
+
+    font-size: 13px;
+    line-height: 1.8;
+  }
+
+
+  /* =========================================================
+     SPECIFICATION
+  ========================================================= */
+
+  .process-spec {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    max-width: 330px;
+
+    margin-top: 3rem;
+
+    border-top:
+      1px solid rgba(255,255,255,.1);
+  }
+
+  .process-spec > div {
+    padding: 1rem 1rem 0 0;
+
+    border-right:
+      1px solid rgba(255,255,255,.08);
+  }
+
+  .process-spec > div + div {
+    padding-left: 1rem;
+    border-right: 0;
+  }
+
+  .process-spec span {
+    display: block;
+
+    color: rgba(243,240,232,.28);
+
+    font:
+      8px ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      Monaco,
+      Consolas,
+      monospace;
+
+    letter-spacing: .15em;
+  }
+
+  .process-spec strong {
+    display: block;
+
+    margin-top: .45rem;
+
+    color: rgba(243,240,232,.72);
+
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+
+  /* =========================================================
+     TECHNICAL CARD
+  ========================================================= */
+
+  .technical-card {
+    position: relative;
+
+    min-height: 390px;
+
+    overflow: hidden;
+
+    border:
+      1px solid rgba(255,255,255,.13);
+
+    background:
+      linear-gradient(
+        rgba(255,255,255,.025) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        rgba(255,255,255,.025) 1px,
+        transparent 1px
+      );
+
+    background-size: 34px 34px;
+
+    transition:
+      border-color .5s ease,
+      transform .7s cubic-bezier(.2,.65,.25,1);
+  }
+
+  .process-panel.is-active .technical-card {
+    border-color:
+      rgba(30,110,100,.42);
+
+    transform: translateY(-4px);
+  }
+
+  .technical-card::before {
+    content: '';
+
+    position: absolute;
+    inset: 18px;
+
+    border:
+      1px solid rgba(255,255,255,.06);
+
+    pointer-events: none;
+  }
+
+  .technical-card-header {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    justify-content: space-between;
+
+    padding: 1rem 1.1rem;
+
+    color: rgba(243,240,232,.28);
+
+    font:
+      8px ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      Monaco,
+      Consolas,
+      monospace;
+
+    letter-spacing: .14em;
+
+    border-bottom:
+      1px solid rgba(255,255,255,.08);
+  }
+
+  .technical-card-header span:last-child {
+    color: var(--process-accent);
+  }
+
+  .technical-card-footer {
+    position: absolute;
+
+    left: 1.1rem;
+    right: 1.1rem;
+    bottom: 1rem;
+
+    display: flex;
+    justify-content: space-between;
+
+    color: rgba(243,240,232,.25);
+
+    font:
+      8px ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      Monaco,
+      Consolas,
+      monospace;
+
+    letter-spacing: .12em;
+  }
+
+
+  /* =========================================================
+     DISCOVERY VISUAL
+  ========================================================= */
+
+  .discovery-visual {
+    position: absolute;
+    inset: 60px 25px 50px;
+  }
+
+  .discovery-axis {
+    position: absolute;
+    background: rgba(255,255,255,.07);
+  }
+
+  .axis-x {
+    left: 10%;
+    right: 10%;
+    top: 50%;
+    height: 1px;
+  }
+
+  .axis-y {
+    top: 15%;
+    bottom: 15%;
+    left: 50%;
+    width: 1px;
+  }
+
+  .discovery-point {
+    position: absolute;
+
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+
+    color: rgba(243,240,232,.42);
+
+    font:
+      8px ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      Monaco,
+      Consolas,
+      monospace;
+
+    letter-spacing: .14em;
+  }
+
+  .discovery-point i {
+    width: 10px;
+    height: 10px;
+
+    display: block;
+
+    border: 1px solid var(--process-accent);
+
+    transform: rotate(45deg);
+
+    transition:
+      transform .7s cubic-bezier(.2,.65,.25,1),
+      background .4s ease;
+  }
+
+  .process-panel.is-active .discovery-point i {
+    background: rgba(30,110,100,.35);
+    transform: rotate(45deg) scale(1.15);
+  }
+
+  .point-a {
+    left: 14%;
+    top: 28%;
+  }
+
+  .point-b {
+    right: 15%;
+    top: 28%;
+  }
+
+  .point-c {
+    left: 42%;
+    bottom: 20%;
+  }
+
+  .discovery-connection {
+    position: absolute;
+
+    height: 1px;
+
+    background: var(--process-accent);
+
+    transform-origin: left center;
+
+    opacity: .7;
+
+    transition:
+      transform 1s cubic-bezier(.2,.65,.25,1);
+  }
+
+  .connection-a {
+    width: 40%;
+    left: 18%;
+    top: 31%;
+
+    transform: rotate(0deg) scaleX(.1);
+  }
+
+  .connection-b {
+    width: 28%;
+    left: 47%;
+    top: 34%;
+
+    transform: rotate(125deg) scaleX(.1);
+  }
+
+  .process-panel.is-active .connection-a,
+  .process-panel.is-active .connection-b {
+    transform: rotate(var(--connection-angle, 0deg)) scaleX(1);
+  }
+
+
+  /* =========================================================
+     BLUEPRINT
+  ========================================================= */
+
+  .blueprint-visual {
+    position: absolute;
+    inset: 65px 30px 50px;
+  }
+
+  .blueprint-box {
+    position: absolute;
+
+    border:
+      1px solid rgba(30,110,100,.7);
+
+    transition:
+      transform .8s cubic-bezier(.2,.65,.25,1);
+  }
+
+  .blueprint-a {
+    left: 12%;
+    top: 20%;
+
+    width: 55%;
+    height: 38%;
+  }
+
+  .blueprint-b {
+    left: 45%;
+    top: 45%;
+
+    width: 34%;
+    height: 28%;
+  }
+
+  .blueprint-c {
+    left: 20%;
+    top: 63%;
+
+    width: 25%;
+    height: 20%;
+  }
+
+  .blueprint-cross {
+    position: absolute;
+
+    background: rgba(30,110,100,.4);
+  }
+
+  .cross-a {
+    left: 9%;
+    top: 15%;
+    bottom: 12%;
+    width: 1px;
+  }
+
+  .cross-b {
+    left: 7%;
+    right: 7%;
+    top: 80%;
+    height: 1px;
+  }
+
+  .blueprint-tag {
+    position: absolute;
+
+    color: rgba(30,110,100,.75);
+
+    font:
+      8px ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      Monaco,
+      Consolas,
+      monospace;
+
+    letter-spacing: .13em;
+  }
+
+  .tag-a {
+    left: 12%;
+    top: 9%;
+  }
+
+  .tag-b {
+    right: 10%;
+    top: 43%;
+  }
+
+  .tag-c {
+    left: 20%;
+    bottom: 9%;
+  }
+
+
+  /* =========================================================
+     CONSTRUCTION
+  ========================================================= */
+
+  .construction-visual {
+    position: absolute;
+    inset: 70px 30px 50px;
+  }
+
+  .construction-floor {
+    position: absolute;
+
+    left: 15%;
+    right: 13%;
+
+    height: 1px;
+
+    background: var(--process-accent);
+
+    transform-origin: center;
+    transform: scaleX(.15);
+
+    transition:
+      transform 1s cubic-bezier(.2,.65,.25,1);
+  }
+
+  .floor-one {
+    top: 72%;
+  }
+
+  .floor-two {
+    top: 51%;
+  }
+
+  .floor-three {
+    top: 30%;
+  }
+
+  .construction-column {
+    position: absolute;
+
+    bottom: 28%;
+
+    width: 1px;
+    height: 44%;
+
+    background: rgba(30,110,100,.7);
+
+    transform-origin: bottom;
+    transform: scaleY(.1);
+
+    transition:
+      transform .9s cubic-bezier(.2,.65,.25,1);
+  }
+
+  .column-one {
+    left: 22%;
+  }
+
+  .column-two {
+    left: 50%;
+  }
+
+  .column-three {
+    left: 78%;
+  }
+
+  .construction-ground {
+    position: absolute;
+
+    left: 10%;
+    right: 8%;
+    bottom: 18%;
+
+    height: 1px;
+
+    background: rgba(255,255,255,.15);
+  }
+
+  .construction-tag {
+    position: absolute;
+
+    right: 9%;
+    top: 12%;
+
+    color: rgba(243,240,232,.3);
+
+    font:
+      8px ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      Monaco,
+      Consolas,
+      monospace;
+
+    letter-spacing: .15em;
+  }
+
+  .process-panel.is-active .construction-floor {
+    transform: scaleX(1);
+  }
+
+  .process-panel.is-active .construction-column {
+    transform: scaleY(1);
+  }
+
+
+  /* =========================================================
+     COMPLETION
+  ========================================================= */
+
+  .completion-visual {
+    position: absolute;
+    inset: 65px 30px 50px;
+  }
+
+  .completion-orbit {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    border: 1px solid var(--process-accent);
+    border-radius: 50%;
+
+    transform:
+      translate(-50%, -50%)
+      scale(.6);
+
+    opacity: .25;
+
+    transition:
+      transform 1s cubic-bezier(.2,.65,.25,1),
+      opacity .7s ease;
+  }
+
+  .orbit-one {
+    width: 190px;
+    height: 190px;
+  }
+
+  .orbit-two {
+    width: 120px;
+    height: 120px;
+  }
+
+  .completion-core {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    width: 65px;
+    height: 65px;
+
+    display: grid;
+    place-items: center;
+
+    border:
+      1px solid var(--process-accent);
+
+    color: var(--process-accent);
+
+    transform:
+      translate(-50%, -50%)
+      scale(.7);
+
+    opacity: .3;
+
+    transition:
+      transform .7s cubic-bezier(.2,.65,.25,1),
+      opacity .5s ease;
+  }
+
+  .completion-core span {
+    font-size: 24px;
+  }
+
+  .completion-word {
+    position: absolute;
+
+    left: 50%;
+    bottom: 5%;
+
+    transform: translateX(-50%);
+
+    color: rgba(243,240,232,.3);
+
+    font:
+      8px ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      Monaco,
+      Consolas,
+      monospace;
+
+    letter-spacing: .18em;
+  }
+
+  .process-panel.is-active .completion-orbit {
+    transform:
+      translate(-50%, -50%)
+      scale(1);
+
+    opacity: .7;
+  }
+
+  .process-panel.is-active .completion-core {
+    transform:
+      translate(-50%, -50%)
+      scale(1);
+
+    opacity: 1;
+  }
+
+
+  /* =========================================================
+     TABLET
+  ========================================================= */
+
+  @media (max-width: 1023px) {
+
+    .process-layout {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .process-sidebar {
+      display: none;
+    }
+
+    .process-panel {
+      min-height: 0;
+      padding-block: 4rem 6rem;
+    }
+
+    .process-panel:first-child {
+      padding-top: 2rem;
+    }
+
+    .process-panel-grid {
+      grid-template-columns:
+        minmax(0, .9fr)
+        minmax(0, 1.1fr);
+    }
+  }
+
+
+  /* =========================================================
+     MOBILE
+  ========================================================= */
+
+  @media (max-width: 767px) {
+
+    .process-section {
+      padding-block: 5rem;
+    }
+
+    .process-grid {
+      background-size: 55px 55px;
+    }
+
+    .process-intro-wrap {
+      padding-block: 1rem 3rem;
+    }
+
+    .process-main-title {
+      max-width: 12ch;
+    }
+
+    .process-main-copy {
+      max-width: 90%;
+    }
+
+    .process-panel {
+      padding-block: 3.5rem 5rem;
+    }
+
+    .process-panel-grid {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+
+    .process-panel-header {
+      margin-bottom: 2.5rem;
+    }
+
+    .process-panel-copy h3 {
+      font-size: 3rem;
+    }
+
+    .process-spec {
+      margin-top: 2rem;
+    }
+
+    .technical-card {
+      min-height: 310px;
+    }
+
+  }
+
+
+  /* =========================================================
+     REDUCED MOTION
+  ========================================================= */
+
+  @media (prefers-reduced-motion: reduce) {
+
+    .process-nav-item,
+    .process-sidebar-title h3,
+    .process-sidebar-description,
+    .technical-card,
+    .discovery-point i,
+    .discovery-connection,
+    .blueprint-box,
+    .construction-floor,
+    .construction-column,
+    .completion-orbit,
+    .completion-core {
+      transition: none !important;
+    }
+  }
+</style>
+
+
+<script>
+  const processRoot = document.querySelector('#process');
+
+  if (processRoot) {
+    const panels = Array.from(
+      processRoot.querySelectorAll('[data-process-step]')
+    );
+
+    const navItems = Array.from(
+      processRoot.querySelectorAll('[data-process-nav]')
+    );
+
+    const number = processRoot.querySelector(
+      '[data-process-number]'
+    );
+
+    const title = processRoot.querySelector(
+      '[data-process-title]'
+    );
+
+    const description = processRoot.querySelector(
+      '[data-process-description]'
+    );
+
+    let activeStep = '01';
+
+
+    function setActiveStep(step) {
+      if (step === activeStep) return;
+
+      activeStep = step;
+
+      const panel = panels.find(
+        (item) =>
+          item.dataset.processStep === step
+      );
+
+      if (!panel) return;
+
+      panels.forEach((item) => {
+        item.classList.toggle(
+          'is-active',
+          item === panel
+        );
+      });
+
+      navItems.forEach((item) => {
+        item.classList.toggle(
+          'is-active',
+          item.dataset.processNav === step
+        );
+      });
+
+      if (number) {
+        number.textContent = step;
+      }
+
+      if (title) {
+        title.style.opacity = '0';
+        title.style.transform = 'translateY(8px)';
+
+        window.setTimeout(() => {
+          title.textContent =
+            panel.dataset.title || '';
+
+          title.style.opacity = '1';
+          title.style.transform =
+            'translateY(0)';
+        }, 120);
+      }
+
+      if (description) {
+        description.style.opacity = '0';
+        description.style.transform =
+          'translateY(8px)';
+
+        window.setTimeout(() => {
+          description.textContent =
+            panel.dataset.description || '';
+
+          description.style.opacity = '1';
+          description.style.transform =
+            'translateY(0)';
+        }, 120);
+      }
+    }
+
+
+    /*
+     * Detect the panel closest to the viewport
+     * center and activate it.
+     */
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort(
+            (a, b) =>
+              Math.abs(
+                a.boundingClientRect.top -
+                window.innerHeight * .42
+              ) -
+              Math.abs(
+                b.boundingClientRect.top -
+                window.innerHeight * .42
+              )
+          );
+
+        if (visible.length) {
+          setActiveStep(
+            visible[0]
+              .target
+              .dataset
+              .processStep
+          );
+        }
+      },
+      {
+        threshold: [0.15, 0.35, 0.55],
+        rootMargin: '-18% 0px -42% 0px'
+      }
+    );
+
+
+    panels.forEach((panel) => {
+      observer.observe(panel);
+    });
+
+
+    /*
+     * Navigation click
+     */
+
+    navItems.forEach((item) => {
+
+      item.addEventListener(
+        'click',
+        (event) => {
+
+          const href =
+            item.getAttribute('href');
+
+          if (!href) return;
+
+          const target =
+            document.querySelector(href);
+
+          if (!target) return;
+
+          event.preventDefault();
+
+          target.scrollIntoView({
+            behavior:
+              window.matchMedia(
+                '(prefers-reduced-motion: reduce)'
+              ).matches
+                ? 'auto'
+                : 'smooth',
+            block: 'start'
+          });
+
+        }
+      );
+
+    });
+
+
+    /*
+     * First step should be active immediately.
+     */
+
+    const firstPanel = panels[0];
+
+    if (firstPanel) {
+      firstPanel.classList.add('is-active');
+
+      if (number) {
+        number.textContent = '01';
+      }
+
+      if (title) {
+        title.textContent =
+          firstPanel.dataset.title || 'Understand';
+      }
+
+      if (description) {
+        description.textContent =
+          firstPanel.dataset.description || '';
+      }
+    }
+  }
+</script>
 
 
 <style>
@@ -2691,7 +4394,7 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
       monospace;
 
     font-size:
-      8px;
+      12px;
 
     letter-spacing:
       .16em;
@@ -2804,7 +4507,7 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
       monospace;
 
     font-size:
-      8px;
+      12px;
 
     color:
       rgba(246,243,236,.35);
@@ -2945,7 +4648,7 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
       monospace;
 
     font-size:
-      8px;
+      12px;
 
     letter-spacing:
       .18em;
@@ -3041,7 +4744,7 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
       monospace;
 
     font-size:
-      8px;
+      12px;
 
     letter-spacing:
       .2em;
@@ -3400,7 +5103,7 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
       <div class="flex items-center gap-3">
         <span class="h-px w-8 bg-accent"></span>
-        <span class="font-mono text-[9px] uppercase tracking-[.24em] text-ink/45">
+        <span class="font-mono text-[12px] uppercase tracking-[.24em] text-ink/45">
           06 / Why PBJ
         </span>
         <span class="h-px w-8 bg-accent"></span>
@@ -3411,7 +5114,7 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
         class="why-title mx-auto mt-7 max-w-[16ch] font-serif text-[clamp(46px,6vw,86px)] leading-[.9] tracking-[-.05em]"
       >
         Experience you can
-        <span class="text-ink/30">
+        <span class="heading-accent">
           build on.
         </span>
       </h2>
@@ -3447,7 +5150,7 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
           <span class="h-px w-12 bg-accent"></span>
 
-          <span class="font-mono text-[9px] uppercase tracking-[.18em] text-ink/45">
+          <span class="font-mono text-[12px] uppercase tracking-[.18em] text-ink/45">
             Years of experience
           </span>
 
@@ -3579,6 +5282,45 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
     </div>
 
 
+    <!-- =====================================================
+         WHAT SETS US APART
+    ====================================================== -->
+
+    <div class="why-differentiators mt-20 grid gap-10 border-t border-ink/15 pt-14 sm:grid-cols-3 md:mt-28">
+
+      <div class="why-diff border-b border-ink/15 pb-8 sm:border-b-0 sm:border-r sm:pb-0 sm:pr-8">
+        <span class="why-diff-number">01</span>
+        <h3 class="why-diff-title">One in-house team</h3>
+        <p class="why-diff-copy">
+          Structure, filtration, tiling and landscaping are built by the
+          same team — a single point of accountability instead of handoffs
+          between subcontractors.
+        </p>
+      </div>
+
+      <div class="why-diff border-b border-ink/15 pb-8 sm:border-b-0 sm:border-r sm:px-8 sm:pb-0">
+        <span class="why-diff-number">02</span>
+        <h3 class="why-diff-title">Design and build, together</h3>
+        <p class="why-diff-copy">
+          3D visualisation and detailed planning happen before construction
+          starts, so the people who designed it are the same people
+          building it.
+        </p>
+      </div>
+
+      <div class="why-diff sm:pl-8">
+        <span class="why-diff-number">03</span>
+        <h3 class="why-diff-title">Phases that overlap, not wait</h3>
+        <p class="why-diff-copy">
+          Because one team covers site works, structure and finishing,
+          stages can run in parallel instead of stalling between separate
+          contractors.
+        </p>
+      </div>
+
+    </div>
+
+
     <!-- BOTTOM STATEMENT -->
 
     <div
@@ -3600,17 +5342,11 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
         <a
           href="/about/"
-          class="group flex items-center gap-3 font-mono text-[9px] uppercase tracking-[.16em]"
+          class="btn btn-solid justify-self-start md:justify-self-end"
+          data-analytics-event="click_more_about_pbj"
+          data-analytics-params={JSON.stringify({ placement: 'homepage_why_pbj' })}
         >
-
-          <span>
-            More about PBJ
-          </span>
-
-          <span class="transition-transform duration-300 group-hover:translate-x-1">
-            →
-          </span>
-
+          More about PBJ<span aria-hidden="true"> →</span>
         </a>
 
       </div>
@@ -3751,7 +5487,7 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
       monospace;
 
     font-size:
-      8px;
+      12px;
 
     color:
       rgba(20,23,26,.3);
@@ -3770,7 +5506,7 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
       monospace;
 
     font-size:
-      8px;
+      12px;
 
     text-transform:
       uppercase;
@@ -3803,6 +5539,71 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
     line-height:
       1;
+  }
+
+
+  /* ==========================================================
+     WHAT SETS US APART
+  ========================================================== */
+
+  .why-diff-number {
+
+    display:
+      block;
+
+    font-family:
+      ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      monospace;
+
+    font-size:
+      12px;
+
+    color:
+      rgb(30,110,100);
+  }
+
+
+  .why-diff-title {
+
+    margin-top:
+      14px;
+
+    font-family:
+      Georgia,
+      serif;
+
+    font-size:
+      20px;
+
+    font-weight:
+      400;
+
+    letter-spacing:
+      -.01em;
+
+    line-height:
+      1.15;
+  }
+
+
+  .why-diff-copy {
+
+    margin-top:
+      10px;
+
+    max-width:
+      32ch;
+
+    font-size:
+      13px;
+
+    line-height:
+      1.7;
+
+    color:
+      rgba(20,23,26,.55);
   }
 
 
@@ -4011,7 +5812,7 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
       <div class="flex items-center gap-3">
         <span class="h-px w-8 bg-accent"></span>
-        <span class="font-mono text-[9px] uppercase tracking-[.24em] text-ink/45">
+        <span class="font-mono text-[12px] uppercase tracking-[.24em] text-ink/45">
           07 / FAQ
         </span>
         <span class="h-px w-8 bg-accent"></span>
@@ -4022,7 +5823,7 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
         class="mx-auto mt-7 max-w-[16ch] font-serif text-[clamp(44px,6vw,82px)] leading-[.92] tracking-[-.045em]"
       >
         Questions worth
-        <span class="text-ink/35">
+        <span class="heading-accent">
           answering upfront.
         </span>
       </h2>
@@ -4088,7 +5889,7 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
        CONTENT
   ====================================================== -->
 
-  <div class="wrap relative z-[3] flex min-h-[85svh] flex-col justify-between py-12 md:py-16">
+  <div class="wrap relative z-[3] flex min-h-[85svh] flex-col py-12 md:py-16">
 
 
     <!-- TOP -->
@@ -4099,14 +5900,14 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
         <span class="h-px w-8 bg-accent"></span>
 
-        <span class="font-mono text-[9px] uppercase tracking-[.2em] text-paper/45">
+        <span class="font-mono text-[12px] uppercase tracking-[.2em] text-paper/45">
           08 / Start a Project
         </span>
 
       </div>
 
 
-      <span class="font-mono text-[9px] text-paper/30">
+      <span class="font-mono text-[12px] text-paper/30">
         PBJ INFRA
       </span>
 
@@ -4114,72 +5915,64 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
 
     <!-- =====================================================
-         MAIN CTA
+         MAIN CTA — heading, copy, primary CTA, location and
+         direct-contact buttons combined into one centred block.
     ====================================================== -->
 
-    <div class="cta-main max-w-[1100px]">
+    <div class="flex flex-1 items-center justify-center py-14">
 
-      <h2
-        id="cta-title"
-        class="cta-title font-serif text-[clamp(58px,10vw,145px)] leading-[.78] tracking-[-.065em]"
-      >
+      <div class="cta-main mx-auto max-w-[650px] text-center">
 
-        Have something
-        <span class="block text-paper/35">
-          worth building?
-        </span>
-
-      </h2>
-
-
-      <p class="cta-copy mt-9 max-w-[520px] text-[14px] leading-[1.75] text-paper/55 md:text-[15px]">
-        Tell us what you're planning. We'll help you understand the
-        right way forward — from the first conversation to execution.
-      </p>
-
-
-      <!-- PRIMARY CTA -->
-
-      <div class="mt-10">
-
-        <a
-          href="/contact/"
-          class="cta-button group relative inline-flex items-center gap-7 overflow-hidden border border-paper/30 px-7 py-5 md:px-9 md:py-6"
-          data-analytics-event="click_start_project"
-          data-analytics-params={JSON.stringify({ placement: 'homepage_final_cta' })}
+        <h2
+          id="cta-title"
+          class="cta-title font-serif text-[clamp(44px,6vw,82px)] leading-[.92] tracking-[-.045em]"
         >
 
-          <span class="relative z-[2] font-mono text-[10px] uppercase tracking-[.18em]">
-            Start a project
+          Have something
+          <span class="heading-accent">
+            worth building?
           </span>
 
-          <span class="relative z-[2] text-[20px] transition-transform duration-500 group-hover:translate-x-2">
-            ↗
-          </span>
-
-          <span class="cta-button-fill absolute inset-0 origin-left scale-x-0 bg-accent transition-transform duration-500 ease-out group-hover:scale-x-100"></span>
-
-        </a>
-
-      </div>
-
-    </div>
+        </h2>
 
 
-    <!-- =====================================================
-         CONTACT STRIP
-    ====================================================== -->
-
-    <div class="cta-footer border-t border-paper/15 pt-7">
-
-      <div class="grid gap-7 md:grid-cols-[1fr_auto] md:items-end">
+        <p class="cta-copy mx-auto mt-7 max-w-[500px] text-[14px] leading-[1.75] text-paper/55 md:text-[15px]">
+          Tell us what you're planning. We'll help you understand the
+          right way forward — from the first conversation to execution.
+        </p>
 
 
-        <!-- LOCATION -->
+        <!-- PRIMARY CTA -->
 
-        <div>
+        <div class="mt-9 flex justify-center">
 
-          <span class="font-mono text-[8px] uppercase tracking-[.18em] text-paper/35">
+          <a
+            href="/contact/"
+            class="cta-button group relative inline-flex items-center gap-6 overflow-hidden border border-paper/30 px-7 py-5"
+            data-analytics-event="click_start_project"
+            data-analytics-params={JSON.stringify({ placement: 'homepage_final_cta' })}
+          >
+
+            <span class="relative z-[2] font-mono text-[12px] uppercase tracking-[.18em]">
+              Start a project
+            </span>
+
+            <span class="relative z-[2] text-[18px] transition-transform duration-500 group-hover:translate-x-2">
+              ↗
+            </span>
+
+            <span class="cta-button-fill absolute inset-0 origin-left scale-x-0 bg-accent transition-transform duration-500 ease-out group-hover:scale-x-100"></span>
+
+          </a>
+
+        </div>
+
+
+        <!-- LOCATION + DIRECT CONTACT -->
+
+        <div class="cta-contact-block mt-12 border-t border-paper/15 pt-9">
+
+          <span class="font-mono text-[12px] uppercase tracking-[.18em] text-paper/35">
             Project Coverage
           </span>
 
@@ -4187,65 +5980,36 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
             Pune · Maharashtra · India
           </p>
 
-        </div>
+          <div class="mt-7 flex flex-wrap justify-center gap-3">
 
+            <a
+              href={whatsappLink('Hi PBJ Infra, I have a project in mind.')}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-lt"
+              data-analytics-event="click_whatsapp"
+              data-analytics-params={JSON.stringify({ placement: 'homepage_final_cta' })}
+            >
+              WhatsApp<span aria-hidden="true"> ↗</span>
+            </a>
 
-        <!-- CONTACT ACTIONS -->
+            <a
+              href={telLink()}
+              class="btn btn-lt"
+              data-analytics-event="click_phone"
+            >
+              Call<span aria-hidden="true"> ↗</span>
+            </a>
 
-        <div class="flex flex-wrap gap-5">
+            <a
+              href={mailtoLink()}
+              class="btn btn-lt"
+              data-analytics-event="click_email"
+            >
+              Email<span aria-hidden="true"> ↗</span>
+            </a>
 
-          <a
-            href={whatsappLink('Hi PBJ Infra, I have a project in mind.')}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="cta-contact group"
-            data-analytics-event="click_whatsapp"
-            data-analytics-params={JSON.stringify({ placement: 'homepage_final_cta' })}
-          >
-
-            <span>
-              WhatsApp
-            </span>
-
-            <span class="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-              ↗
-            </span>
-
-          </a>
-
-
-          <a
-            href={telLink()}
-            class="cta-contact group"
-            data-analytics-event="click_phone"
-          >
-
-            <span>
-              Call
-            </span>
-
-            <span class="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-              ↗
-            </span>
-
-          </a>
-
-
-          <a
-            href={mailtoLink()}
-            class="cta-contact group"
-            data-analytics-event="click_email"
-          >
-
-            <span>
-              Email
-            </span>
-
-            <span class="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-              ↗
-            </span>
-
-          </a>
+          </div>
 
         </div>
 
@@ -4361,61 +6125,6 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
 
   /* ==========================================================
-     CONTACT LINKS
-  ========================================================== */
-
-  .cta-contact {
-
-    display:
-      inline-flex;
-
-    align-items:
-      center;
-
-    gap:
-      9px;
-
-    padding-bottom:
-      7px;
-
-    border-bottom:
-      1px solid rgba(246,243,236,.2);
-
-    font-family:
-      ui-monospace,
-      SFMono-Regular,
-      Menlo,
-      monospace;
-
-    font-size:
-      9px;
-
-    text-transform:
-      uppercase;
-
-    letter-spacing:
-      .15em;
-
-    color:
-      rgba(246,243,236,.55);
-
-    transition:
-      color .3s ease,
-      border-color .3s ease;
-  }
-
-
-  .cta-contact:hover {
-
-    color:
-      rgb(246,243,236);
-
-    border-color:
-      rgb(30,110,100);
-  }
-
-
-  /* ==========================================================
      MOBILE
   ========================================================== */
 
@@ -4515,6 +6224,12 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
         );
 
 
+      const contactBlock =
+        cta.querySelector(
+          '.cta-contact-block'
+        );
+
+
       gsap.fromTo(
         image,
 
@@ -4547,7 +6262,7 @@ const gReviews = googleReviews.available ? (googleReviews.reviews ?? []).slice(0
 
 
       gsap.fromTo(
-        [title, copy, button],
+        [title, copy, button, contactBlock],
 
         {
           y: 45,

@@ -8,71 +8,1517 @@ import FinalCTA from '../../components/FinalCTA.astro';
 import { breadcrumbSchema } from '../../lib/schema';
 
 const locations = await getCollection('locations');
-const published = locations.filter((l) => l.data.status === 'published');
-const withEvidence = locations.filter((l) => l.data.status === 'draft' && l.data.role !== 'Service Coverage');
-const coverageOnly = locations.filter((l) => l.data.status === 'draft' && l.data.role === 'Service Coverage');
-const crumbs = [{ name: 'Home', url: '/' }, { name: 'Locations', url: '/locations/' }];
+const projects = await getCollection('projects');
+
+const published = locations.filter(
+  (location) => location.data.status === 'published'
+);
+
+const withEvidence = locations.filter(
+  (location) =>
+    location.data.status === 'draft' &&
+    location.data.role !== 'Service Coverage'
+);
+
+const coverageOnly = locations.filter(
+  (location) =>
+    location.data.status === 'draft' &&
+    location.data.role === 'Service Coverage'
+);
+
+const publishedProjects = projects.filter(
+  (project) => project.data.status === 'published'
+);
+
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Locations', url: '/locations/' },
+];
+
+/*
+ * Location aliases are used only to group published projects under a
+ * readable city/location heading. No map coordinates are required.
+ */
+const cityAliases: Record<string, string> = {
+  pune: 'Pune',
+  panshet: 'Panshet',
+  latur: 'Latur',
+  ahilyanagar: 'Ahilyanagar',
+  ahmednagar: 'Ahilyanagar',
+  mumbai: 'Mumbai',
+  nashik: 'Nashik',
+  kolhapur: 'Kolhapur',
+  nagpur: 'Nagpur',
+  satara: 'Satara',
+  sangli: 'Sangli',
+  gokarna: 'Gokarna',
+  bengaluru: 'Bengaluru',
+  bangalore: 'Bengaluru',
+  kanakapura: 'Kanakapura',
+};
+
+function resolveCity(value = ''): string | null {
+  const normalized = value.toLowerCase();
+
+  for (const [alias, city] of Object.entries(cityAliases)) {
+    if (normalized.includes(alias)) return city;
+  }
+
+  return null;
+}
+
+type ProjectItem = {
+  name: string;
+  slug: string;
+  year?: string;
+  location: string;
+};
+
+type LocationItem = {
+  city: string;
+  projects: ProjectItem[];
+  verified: boolean;
+  slug?: string;
+};
+
+const locationMap = new Map<string, LocationItem>();
+
+/* Dedicated published location pages. */
+for (const location of published) {
+  const city = resolveCity(location.data.name) || location.data.name;
+
+  locationMap.set(city, {
+    city,
+    projects: [],
+    verified: true,
+    slug: location.slug,
+  });
+}
+
+/* Published projects can appear even without a dedicated location page. */
+for (const project of publishedProjects) {
+  const city = resolveCity(project.data.location);
+  if (!city) continue;
+
+  const existing = locationMap.get(city);
+
+  const item: ProjectItem = {
+    name: project.data.name,
+    slug: project.slug,
+    year: project.data.year,
+    location: project.data.location,
+  };
+
+  if (existing) {
+    existing.projects.push(item);
+  } else {
+    locationMap.set(city, {
+      city,
+      projects: [item],
+      verified: false,
+    });
+  }
+}
+
+const locationIndex = Array.from(locationMap.values()).sort((a, b) => {
+  if (a.city === 'Pune') return -1;
+  if (b.city === 'Pune') return 1;
+  return a.city.localeCompare(b.city);
+});
+
+const mappedProjectCount = locationIndex.reduce(
+  (total, location) => total + location.projects.length,
+  0
+);
+
+const clientLocationData = locationIndex.map((location, index) => ({
+  city: location.city,
+  number: String(index + 1).padStart(2, '0'),
+  type: location.city === 'Pune'
+    ? 'Main location'
+    : location.verified
+      ? 'Verified location'
+      : 'Project location',
+  location: location.city === 'Pune'
+    ? 'Maharashtra, India'
+    : location.projects[0]?.location || `${location.city}, India`,
+  projects: location.projects,
+}));
 ---
+
 <BaseLayout
-  title="Where PBJ Infra Builds | Pune, Latur & Maharashtra"
-  description="PBJ Infra is headquartered in Pune with a major operational hub in Latur, and project coverage across Maharashtra and India. See verified location pages and service coverage."
+  title="Locations | Pune-Based, Pan-India Construction | PBJ Infra"
+  description="PBJ Infra is based in Pune, Maharashtra, with construction and project execution services across India. See verified locations and Pan-India coverage."
   path="/locations/"
   schema={[breadcrumbSchema(crumbs)]}
 >
+  <!-- HERO -->
   <PageHero
     crumbs={crumbs}
     tone="ink"
     eyebrow="Locations / Coverage"
-    title="From Pune and Latur"
-    titleMuted="to projects across India."
-    lead="PBJ Infra is headquartered in Phursungi, Pune, with a major operational hub in Latur. Dedicated location pages are published only where PBJ has verified, on-the-ground project or office evidence — not generated for every city PBJ could theoretically serve."
-    ctas={[{ label: 'Start a project', href: '/contact/', style: 'solid', event: 'click_start_project', params: { placement: 'locations_hero' } }]}
+    title="Pune based"
+    titleMuted="Pan-India reach."
+    lead="Headquartered in Pune, Maharashtra, PBJ Infra delivers construction and project execution services across India. Our published locations and projects show where we have verified work or presence, while our wider service coverage remains Pan India."
+    ctas={[
+      {
+        label: 'Start a project',
+        href: '/contact/',
+        style: 'solid',
+        event: 'click_start_project',
+        params: { placement: 'locations_hero' },
+      },
+    ]}
   />
 
-  <PageShell tone="paper" labelledby="loc-verified">
-    <SectionHeader id="loc-verified" num="01" label="On the ground" title="Verified locations" tone="paper" />
-    <div class="mt-14 grid sm:grid-cols-2 gap-5" data-reveal-stagger>
-      {published.map((l) => (
-        <a href={`/locations/${l.slug}/`} class="block border border-ink/[.14] hover:border-accent transition-colors p-7">
-          <span class="font-mono text-[11px] text-accent tracking-wide uppercase">{l.data.role}</span>
-          <h3 class="font-serif text-2xl mt-2 mb-2">{l.data.name}</h3>
-          <p class="text-[13.5px] text-ink-soft">{l.data.intro.slice(0, 140)}…</p>
-          <span class="inline-block mt-4 font-mono text-xs tracking-wide uppercase text-accent">View {l.data.name} →</span>
-        </a>
-      ))}
+  <!-- INDIA / LOCATION INDEX -->
+  <PageShell tone="paper" labelledby="location-footprint-heading">
+    <div id="location-footprint-heading" class="sr-only">
+      PBJ Infra geographic footprint
+    </div>
+
+    <div class="footprint-intro" data-reveal>
+      <div>
+        <span class="section-kicker">01 / Geographic footprint</span>
+        <h2 class="footprint-title">
+          One base.
+          <span class="heading-accent">A wider reach.</span>
+        </h2>
+      </div>
+
+      <div class="footprint-intro-copy">
+        <p>
+          Pune is PBJ Infra's primary location. The India map provides the
+          geographic context; the location index beside it is the source of
+          truth for published locations and project evidence.
+        </p>
+      </div>
+    </div>
+
+    <div class="footprint-board" data-reveal>
+      <div class="footprint-grid" aria-hidden="true"></div>
+
+      <!-- MAP -->
+      <div class="map-column">
+        <div class="map-column-head">
+          <div>
+            <span>PBJ Infra / geographic footprint</span>
+            <strong>India</strong>
+          </div>
+
+          <span class="map-head-status">
+            Pan India coverage
+          </span>
+        </div>
+
+        <div class="india-map-frame">
+          <div class="india-map-rings" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <img
+            src="/images/in.svg"
+            alt="India map representing PBJ Infra's Pan-India service coverage"
+            class="india-map-image"
+            loading="lazy"
+            decoding="async"
+          />
+
+          <!-- Pune is intentionally presented as the primary location badge,
+               independent of map coordinates. -->
+          <div class="pune-badge">
+            <span class="pune-badge-dot"></span>
+            <div>
+              <span>Main location</span>
+              <strong>Pune</strong>
+              <small>Maharashtra, India</small>
+            </div>
+          </div>
+
+          <div class="pan-india-badge">
+            <span>Service territory</span>
+            <strong>Pan India</strong>
+          </div>
+        </div>
+
+        <div class="map-column-foot">
+          <span>
+            <i class="legend-main-dot"></i>
+            Pune / Main location
+          </span>
+          <span>
+            <i class="legend-outline-dot"></i>
+            Published locations &amp; projects
+          </span>
+          <span>
+            <i class="legend-pan-line"></i>
+            Pan India service coverage
+          </span>
+        </div>
+      </div>
+
+      <!-- LOCATION INDEX -->
+      <aside class="location-index-panel" aria-label="PBJ Infra location index">
+        <div class="location-index-head">
+          <div>
+            <span>Location index</span>
+            <strong>Where we have evidence</strong>
+          </div>
+          <span>{String(locationIndex.length).padStart(2, '0')}</span>
+        </div>
+
+        <div class="location-index-list">
+          {locationIndex.map((location, index) => {
+            const isPune = location.city === 'Pune';
+
+            return (
+              <button
+                type="button"
+                class:list={[
+                  'location-index-item',
+                  isPune && 'is-main',
+                ]}
+                data-location-select={location.city}
+              >
+                <span class="location-index-no">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+
+                <span class="location-index-copy">
+                  <strong>{location.city}</strong>
+                  <small>
+                    {isPune
+                      ? 'Main location · Maharashtra'
+                      : location.projects.length
+                        ? `${location.projects.length} published project${location.projects.length > 1 ? 's' : ''}`
+                        : 'Verified location'}
+                  </small>
+                </span>
+
+                <span class="location-index-arrow">↗</span>
+              </button>
+            );
+          })}
+
+          <button
+            type="button"
+            class="location-index-item is-pan-india"
+            data-location-select="Pan India"
+          >
+            <span class="location-index-no">+</span>
+            <span class="location-index-copy">
+              <strong>Pan India</strong>
+              <small>Service coverage</small>
+            </span>
+            <span class="location-index-arrow">↗</span>
+          </button>
+        </div>
+
+        <div class="selected-location" data-selected-location>
+          <span data-selected-type>Main location</span>
+          <div class="selected-location-title-row">
+            <h3 data-selected-title>Pune</h3>
+            <strong data-selected-number>01</strong>
+          </div>
+          <p data-selected-location>Maharashtra, India</p>
+
+          <div class="selected-location-projects" data-selected-projects>
+            <span>PBJ Infra</span>
+            <p>Headquarters and primary operating location.</p>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- PAN INDIA STATEMENT -->
+    <div class="coverage-statement" data-reveal>
+      <div class="coverage-statement-label">
+        <span>Service territory</span>
+        <strong>Pan India</strong>
+      </div>
+
+      <p>
+        The map is intentionally not filled with artificial city markers.
+        Published locations and projects are shown through the index, while
+        the broader territory communicates PBJ Infra's Pan-India service reach.
+      </p>
     </div>
   </PageShell>
 
+  <!-- VERIFIED LOCATIONS -->
+  <PageShell tone="paper-dim" labelledby="loc-verified">
+    <SectionHeader
+      id="loc-verified"
+      num="02"
+      label="On the ground"
+      title="Verified locations"
+      intro="Dedicated location pages are published only where PBJ Infra has verified project or operational evidence."
+      tone="paper"
+    />
+
+    {published.length > 0 ? (
+      <div class="mt-14 grid gap-5 sm:grid-cols-2" data-reveal-stagger>
+        {published.map((location) => (
+          <a
+            href={`/locations/${location.slug}/`}
+            class="location-card"
+          >
+            <div class="location-card-top">
+              <span>{location.data.role}</span>
+              <span>↗</span>
+            </div>
+
+            <h3>{location.data.name}</h3>
+
+            <p>
+              {location.data.intro.slice(0, 180)}
+              {location.data.intro.length > 180 ? '…' : ''}
+            </p>
+
+            <span class="location-card-link">
+              View location →
+            </span>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <div class="mt-14 border border-black/[.1] p-7">
+        <p class="font-mono text-xs uppercase tracking-[.12em] text-black/40">
+          Location pages in development
+        </p>
+      </div>
+    )}
+  </PageShell>
+
+  <!-- PROJECTS BY LOCATION -->
+  {publishedProjects.length > 0 && (
+    <PageShell tone="paper" labelledby="loc-projects">
+      <SectionHeader
+        id="loc-projects"
+        num="03"
+        label="Published work"
+        title="Projects by location"
+        intro="Explore published PBJ Infra projects grouped by their project location."
+        tone="paper"
+      />
+
+      <div class="project-location-list" data-reveal-stagger>
+        {locationIndex
+          .filter((location) => location.projects.length > 0)
+          .map((location) => (
+            <section class="project-location-group">
+              <div class="project-location-heading">
+                <div>
+                  <span>{location.city}</span>
+                  <h3>
+                    {location.projects[0]?.location || `${location.city}, India`}
+                  </h3>
+                </div>
+
+                <span>
+                  {String(location.projects.length).padStart(2, '0')} project
+                  {location.projects.length > 1 ? 's' : ''}
+                </span>
+              </div>
+
+              <div class="project-location-cards">
+                {location.projects.map((project) => (
+                  <a
+                    href={`/projects/${project.slug}/`}
+                    class="project-location-card"
+                  >
+                    <div>
+                      <span>{project.year || 'Project'}</span>
+                      <h4>{project.name}</h4>
+                      <p>{project.location}</p>
+                    </div>
+                    <span class="project-location-arrow">↗</span>
+                  </a>
+                ))}
+              </div>
+            </section>
+          ))}
+      </div>
+    </PageShell>
+  )}
+
+  <!-- EXPANDING FOOTPRINT -->
   {withEvidence.length > 0 && (
     <PageShell tone="paper-dim" labelledby="loc-progress">
-      <SectionHeader id="loc-progress" num="02" label="Evidence, page pending" title="In progress — has verified project evidence" tone="paper" />
-      <div class="mt-14 grid sm:grid-cols-2 gap-5" data-reveal-stagger>
-        {withEvidence.map((l) => (
-          <div class="border border-dashed border-ink/[.14] p-7">
-            <span class="font-mono text-[11px] text-warn tracking-wide uppercase">{l.data.role} · page in development</span>
-            <h3 class="font-serif text-2xl mt-2 mb-2">{l.data.name}</h3>
-            <p class="text-[13.5px] text-ink-soft">{l.data.intro}</p>
+      <SectionHeader
+        id="loc-progress"
+        num="04"
+        label="Expanding our footprint"
+        title="Verified project evidence in progress"
+        intro="These areas have supporting evidence but do not yet have a dedicated published location page."
+        tone="paper"
+      />
+
+      <div class="mt-14 grid gap-5 sm:grid-cols-2" data-reveal-stagger>
+        {withEvidence.map((location) => (
+          <div class="pending-location-card">
+            <span>
+              {location.data.role} · page in development
+            </span>
+            <h3>{location.data.name}</h3>
+            <p>{location.data.intro}</p>
           </div>
         ))}
       </div>
     </PageShell>
   )}
 
+  <!-- PAN INDIA COVERAGE -->
   <PageShell tone="ink" labelledby="loc-coverage">
-    <SectionHeader id="loc-coverage" num="03" label="Wider reach" title="Broader service coverage" intro="These regions are listed as coverage areas on pbjinfra.com but don't yet have project-level or address-level evidence published — shown here as a coverage table, not as individual pages, to avoid thin or duplicate content." tone="ink" />
-    <div class="mt-12 flex flex-wrap gap-3" data-reveal>
-      {coverageOnly.map((l) => (
-        <span class="font-mono text-xs border border-paper/[.18] px-3.5 py-2 text-paper/70">{l.data.name} <span class="text-paper/35">· {l.data.role}</span></span>
-      ))}
+    <SectionHeader
+      id="loc-coverage"
+      num="05"
+      label="Wider reach"
+      title="Pan-India service coverage"
+      intro="PBJ Infra's service territory is Pan India. Location pages are not created for every city unless project or operational evidence supports them."
+      tone="ink"
+    />
+
+    <div class="pan-india-grid" data-reveal>
+      <div class="pan-india-big-type">
+        <span>Coverage</span>
+        <strong>India</strong>
+      </div>
+
+      <div>
+        <p class="pan-india-copy">
+          From its Pune base, PBJ Infra can discuss construction and project
+          execution opportunities across India.
+        </p>
+
+        <div class="pan-india-services">
+          <span>Aquatic construction</span>
+          <span>Hospitality &amp; leisure</span>
+          <span>Residential</span>
+          <span>Specialized structures</span>
+          <span>Project execution</span>
+        </div>
+      </div>
     </div>
-    <p class="font-mono text-[11px] text-paper/40 mt-6">Illustrative coverage list — reflects the regions stated on pbjinfra.com. Individual pages will be added once PBJ can supply project or office evidence for a given city.</p>
+
+    {coverageOnly.length > 0 && (
+      <div class="coverage-tags" data-reveal>
+        {coverageOnly.map((location) => (
+          <span>
+            {location.data.name}
+            <small>· {location.data.role}</small>
+          </span>
+        ))}
+        <span class="coverage-pan-tag">Pan India</span>
+      </div>
+    )}
+
+    <p class="coverage-note">
+      Service coverage indicates where PBJ Infra can discuss and undertake
+      suitable projects; it does not imply completed work in every region.
+    </p>
   </PageShell>
 
   <FinalCTA
     title="Building somewhere"
-    titleMuted="in Maharashtra?"
-    copy="If PBJ Infra doesn't have a page for your city yet, that doesn't mean it can't build there — tell us where and what you're planning."
-    primary={{ label: 'Start a project', href: '/contact/', event: 'click_start_project', params: { placement: 'locations_cta' } }}
+    titleMuted="in India?"
+    copy="PBJ Infra is based in Pune and provides construction and project execution services across India. Tell us where you are building and what you are planning."
+    primary={{
+      label: 'Start a project',
+      href: '/contact/',
+      event: 'click_start_project',
+      params: { placement: 'locations_cta' },
+    }}
     contact={true}
   />
 </BaseLayout>
+
+<style>
+  .section-kicker,
+  .map-column-head span,
+  .map-head-status,
+  .map-column-foot,
+  .location-index-head span,
+  .location-index-copy small,
+  .selected-location > span,
+  .selected-location-projects > span,
+  .coverage-statement-label span,
+  .location-card-top,
+  .project-location-heading > div > span,
+  .pan-india-big-type span {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 10px;
+    line-height: 1.2;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+  }
+
+  .section-kicker {
+    color: #1e6e64;
+  }
+
+  .footprint-intro {
+    display: grid;
+    grid-template-columns: minmax(0, .9fr) minmax(280px, .7fr);
+    gap: 4rem;
+    align-items: end;
+    margin-bottom: 3.5rem;
+  }
+
+  .footprint-title {
+    max-width: 720px;
+    margin-top: 1rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(2.8rem, 6vw, 5.8rem);
+    line-height: .9;
+    letter-spacing: -.045em;
+    font-weight: 400;
+  }
+
+  .footprint-title span {
+    display: block;
+  }
+
+  .footprint-intro-copy {
+    max-width: 520px;
+    justify-self: end;
+  }
+
+  .footprint-intro-copy p {
+    color: rgba(17, 17, 17, .58);
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  .footprint-board {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(320px, .75fr);
+    min-height: 720px;
+    overflow: hidden;
+    border: 1px solid rgba(17, 17, 17, .12);
+    background: #e9e5dc;
+  }
+
+  .footprint-grid {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: .6;
+    background-image:
+      linear-gradient(rgba(17,17,17,.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(17,17,17,.045) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  .map-column {
+    position: relative;
+    z-index: 1;
+    min-width: 0;
+    border-right: 1px solid rgba(17, 17, 17, .1);
+  }
+
+  .map-column-head {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem 1.75rem;
+    border-bottom: 1px solid rgba(17, 17, 17, .1);
+  }
+
+  .map-column-head div {
+    display: flex;
+    flex-direction: column;
+    gap: .45rem;
+  }
+
+  .map-column-head span {
+    color: rgba(17,17,17,.35);
+  }
+
+  .map-column-head strong {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+  }
+
+  .map-head-status {
+    padding-top: .25rem;
+    color: #1e6e64;
+  }
+
+  .india-map-frame {
+    position: relative;
+    min-height: 600px;
+    overflow: hidden;
+  }
+
+  .india-map-image {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: min(82%, 620px);
+    height: min(82%, 620px);
+    transform: translate(-50%, -50%);
+    object-fit: contain;
+    opacity: .82;
+    filter: saturate(.55);
+  }
+
+  .india-map-rings {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 560px;
+    height: 560px;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .india-map-rings span {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    border: 1px solid rgba(30,110,100,.08);
+    border-radius: 50%;
+  }
+
+  .india-map-rings span:nth-child(2) {
+    width: 72%;
+    height: 72%;
+  }
+
+  .india-map-rings span:nth-child(3) {
+    width: 44%;
+    height: 44%;
+  }
+
+  .pune-badge {
+    position: absolute;
+    left: 17%;
+    top: 46%;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    padding: .7rem .85rem;
+    background: rgba(243,240,232,.94);
+    border: 1px solid rgba(30,110,100,.22);
+    box-shadow: 0 12px 35px rgba(17,17,17,.08);
+    backdrop-filter: blur(8px);
+  }
+
+  .pune-badge-dot {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+    border-radius: 50%;
+    background: #1e6e64;
+    box-shadow: 0 0 0 7px rgba(30,110,100,.1);
+  }
+
+  .pune-badge div {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pune-badge span,
+  .pune-badge small {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 8px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+
+  .pune-badge span {
+    color: #1e6e64;
+  }
+
+  .pune-badge strong {
+    margin-top: .15rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  .pune-badge small {
+    margin-top: .25rem;
+    color: rgba(17,17,17,.42);
+  }
+
+  .pan-india-badge {
+    position: absolute;
+    right: 8%;
+    bottom: 9%;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  .pan-india-badge span {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 9px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: rgba(30,110,100,.55);
+  }
+
+  .pan-india-badge strong {
+    margin-top: .2rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 400;
+    line-height: .9;
+    color: rgba(17,17,17,.17);
+  }
+
+  .map-column-foot {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .7rem 1.25rem;
+    padding: 1rem 1.75rem;
+    border-top: 1px solid rgba(17,17,17,.1);
+    color: rgba(17,17,17,.42);
+  }
+
+  .map-column-foot span {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+  }
+
+  .legend-main-dot,
+  .legend-outline-dot,
+  .legend-pan-line {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .legend-main-dot {
+    background: #1e6e64;
+  }
+
+  .legend-outline-dot {
+    border: 1px solid #1e6e64;
+    background: transparent;
+  }
+
+  .legend-pan-line {
+    width: 15px;
+    height: 1px;
+    border-radius: 0;
+    background: rgba(30,110,100,.35);
+  }
+
+  .location-index-panel {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    background: rgba(243,240,232,.78);
+  }
+
+  .location-index-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.5rem 1.5rem 1.2rem;
+    border-bottom: 1px solid rgba(17,17,17,.1);
+  }
+
+  .location-index-head div {
+    display: flex;
+    flex-direction: column;
+    gap: .45rem;
+  }
+
+  .location-index-head span {
+    color: rgba(17,17,17,.35);
+  }
+
+  .location-index-head > span {
+    color: #1e6e64;
+  }
+
+  .location-index-head strong {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.25rem;
+    font-weight: 400;
+  }
+
+  .location-index-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .location-index-item {
+    display: grid;
+    grid-template-columns: 32px minmax(0,1fr) 20px;
+    align-items: center;
+    gap: .8rem;
+    width: 100%;
+    min-height: 78px;
+    padding: 1rem 1.5rem;
+    border: 0;
+    border-bottom: 1px solid rgba(17,17,17,.08);
+    background: transparent;
+    color: #111;
+    text-align: left;
+    cursor: pointer;
+    transition: background .3s ease, padding-left .3s ease;
+  }
+
+  .location-index-item:hover,
+  .location-index-item:focus-visible,
+  .location-index-item.is-active {
+    padding-left: 1.8rem;
+    background: rgba(30,110,100,.055);
+  }
+
+  .location-index-item.is-main {
+    box-shadow: inset 3px 0 0 #1e6e64;
+  }
+
+  .location-index-item.is-pan-india {
+    background: rgba(30,110,100,.035);
+  }
+
+  .location-index-no {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 10px;
+    color: rgba(17,17,17,.28);
+  }
+
+  .location-index-copy {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+  }
+
+  .location-index-copy strong {
+    overflow: hidden;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.25rem;
+    font-weight: 400;
+    line-height: 1.05;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .location-index-item.is-main .location-index-copy strong {
+    color: #1e6e64;
+  }
+
+  .location-index-copy small {
+    margin-top: .35rem;
+    color: rgba(17,17,17,.4);
+    letter-spacing: .08em;
+  }
+
+  .location-index-arrow {
+    color: #1e6e64;
+    font-size: 14px;
+  }
+
+  .selected-location {
+    margin: auto 1.5rem 1.5rem;
+    padding: 1.3rem;
+    border: 1px solid rgba(30,110,100,.18);
+    background: rgba(255,255,255,.32);
+  }
+
+  .selected-location > span {
+    color: #1e6e64;
+  }
+
+  .selected-location-title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: .6rem;
+  }
+
+  .selected-location h3 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 2rem;
+    line-height: .95;
+    font-weight: 400;
+  }
+
+  .selected-location-title-row > strong {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 10px;
+    font-weight: 400;
+    color: rgba(17,17,17,.3);
+  }
+
+  .selected-location > p {
+    margin-top: .35rem;
+    color: rgba(17,17,17,.45);
+    font-size: 13px;
+  }
+
+  .selected-location-projects {
+    margin-top: 1rem;
+    padding-top: .9rem;
+    border-top: 1px solid rgba(17,17,17,.08);
+  }
+
+  .selected-location-projects > span {
+    color: rgba(17,17,17,.35);
+  }
+
+  .selected-location-projects p {
+    margin-top: .35rem;
+    color: rgba(17,17,17,.55);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .selected-location-projects a {
+    display: block;
+    margin-top: .35rem;
+    color: #1e6e64;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .selected-location-projects a:hover {
+    text-decoration: underline;
+  }
+
+  .coverage-statement {
+    display: grid;
+    grid-template-columns: minmax(200px, .45fr) minmax(0, 1fr);
+    gap: 3rem;
+    align-items: center;
+    margin-top: 1px;
+    padding: 2rem 0 0;
+  }
+
+  .coverage-statement-label {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .coverage-statement-label span {
+    color: rgba(17,17,17,.35);
+  }
+
+  .coverage-statement-label strong {
+    margin-top: .4rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 2.4rem;
+    font-weight: 400;
+    color: #1e6e64;
+  }
+
+  .coverage-statement > p {
+    max-width: 700px;
+    color: rgba(17,17,17,.52);
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  .location-card {
+    display: flex;
+    min-height: 250px;
+    flex-direction: column;
+    padding: 1.7rem;
+    border: 1px solid rgba(17,17,17,.12);
+    background: #f3f0e8;
+    transition: border-color .3s ease, transform .35s ease, box-shadow .35s ease;
+  }
+
+  .location-card:hover {
+    border-color: rgba(30,110,100,.4);
+    transform: translateY(-3px);
+    box-shadow: 0 16px 40px rgba(17,17,17,.06);
+  }
+
+  .location-card-top {
+    display: flex;
+    justify-content: space-between;
+    color: #1e6e64;
+  }
+
+  .location-card h3 {
+    margin-top: 3rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    letter-spacing: -.025em;
+  }
+
+  .location-card p {
+    max-width: 580px;
+    margin-top: .7rem;
+    color: rgba(17,17,17,.52);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .location-card-link {
+    margin-top: auto;
+    padding-top: 1.5rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: #1e6e64;
+  }
+
+  .project-location-list {
+    margin-top: 3.5rem;
+  }
+
+  .project-location-group + .project-location-group {
+    margin-top: 4rem;
+    padding-top: 4rem;
+    border-top: 1px solid rgba(17,17,17,.1);
+  }
+
+  .project-location-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .project-location-heading > div > span {
+    color: #1e6e64;
+  }
+
+  .project-location-heading h3 {
+    margin-top: .4rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 2rem;
+    font-weight: 400;
+  }
+
+  .project-location-heading > span {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: rgba(17,17,17,.35);
+  }
+
+  .project-location-cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    background: rgba(17,17,17,.1);
+    border: 1px solid rgba(17,17,17,.1);
+  }
+
+  .project-location-card {
+    display: flex;
+    min-height: 150px;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.4rem;
+    background: #f3f0e8;
+    transition: background .3s ease;
+  }
+
+  .project-location-card:hover {
+    background: #ebe7de;
+  }
+
+  .project-location-card > div > span,
+  .project-location-card p {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: rgba(17,17,17,.35);
+  }
+
+  .project-location-card h4 {
+    margin-top: .7rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+  }
+
+  .project-location-card p {
+    margin-top: .35rem;
+    letter-spacing: .02em;
+    text-transform: none;
+  }
+
+  .project-location-arrow {
+    color: #1e6e64;
+    font-size: 18px;
+  }
+
+  .pending-location-card {
+    min-height: 200px;
+    padding: 1.7rem;
+    border: 1px dashed rgba(17,17,17,.15);
+    background: rgba(255,255,255,.22);
+  }
+
+  .pending-location-card > span {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: #1e6e64;
+  }
+
+  .pending-location-card h3 {
+    margin-top: 2.5rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.8rem;
+    font-weight: 400;
+  }
+
+  .pending-location-card p {
+    margin-top: .5rem;
+    color: rgba(17,17,17,.52);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .pan-india-grid {
+    display: grid;
+    grid-template-columns: minmax(240px, .7fr) minmax(0, 1fr);
+    gap: 4rem;
+    align-items: center;
+    margin-top: 3.5rem;
+    padding: 2rem 0;
+    border-top: 1px solid rgba(255,255,255,.1);
+    border-bottom: 1px solid rgba(255,255,255,.1);
+  }
+
+  .pan-india-big-type {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pan-india-big-type span {
+    color: rgba(255,255,255,.35);
+  }
+
+  .pan-india-big-type strong {
+    margin-top: .35rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(4rem, 9vw, 8rem);
+    line-height: .8;
+    font-weight: 400;
+    color: #1e6e64;
+  }
+
+  .pan-india-copy {
+    max-width: 650px;
+    color: rgba(255,255,255,.62);
+    font-size: 17px;
+    line-height: 1.8;
+  }
+
+  .pan-india-services {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin-top: 1.5rem;
+  }
+
+  .pan-india-services span {
+    padding: .55rem .7rem;
+    border: 1px solid rgba(255,255,255,.12);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 9px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.5);
+  }
+
+  .coverage-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem;
+    margin-top: 2rem;
+  }
+
+  .coverage-tags span {
+    padding: .65rem .8rem;
+    border: 1px solid rgba(255,255,255,.12);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 10px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.58);
+  }
+
+  .coverage-tags small {
+    color: rgba(255,255,255,.3);
+  }
+
+  .coverage-tags .coverage-pan-tag {
+    border-color: rgba(30,110,100,.5);
+    color: #1e6e64;
+  }
+
+  .coverage-note {
+    max-width: 760px;
+    margin-top: 1.5rem;
+    color: rgba(255,255,255,.3);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 10px;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 1100px) {
+    .footprint-board {
+      grid-template-columns: minmax(0, 1.1fr) minmax(290px, .9fr);
+    }
+
+    .pune-badge {
+      left: 10%;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .footprint-intro {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .footprint-intro-copy {
+      justify-self: start;
+    }
+
+    .footprint-board {
+      grid-template-columns: 1fr;
+    }
+
+    .map-column {
+      border-right: 0;
+      border-bottom: 1px solid rgba(17,17,17,.1);
+    }
+
+    .india-map-frame {
+      min-height: 560px;
+    }
+
+    .location-index-panel {
+      min-height: auto;
+    }
+
+    .selected-location {
+      margin-top: 1.5rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .footprint-title {
+      font-size: clamp(2.7rem, 14vw, 4rem);
+    }
+
+    .map-column-head {
+      padding: 1.2rem;
+    }
+
+    .map-head-status {
+      display: none;
+    }
+
+    .india-map-frame {
+      min-height: 500px;
+    }
+
+    .india-map-image {
+      width: 92%;
+      height: 92%;
+    }
+
+    .india-map-rings {
+      width: 430px;
+      height: 430px;
+    }
+
+    .pune-badge {
+      left: 7%;
+      top: 43%;
+      padding: .55rem .65rem;
+    }
+
+    .pune-badge strong {
+      font-size: 1.05rem;
+    }
+
+    .pune-badge-dot {
+      width: 12px;
+      height: 12px;
+      flex-basis: 12px;
+    }
+
+    .pan-india-badge {
+      right: 5%;
+      bottom: 7%;
+    }
+
+    .pan-india-badge strong {
+      font-size: 2.3rem;
+    }
+
+    .map-column-foot {
+      padding: .9rem 1.2rem;
+      font-size: 8px;
+    }
+
+    .location-index-head,
+    .location-index-item {
+      padding-left: 1.2rem;
+      padding-right: 1.2rem;
+    }
+
+    .location-index-item:hover,
+    .location-index-item:focus-visible,
+    .location-index-item.is-active {
+      padding-left: 1.35rem;
+    }
+
+    .selected-location {
+      margin-left: 1.2rem;
+      margin-right: 1.2rem;
+      padding: 1.1rem;
+    }
+
+    .coverage-statement {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      padding-top: 1.5rem;
+    }
+
+    .coverage-statement-label strong {
+      font-size: 2rem;
+    }
+
+    .project-location-heading {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: .6rem;
+    }
+
+    .project-location-cards {
+      grid-template-columns: 1fr;
+    }
+
+    .pan-india-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .location-card,
+    .location-index-item {
+      transition: none;
+    }
+  }
+</style>
+
+<script is:inline define:vars={{ clientLocationData }}>
+  const selectors = Array.from(
+    document.querySelectorAll('[data-location-select]')
+  );
+
+  const typeEl = document.querySelector('[data-selected-type]');
+  const titleEl = document.querySelector('[data-selected-title]');
+  const locationEl = document.querySelector('[data-selected-location]');
+  const numberEl = document.querySelector('[data-selected-number]');
+  const projectsEl = document.querySelector('[data-selected-projects]');
+
+  const dataByCity = new Map(
+    clientLocationData.map((item) => [item.city, item])
+  );
+
+  function activateLocation(city) {
+    selectors.forEach((selector) => {
+      selector.classList.toggle(
+        'is-active',
+        selector.dataset.locationSelect === city
+      );
+    });
+
+    if (city === 'Pan India') {
+      if (typeEl) typeEl.textContent = 'Service coverage';
+      if (titleEl) titleEl.textContent = 'Pan India';
+      if (locationEl) locationEl.textContent = 'India';
+      if (numberEl) numberEl.textContent = '∞';
+
+      if (projectsEl) {
+        projectsEl.innerHTML = `
+          <span>PBJ Infra</span>
+          <p>
+            Construction and project execution services available across India.
+          </p>
+        `;
+      }
+
+      return;
+    }
+
+    const data = dataByCity.get(city);
+    if (!data) return;
+
+    if (typeEl) typeEl.textContent = data.type;
+    if (titleEl) titleEl.textContent = data.city;
+    if (locationEl) locationEl.textContent = data.location;
+    if (numberEl) numberEl.textContent = data.number;
+
+    if (projectsEl) {
+      if (data.projects.length) {
+        projectsEl.innerHTML = `
+          <span>Published projects</span>
+          <div>
+            ${data.projects
+              .map(
+                (project) => `
+                  <a href="/projects/${project.slug}/">
+                    ${project.name}${project.year ? ` · ${project.year}` : ''}
+                  </a>
+                `
+              )
+              .join('')}
+          </div>
+        `;
+      } else {
+        projectsEl.innerHTML = `
+          <span>PBJ Infra</span>
+          <p>Verified location associated with PBJ Infra.</p>
+        `;
+      }
+    }
+  }
+
+  selectors.forEach((selector) => {
+    selector.addEventListener('click', () => {
+      const city = selector.dataset.locationSelect;
+      if (city) activateLocation(city);
+    });
+  });
+
+  activateLocation('Pune');
+</script>
