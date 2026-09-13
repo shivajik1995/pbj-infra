@@ -30,7 +30,7 @@ contentGaps:
   - "Surface area, water volume, depth profile and the interior finish specification are not published on pbjinfra.com — PBJ team to supply for a technical section."
   - "Client brief and site context (garden setting, views the pool was oriented to) are not documented and would complete the case study."
 relatedService: "lagoon-pool-construction"
-relatedProjects: ["farm-house-latur", "rabbit-dome-house"]
+relatedProjects: ["farm-house-latur", "rabbit-dome-house", "hotel-ak-gemak-kolhapur"]
 seo:
   title: "Natural Lagoon Pool, Chatrapati Sambhaji Nagar | PBJ Infra"
   description: "PBJ Infra's Natural Lagoon Pool in Chatrapati Sambhaji Nagar — a free-form, beach-entry lagoon pool built as a full swimming pool under the Trusted Lagoon line."

@@ -12,6 +12,9 @@ const order = [
   'adventure-waterpark-ahilyanagar',
   'jalashay-resort-panshet',
   'akaya-resort-gokarna',
+  'aandra-lakestay-resort-pune',
+  'takawe-resort-kamshet',
+  'hotel-ak-gemak-kolhapur',
   'mi-casa-kanakapura',
   'latur-water-park',
   'luxury-infinity-pool',
@@ -29,9 +32,17 @@ const crumbs = [
   { name: 'Projects', url: '/projects/' }
 ];
 
+// Everything that has a routed page — matches the `status !== 'draft'` gate in
+// [slug].astro's getStaticPaths, so an in-progress project (which does get a
+// page, labelled "In progress") isn't silently missing from this listing.
 const publishedProjects = ordered.filter(
-  (project) => project.data.status === 'published'
+  (project) => project.data.status !== 'draft'
 );
+// The footer stat counts completed work only, so an in-progress build isn't
+// claimed as delivered.
+const completedCount = ordered.filter(
+  (project) => project.data.status === 'published'
+).length;
 ---
 
 <BaseLayout
@@ -164,8 +175,9 @@ const publishedProjects = ordered.filter(
                     : (data.year ?? data.duration ?? statusLabel);
 
                   return (
-                    <article
+                    <a
                       class="project-rectangle"
+                      href={`/projects/${project.slug}/`}
                       data-project-card
                       data-project-index={index}
                       data-project-number={String(index + 1).padStart(2, '0')}
@@ -220,7 +232,7 @@ const publishedProjects = ordered.filter(
                           <span class="project-card-arrow">↗</span>
                         </div>
                       </div>
-                    </article>
+                    </a>
                   );
                 })
               }
@@ -235,8 +247,8 @@ const publishedProjects = ordered.filter(
 
       <div class="project-showcase-footer" data-reveal>
         <div>
-          <span class="project-footer-number">{publishedProjects.length}</span>
-          <span>published projects</span>
+          <span class="project-footer-number">{completedCount}</span>
+          <span>completed projects</span>
         </div>
 
         <p>
@@ -576,6 +588,8 @@ const publishedProjects = ordered.filter(
       --card-shift: 0px;
       position: relative;
       display: grid;
+      color: inherit;
+      text-decoration: none;
       grid-template-columns: minmax(0, 1.2fr) minmax(260px, .8fr);
       min-height: 330px;
       overflow: hidden;
