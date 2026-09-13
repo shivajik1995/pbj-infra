@@ -114,10 +114,10 @@ const posterSrc = '/images/hero-poster.jpg';
         </span>
 
 
-        <span class="mask-line block overflow-hidden">
+        <span class="mask-line mt-2 block overflow-hidden md:mt-4">
 
           <span class="hero-title-line block text-paper/90">
-            <span class="text-accent">we build it.</span>
+            <span class="heading-accent">we build it.</span>
           </span>
 
         </span>
@@ -445,7 +445,7 @@ const posterSrc = '/images/hero-poster.jpg';
   import { gsap } from 'gsap';
 
 
-  const hero = document.querySelector('.hero-cinematic');
+  const hero = document.querySelector<HTMLElement>('.hero-cinematic');
 
 
   if (hero) {
@@ -508,7 +508,7 @@ const posterSrc = '/images/hero-poster.jpg';
         ).matches;
 
 
-      const video = hero.querySelector('.hero-bg-video');
+      const video = hero.querySelector<HTMLVideoElement>('.hero-bg-video');
 
 
       const videoWrap = hero.querySelector('.hero-video-wrap');

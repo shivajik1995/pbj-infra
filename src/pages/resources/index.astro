@@ -9,11 +9,13 @@ import { breadcrumbSchema } from '../../lib/schema';
 const articles = (await getCollection('articles', ({ data }) => data.status === 'published')).sort(
   (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf(),
 );
+const featuredArticle = articles[0];
+const remainingArticles = articles.slice(1);
 const crumbs = [{ name: 'Home', url: '/' }, { name: 'Resources', url: '/resources/' }];
 ---
 <BaseLayout
   title="Construction Guides & Resources | PBJ Infra"
-  description="Practical guides on pool construction timelines, planning and more from PBJ Infra — answers to real questions, not marketing filler."
+  description="Practical construction guides from PBJ Infra covering planning, pool construction, waterparks, timelines and real project questions."
   path="/resources/"
   schema={[breadcrumbSchema(crumbs)]}
 >
@@ -23,31 +25,124 @@ const crumbs = [{ name: 'Home', url: '/' }, { name: 'Resources', url: '/resource
     eyebrow="Resources / Guides"
     title="Guides worth reading"
     titleMuted="before you build."
-    lead="A small, growing set of articles answering real questions PBJ hears at consultation — not dozens of thin, auto-generated posts. Each one links to the service and project it's actually about."
+    lead="Practical answers to the questions PBJ Infra hears during project planning — written to help you understand the work before construction begins."
   />
 
-  <PageShell tone="paper">
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" data-reveal-stagger>
-      {articles.map((a) => (
-        <a href={`/resources/${a.slug}/`} class="group block glass-paper rounded-2xl overflow-hidden hover:border-accent/50 transition-colors">
-          <div class="aspect-[16/10] overflow-hidden">
-            <img src={a.data.heroImage.src} alt={a.data.heroImage.alt} width={a.data.heroImage.width} height={a.data.heroImage.height} loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+  {articles.length > 0 ? (
+    <>
+      <PageShell tone="paper">
+        <div class="resources-intro" data-reveal>
+          <div>
+            <p class="resources-kicker">01 / Featured guide</p>
+            <h2 class="resources-heading">Start with the question <span class="heading-accent">closest to your project.</span></h2>
           </div>
-          <div class="p-6">
-            <h2 class="font-serif text-xl mb-2">{a.data.title}</h2>
-            <p class="text-[13.5px] text-ink-soft">{a.data.dek}</p>
-            <span class="inline-block mt-4 font-mono text-xs tracking-wide uppercase text-ink group-hover:text-accent">Read guide →</span>
+          <div class="resources-count"><strong>{String(articles.length).padStart(2, '0')}</strong><span>published guides</span></div>
+        </div>
+
+        <a href={`/resources/${featuredArticle.slug}/`} class="resource-feature" data-reveal>
+          <div class="resource-feature-image">
+            <img src={featuredArticle.data.heroImage.src} alt={featuredArticle.data.heroImage.alt} width={featuredArticle.data.heroImage.width} height={featuredArticle.data.heroImage.height} loading="eager" decoding="async" />
+            <div class="resource-image-overlay"></div>
+            <span class="resource-feature-number">01</span>
+            <span class="resource-feature-label">Featured resource</span>
+          </div>
+          <div class="resource-feature-content">
+            <p class="resource-date">{featuredArticle.data.publishDate.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
+            <h3>{featuredArticle.data.title}</h3>
+            <p class="resource-dek">{featuredArticle.data.dek}</p>
+            <span class="resource-read">Read guide <span>↗</span></span>
           </div>
         </a>
-      ))}
-    </div>
-  </PageShell>
+      </PageShell>
+
+      {remainingArticles.length > 0 && (
+        <PageShell tone="paper-dim">
+          <div class="resources-section-head" data-reveal>
+            <div>
+              <p class="resources-kicker">02 / Resource library</p>
+              <h2 class="resources-heading">More useful <span class="heading-accent">construction guides.</span></h2>
+            </div>
+            <p class="resources-section-copy">A growing library focused on practical decisions, planning and construction questions rather than generic marketing content.</p>
+          </div>
+
+          <div class="resources-grid" data-reveal-stagger>
+            {remainingArticles.map((article, index) => (
+              <a href={`/resources/${article.slug}/`} class="resource-card">
+                <div class="resource-card-image">
+                  <img src={article.data.heroImage.src} alt={article.data.heroImage.alt} width={article.data.heroImage.width} height={article.data.heroImage.height} loading="lazy" decoding="async" />
+                  <span class="resource-card-number">{String(index + 2).padStart(2, '0')}</span>
+                </div>
+                <div class="resource-card-content">
+                  <p class="resource-date">{article.data.publishDate.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
+                  <h3>{article.data.title}</h3>
+                  <p>{article.data.dek}</p>
+                  <span class="resource-read">Read guide <span>→</span></span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </PageShell>
+      )}
+
+      <section class="resource-principle">
+        <div class="resource-principle-shell">
+          <div class="resource-principle-label">03 / Why these resources exist</div>
+          <div class="resource-principle-content">
+            <h2>Useful before <span class="heading-accent">you call us.</span></h2>
+            <p>A good construction conversation starts with better questions. These guides help you understand scope, timelines, systems and important decisions before a detailed consultation.</p>
+            <a href="/services/" class="resource-principle-link">Explore construction services <span>↗</span></a>
+          </div>
+        </div>
+      </section>
+    </>
+  ) : (
+    <PageShell tone="paper">
+      <div class="resource-empty">
+        <p class="resources-kicker">01 / Resource library</p>
+        <h2>No guides published yet.</h2>
+        <p>New practical construction guides will appear here as they are published.</p>
+        <a href="/contact/" class="resource-principle-link">Talk to PBJ Infra <span>↗</span></a>
+      </div>
+    </PageShell>
+  )}
 
   <FinalCTA
     title="Have a question"
     titleMuted="we haven't answered?"
-    copy="Bring it to a consultation — PBJ Infra would rather talk through your specific project than write another generic article."
+    copy="Bring it to a consultation. PBJ Infra would rather understand your specific project than give you a generic answer."
     primary={{ label: 'Start a project', href: '/contact/', event: 'click_start_project', params: { placement: 'resources_cta' } }}
     contact={true}
   />
 </BaseLayout>
+
+<style>
+  .resources-intro,.resources-section-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,300px);gap:3rem;align-items:end}
+  .resources-kicker{margin:0 0 1rem;color:#1e6e64;font:10px/1.4 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;letter-spacing:.18em;text-transform:uppercase}
+  .resources-heading{max-width:760px;margin:0;font:400 clamp(2.5rem,5vw,5rem)/.98 Georgia,'Times New Roman',serif;letter-spacing:-.035em}
+  .resources-heading span{display:block}
+  .resources-count{display:flex;justify-content:flex-end;align-items:baseline;gap:.65rem;color:rgba(17,17,17,.42);font:10px ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;letter-spacing:.12em;text-transform:uppercase}
+  .resources-count strong{color:#111;font:400 2.5rem Georgia,serif;letter-spacing:-.04em}
+  .resource-feature{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(320px,.8fr);margin-top:4rem;border:1px solid rgba(17,17,17,.12);background:#fff;color:#111;text-decoration:none;overflow:hidden}
+  .resource-feature-image{position:relative;min-height:470px;overflow:hidden;background:#e7e2d8}
+  .resource-feature-image img,.resource-card-image img{width:100%;height:100%;display:block;object-fit:cover;transition:transform .8s cubic-bezier(.2,.65,.25,1)}
+  .resource-feature:hover .resource-feature-image img,.resource-card:hover .resource-card-image img{transform:scale(1.04)}
+  .resource-image-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,.28));pointer-events:none}
+  .resource-feature-number,.resource-feature-label,.resource-card-number{position:absolute;z-index:2;color:#fff;font:9px ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase}
+  .resource-feature-number{top:1.25rem;left:1.25rem}.resource-feature-label{right:1.25rem;bottom:1.25rem}
+  .resource-feature-content{display:flex;flex-direction:column;justify-content:center;padding:clamp(2rem,5vw,5rem);border-left:1px solid rgba(17,17,17,.1)}
+  .resource-date{margin:0;color:rgba(17,17,17,.38);font:9px ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase}
+  .resource-feature-content h3{margin:1.2rem 0 1.1rem;font:400 clamp(2rem,3.5vw,3.5rem)/1 Georgia,'Times New Roman',serif;letter-spacing:-.03em}
+  .resource-dek{max-width:48ch;margin:0;color:rgba(17,17,17,.58);font-size:14px;line-height:1.8}
+  .resource-read{display:inline-flex;align-items:center;gap:.55rem;margin-top:2.5rem;color:#1e6e64;font:10px ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase}
+  .resource-read span{transition:transform .3s ease}.resource-feature:hover .resource-read span,.resource-card:hover .resource-read span{transform:translate(3px,-3px)}
+  .resources-section-head{margin-bottom:3.5rem}.resources-section-copy{max-width:38ch;margin:0;color:rgba(17,17,17,.5);font-size:13px;line-height:1.8}
+  .resources-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:rgba(17,17,17,.12);border:1px solid rgba(17,17,17,.12)}
+  .resource-card{display:block;background:#f3f0e8;color:#111;text-decoration:none;overflow:hidden}.resource-card-image{position:relative;aspect-ratio:16/9;overflow:hidden;background:#e7e2d8}.resource-card-number{top:1rem;left:1rem}
+  .resource-card-content{padding:1.75rem 1.75rem 2rem}.resource-card-content h3{margin:.7rem 0 .8rem;font:400 clamp(1.5rem,2.5vw,2.1rem)/1.08 Georgia,'Times New Roman',serif;letter-spacing:-.025em}.resource-card-content>p:not(.resource-date){margin:0;color:rgba(17,17,17,.55);font-size:13px;line-height:1.75}.resource-card-content .resource-read{margin-top:1.5rem}
+  .resource-principle{background:#111;color:#f3f0e8}.resource-principle-shell{width:min(100% - 3rem,80rem);margin-inline:auto;padding:6rem 0;display:grid;grid-template-columns:minmax(180px,.7fr) minmax(0,1.3fr);gap:clamp(3rem,8vw,9rem)}
+  .resource-principle-label{color:rgba(243,240,232,.38);font:9px ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;letter-spacing:.15em;text-transform:uppercase}.resource-principle-content h2{margin:0;font:400 clamp(2.7rem,5vw,5rem)/.98 Georgia,'Times New Roman',serif;letter-spacing:-.04em}.resource-principle-content h2 span{display:block}.resource-principle-content>p{max-width:58ch;margin:2rem 0 0;color:rgba(243,240,232,.58);font-size:14px;line-height:1.85}
+  .resource-principle-link{display:inline-flex;align-items:center;gap:.6rem;margin-top:2rem;color:#1e6e64;font:10px ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;text-decoration:none}.resource-principle-link span{transition:transform .3s ease}.resource-principle-link:hover span{transform:translate(3px,-3px)}
+  .resource-empty{padding:5rem 0;border-top:1px solid rgba(17,17,17,.1)}.resource-empty h2{margin:0;font:400 clamp(2rem,4vw,3.5rem)/1 Georgia,serif}.resource-empty>p:not(.resources-kicker){max-width:48ch;color:rgba(17,17,17,.55);line-height:1.8}
+  @media(max-width:800px){.resources-intro,.resources-section-head,.resource-principle-shell{grid-template-columns:1fr;gap:1.5rem}.resources-count{justify-content:flex-start}.resource-feature{grid-template-columns:1fr;margin-top:2.5rem}.resource-feature-image{min-height:320px}.resource-feature-content{border-left:0;border-top:1px solid rgba(17,17,17,.1);padding:2rem 1.25rem 2.5rem}.resources-grid{grid-template-columns:1fr}.resource-principle-shell{width:min(100% - 2.5rem,80rem);padding:4.5rem 0}}
+  @media(prefers-reduced-motion:reduce){.resource-feature-image img,.resource-card-image img,.resource-read span{transition:none}}
+</style>

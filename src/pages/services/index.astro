@@ -1,3 +1,4 @@
+
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -8,56 +9,1649 @@ import FinalCTA from '../../components/FinalCTA.astro';
 import ServiceCard from '../../components/ServiceCard.astro';
 import { breadcrumbSchema } from '../../lib/schema';
 
-const services = await getCollection('services');
-const categories = ['Aquatic', 'Hospitality & Leisure', 'Residential', 'Specialized'] as const;
-const crumbs = [{ name: 'Home', url: '/' }, { name: 'Services', url: '/services/' }];
-const tones = ['paper', 'paper-dim', 'paper', 'paper-dim'] as const;
+const services = await getCollection(
+  'services',
+  ({ data }) => data.status === 'published'
+);
+
+const projects = (await getCollection(
+  'projects',
+  ({ data }) => data.status === 'published'
+)).sort((a, b) => String(b.data.year || '').localeCompare(String(a.data.year || '')));
+
+const featuredProjects = projects.slice(0, 3);
+
+const categories = [
+  'Aquatic',
+  'Hospitality & Leisure',
+  'Residential',
+  'Specialized',
+] as const;
+
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Services', url: '/services/' },
+];
+
+const tones = [
+  'paper',
+  'paper-dim',
+  'paper',
+  'paper-dim',
+] as const;
+
+const categoryDescriptions: Record<(typeof categories)[number], string> = {
+  Aquatic:
+    'Swimming pools, waterparks, filtration systems, waterproofing and complete aquatic construction for residential and commercial projects.',
+
+  'Hospitality & Leisure':
+    'Resorts, leisure spaces and destination-focused construction designed around experience, durability and long-term operation.',
+
+  Residential:
+    'Farmhouses, custom residences and alternative residential structures built with practical construction and site-specific thinking.',
+
+  Specialized:
+    'Ferrocement structures, domes, land development and other specialised construction requirements that need an unconventional approach.',
+};
+
+const categoryNumbers = categories.map((_, index) =>
+  String(index + 1).padStart(2, '0')
+);
 ---
+
 <BaseLayout
   title="Construction Services in Pune & Maharashtra | PBJ Infra"
-  description="Every PBJ Infra construction service — swimming pools, filtration and tiling, waterparks, resorts, farmhouses, cob houses, ferrocement domes and land development."
+  description="PBJ Infra provides swimming pool, waterpark, resort, farmhouse and specialised construction services across Pune, Maharashtra and India."
   path="/services/"
   schema={[breadcrumbSchema(crumbs)]}
 >
+  <!-- ===================================================== -->
+  <!-- HERO -->
+  <!-- ===================================================== -->
+
   <PageHero
     crumbs={crumbs}
     tone="ink"
     eyebrow="Services / Capabilities"
-    title="What PBJ Infra"
-    titleMuted="builds."
-    lead="Four disciplines, one in-house site team: aquatic construction, hospitality & leisure, residential builds, and specialised structural work. Every service is genuinely offered by PBJ Infra, operating since 2009 with a 5-year structural warranty."
+    title="Construction expertise"
+    titleMuted="built around you."
+    lead="From aquatic environments and leisure spaces to residences and specialised structures, PBJ Infra brings design coordination, construction and site execution together under one experienced team."
     ctas={[
-      { label: 'Start a project', href: '/contact/', style: 'solid', event: 'click_start_project', params: { placement: 'services_hero' } },
-      { label: 'See projects', href: '/projects/', style: 'lt' },
+      {
+        label: 'Start a project',
+        href: '/contact/',
+        style: 'solid',
+        event: 'click_start_project',
+        params: { placement: 'services_hero' },
+      },
+      {
+        label: 'Explore projects',
+        href: '/projects/',
+        style: 'lt',
+      },
     ]}
   />
 
-  {categories.map((cat, i) => {
-    const inCat = services.filter((s) => s.data.category === cat);
-    const id = `svc-cat-${i}`;
-    return (
-      <PageShell tone={tones[i]} labelledby={id}>
-        <SectionHeader id={id} num={String(i + 1).padStart(2, '0')} label="Discipline" title={cat} tone="paper" />
-        <div class="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-5" data-reveal-stagger>
-          {inCat.map((s) => (
-            <ServiceCard
-              name={s.data.name}
-              category={s.data.category}
-              shortDescription={s.data.shortDescription}
-              href={s.data.status === 'published' ? `/services/${s.slug}/` : null}
-              image={s.data.heroImage}
-            />
-          ))}
+  <!-- ===================================================== -->
+  <!-- INTRO / CAPABILITY STATEMENT -->
+  <!-- ===================================================== -->
+
+  <section class="border-b border-black/10 bg-white">
+    <div class="mx-auto grid max-w-7xl gap-10 px-6 py-16 lg:grid-cols-[1fr_2fr] lg:px-8 lg:py-24">
+
+      <div data-reveal>
+        <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#1e6e64]">
+          One construction partner
+        </p>
+      </div>
+
+      <div data-reveal>
+        <h2 class="max-w-4xl font-serif text-3xl leading-tight tracking-tight text-black sm:text-4xl lg:text-5xl">
+          From the first site conversation
+          <span class="text-black/35">to the finished structure.</span>
+        </h2>
+
+        <p class="mt-7 max-w-3xl text-base leading-8 text-black/60 sm:text-lg">
+          PBJ Infra works across four complementary construction disciplines.
+          Each project is approached according to its site, purpose, materials,
+          systems and long-term use — rather than through a fixed template.
+        </p>
+
+        <div class="mt-10 flex flex-wrap gap-x-8 gap-y-3 border-t border-black/10 pt-6">
+          <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
+            Operating since 2009
+          </span>
+
+          <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
+            Pune → India
+          </span>
+
+          <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-black/45">
+            5-year structural warranty
+          </span>
         </div>
-      </PageShell>
-    );
-  })}
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================================================== -->
+  <!-- SERVICE DISCIPLINES -->
+  <!-- ===================================================== -->
+
+  <main class="services-main">
+    <div class="discipline-progress-line" aria-hidden="true">
+      <span class="discipline-progress-fill"></span>
+    </div>
+
+    <div class="services-discipline-shell">
+      <!-- ONE SHARED STICKY DISCIPLINE PANEL -->
+      <aside class="discipline-panel" data-reveal aria-label="Service discipline">
+        <div class="discipline-sticky">
+          <div class="discipline-number-wrap">
+            <span class="discipline-number" data-discipline-number>01</span>
+            <span class="discipline-number-line"></span>
+          </div>
+
+          <div class="discipline-label">Discipline</div>
+          <h2 class="discipline-title" data-discipline-title>Aquatic</h2>
+
+          <p class="discipline-description" data-discipline-description>
+            Swimming pools, waterparks, filtration systems, waterproofing and complete aquatic construction for residential and commercial projects.
+          </p>
+
+          <div class="discipline-meta">
+            <span class="discipline-meta-line"></span>
+            <span><strong data-discipline-count>0</strong> services</span>
+          </div>
+
+          <div class="discipline-scroll-indicator">
+            <div class="discipline-scroll-track"><span></span></div>
+            <span class="discipline-scroll-text">Scroll to explore</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- ALL SERVICE CARDS SCROLL ON THE RIGHT -->
+      <div class="service-categories-column">
+        {categories.map((category, index) => {
+          const inCategory = services.filter(
+            (service) => service.data.category === category
+          );
+          const sectionId = `service-category-${index}`;
+
+          return (
+            <section
+              class="service-discipline-section"
+              data-discipline-section
+              data-index={index}
+              data-number={categoryNumbers[index]}
+              data-title={category}
+              data-description={categoryDescriptions[category]}
+              data-count={inCategory.length}
+              aria-labelledby={sectionId}
+            >
+              <PageShell tone={tones[index]} labelledby={sectionId}>
+                <div class="service-cards-column">
+                  <div class="discipline-mobile-heading">
+                    <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-[#1e6e64]">
+                      {categoryNumbers[index]} · Discipline
+                    </span>
+                    <h2 id={sectionId} class="mt-3 font-serif text-3xl tracking-tight sm:text-4xl">
+                      {category}
+                    </h2>
+                    <p class="mt-4 max-w-xl text-sm leading-7 text-black/55">
+                      {categoryDescriptions[category]}
+                    </p>
+                  </div>
+
+                  {inCategory.length > 0 ? (
+                    <div class="service-cards-stack" data-reveal-stagger>
+                      {inCategory.map((service, serviceIndex) => (
+                        <article
+                          class="service-rectangle"
+                          data-service-card
+                          style={`--card-index:${serviceIndex};`}
+                        >
+                          <div class="service-rectangle-number">
+                            {String(serviceIndex + 1).padStart(2, '0')}
+                          </div>
+
+                          <div class="service-rectangle-image">
+                            {service.data.heroImage && (
+                              <img
+                                src={service.data.heroImage.src}
+                                alt={service.data.heroImage.alt}
+                                width={service.data.heroImage.width}
+                                height={service.data.heroImage.height}
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            )}
+                            <div class="service-image-overlay"></div>
+                          </div>
+
+                          <div class="service-rectangle-content">
+                            <div>
+                              <p class="service-card-category">{service.data.category}</p>
+                              <h3 class="service-card-title">{service.data.name}</h3>
+                              <p class="service-card-description">
+                                {service.data.shortDescription}
+                              </p>
+                            </div>
+
+                            {service.data.status === 'published' && (
+                              <a
+                                href={`/services/${service.slug}/`}
+                                class="service-card-arrow"
+                                aria-label={`Explore ${service.data.name}`}
+                              >
+                                <span>Explore</span>
+                                <span class="arrow">→</span>
+                              </a>
+                            )}
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  ) : (
+                    <div class="border border-dashed border-black/15 p-8">
+                      <p class="font-mono text-xs uppercase tracking-[0.16em] text-black/40">
+                        Services coming soon
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </PageShell>
+            </section>
+          );
+        })}
+      </div>
+    </div>
+  </main>
+
+  <!-- ===================================================== -->
+  <!-- SERVICE PROCESS -->
+  <!-- ===================================================== -->
+
+  <section class="bg-[#111] text-white">
+    <div class="mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-28">
+
+      <div class="process-layout">
+
+        <!-- FIXED / STICKY PROCESS INTRO -->
+        <aside class="process-panel" data-reveal aria-label="How we work">
+          <div class="process-sticky">
+            <div class="process-number-wrap">
+              <span class="process-number">01</span>
+              <span class="process-number-line"></span>
+            </div>
+
+            <p class="process-label">How we work</p>
+
+            <h2 class="process-title">
+              Construction is more than
+              <span class="heading-accent">putting things together.</span>
+            </h2>
+
+            <p class="process-intro">
+              A clear process keeps design, construction and site execution moving
+              together from the first conversation to completion.
+            </p>
+
+            <div class="process-meta">
+              <span class="process-meta-line"></span>
+              <span>4 steps</span>
+            </div>
+
+            <div class="process-scroll-indicator">
+              <div class="process-scroll-track"><span></span></div>
+              <span>Scroll to explore</span>
+            </div>
+          </div>
+        </aside>
+
+        <!-- SCROLLING PROCESS STEPS -->
+        <div class="process-steps">
+
+          <div
+            class="process-row grid gap-5 border-b border-white/10 py-10 sm:grid-cols-[80px_1fr]"
+            data-reveal
+          >
+            <span class="font-mono text-xs text-[#1e6e64]">
+              01
+            </span>
+
+            <div>
+              <h3 class="font-serif text-2xl">
+                Understand
+              </h3>
+
+              <p class="mt-3 max-w-2xl text-sm leading-7 text-white/50">
+                We begin with the site, requirements, intended use and practical
+                constraints of the project.
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="process-row grid gap-5 border-b border-white/10 py-10 sm:grid-cols-[80px_1fr]"
+            data-reveal
+          >
+            <span class="font-mono text-xs text-[#1e6e64]">
+              02
+            </span>
+
+            <div>
+              <h3 class="font-serif text-2xl">
+                Coordinate
+              </h3>
+
+              <p class="mt-3 max-w-2xl text-sm leading-7 text-white/50">
+                Structure, finishes, systems and specialist requirements are
+                considered together before execution.
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="process-row grid gap-5 border-b border-white/10 py-10 sm:grid-cols-[80px_1fr]"
+            data-reveal
+          >
+            <span class="font-mono text-xs text-[#1e6e64]">
+              03
+            </span>
+
+            <div>
+              <h3 class="font-serif text-2xl">
+                Build
+              </h3>
+
+              <p class="mt-3 max-w-2xl text-sm leading-7 text-white/50">
+                Our site team takes the project through construction, coordination,
+                finishing and practical completion.
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="process-row grid gap-5 py-10 sm:grid-cols-[80px_1fr]"
+            data-reveal
+          >
+            <span class="font-mono text-xs text-[#1e6e64]">
+              04
+            </span>
+
+            <div>
+              <h3 class="font-serif text-2xl">
+                Deliver
+              </h3>
+
+              <p class="mt-3 max-w-2xl text-sm leading-7 text-white/50">
+                The objective is a completed space that works as intended,
+                looks considered and is ready for long-term use.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== -->
+  <!-- PROJECT PROOF -->
+  <!-- ===================================================== -->
+
+  <section class="project-showcase" aria-labelledby="project-showcase-title">
+    <div class="mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-28">
+
+      <div class="project-showcase-header" data-reveal>
+        <div>
+          <div class="project-showcase-kicker">
+            <span class="project-showcase-line"></span>
+            <span>Built examples</span>
+          </div>
+
+          <h2 id="project-showcase-title" class="project-showcase-title">
+            See the work
+            <span class="heading-accent">that brings it together.</span>
+          </h2>
+        </div>
+
+        <a href="/projects/" class="project-showcase-link">
+          <span>View all projects</span>
+          <span class="project-showcase-link-arrow">↗</span>
+        </a>
+      </div>
+
+      {featuredProjects.length > 0 ? (
+        <div class="project-horizontal-showcase" data-project-showcase>
+          <div class="project-horizontal-topline">
+            <span class="project-horizontal-hint">Drag / scroll to explore</span>
+            <span class="project-horizontal-counter"><strong data-project-current>01</strong> / {String(featuredProjects.length).padStart(2, '0')}</span>
+          </div>
+
+          <div class="project-horizontal-track" data-project-track tabindex="0" aria-label="Featured projects">
+            {featuredProjects.map((project, index) => (
+              <a
+                href={`/projects/${project.slug}/`}
+                class="project-horizontal-card"
+                data-project-card
+              >
+                <div class="project-horizontal-image">
+                  <img
+                    src={project.data.heroImage.src}
+                    alt={project.data.heroImage.alt}
+                    width={project.data.heroImage.width}
+                    height={project.data.heroImage.height}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div class="project-horizontal-image-shade"></div>
+                  <span class="project-horizontal-number">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                </div>
+
+                <div class="project-horizontal-content">
+                  <div class="project-horizontal-topline-inner">
+                    <span>{project.data.projectType}</span>
+                    <span>{project.data.year}</span>
+                  </div>
+
+                  <h3 class="project-horizontal-title">
+                    {project.data.name}
+                  </h3>
+
+                  <div class="project-horizontal-meta">
+                    <span>{project.data.location}</span>
+                  </div>
+
+                  <div class="project-horizontal-action">
+                    <span>View project</span>
+                    <span>↗</span>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+
+          <div class="project-horizontal-progress" aria-hidden="true">
+            <span data-project-progress></span>
+          </div>
+        </div>
+      ) : (
+        <div class="project-showcase-empty">
+          <p>No published projects yet.</p>
+        </div>
+      )}
+
+      <div class="project-showcase-footer" data-reveal>
+        <div>
+          <span class="project-showcase-footer-number">{projects.length}</span>
+          <span>published projects</span>
+        </div>
+
+        <p>
+          Aquatic environments, leisure destinations, residences and specialised
+          structures — delivered with the same attention to site and detail.
+        </p>
+
+        <a href="/projects/" class="project-showcase-footer-link">
+          Explore portfolio <span>→</span>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================================================== -->
+  <!-- FINAL CTA -->
+  <!-- ===================================================== -->
 
   <FinalCTA
     title="Not sure which"
-    titleMuted="you need?"
-    copy="Tell us what you're planning and PBJ Infra will help you understand the right way forward — from the first conversation to execution."
-    primary={{ label: 'Start a project', href: '/contact/', event: 'click_start_project', params: { placement: 'services_cta' } }}
+    titleMuted="service you need?"
+    copy="Tell us what you're planning, where you're building and what you want the finished space to achieve. PBJ Infra will help you understand the right way forward."
+    primary={{
+      label: 'Start a project',
+      href: '/contact/',
+      event: 'click_start_project',
+      params: { placement: 'services_cta' },
+    }}
     contact={true}
   />
+
 </BaseLayout>
+
+<script>
+  const sections = Array.from(
+    document.querySelectorAll<HTMLElement>('[data-discipline-section]')
+  );
+
+  const numberEl = document.querySelector<HTMLElement>('[data-discipline-number]');
+  const titleEl = document.querySelector<HTMLElement>('[data-discipline-title]');
+  const descriptionEl = document.querySelector<HTMLElement>('[data-discipline-description]');
+  const countEl = document.querySelector<HTMLElement>('[data-discipline-count]');
+  const progressFill = document.querySelector<HTMLElement>('.discipline-progress-fill');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let activeIndex = -1;
+  let ticking = false;
+
+  const setActive = (section: HTMLElement) => {
+    const index = Number(section.dataset.index || 0);
+    if (index === activeIndex) return;
+    activeIndex = index;
+
+    if (numberEl) numberEl.textContent = section.dataset.number || '01';
+    if (titleEl) titleEl.textContent = section.dataset.title || '';
+    if (descriptionEl) descriptionEl.textContent = section.dataset.description || '';
+    if (countEl) countEl.textContent = section.dataset.count || '0';
+
+    sections.forEach((item, i) => item.classList.toggle('is-active', i === index));
+
+    if (!reduceMotion) {
+      [numberEl, titleEl, descriptionEl, countEl].forEach((el) => {
+        if (!el) return;
+        el.animate(
+          [
+            { opacity: 0.25, transform: 'translateY(6px)' },
+            { opacity: 1, transform: 'translateY(0)' },
+          ],
+          { duration: 320, easing: 'cubic-bezier(.2,.65,.25,1)' }
+        );
+      });
+    }
+  };
+
+  if (sections.length) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+        if (visible.length) {
+          setActive(visible[0].target as HTMLElement);
+        }
+      },
+      {
+        threshold: [0.05, 0.2, 0.5],
+        rootMargin: '-22% 0px -58% 0px',
+      }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    setActive(sections[0]);
+  }
+
+  const projectTrack = document.querySelector<HTMLElement>('[data-project-track]');
+  const projectCards = Array.from(
+    document.querySelectorAll<HTMLElement>('[data-project-card]')
+  );
+  const projectCurrent = document.querySelector<HTMLElement>('[data-project-current]');
+  const projectProgress = document.querySelector<HTMLElement>('[data-project-progress]');
+
+  const updateProjectScroll = () => {
+    if (!projectTrack || !projectCards.length) return;
+
+    const maxScroll = projectTrack.scrollWidth - projectTrack.clientWidth;
+    const progress = maxScroll > 0 ? projectTrack.scrollLeft / maxScroll : 0;
+    if (projectProgress) projectProgress.style.width = `${Math.min(100, Math.max(0, progress * 100))}%`;
+
+    const trackRect = projectTrack.getBoundingClientRect();
+    const trackCenter = trackRect.left + trackRect.width * .28;
+    let closestIndex = 0;
+    let closestDistance = Infinity;
+
+    projectCards.forEach((card, index) => {
+      const rect = card.getBoundingClientRect();
+      const distance = Math.abs((rect.left + rect.width * .18) - trackCenter);
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestIndex = index;
+      }
+    });
+
+    if (projectCurrent) {
+      projectCurrent.textContent = String(closestIndex + 1).padStart(2, '0');
+    }
+  };
+
+  projectTrack?.addEventListener('scroll', updateProjectScroll, { passive: true });
+  projectTrack?.addEventListener('wheel', (event) => {
+    if (!projectTrack || Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+    const maxScroll = projectTrack.scrollWidth - projectTrack.clientWidth;
+    const atStart = projectTrack.scrollLeft <= 0;
+    const atEnd = projectTrack.scrollLeft >= maxScroll - 1;
+
+    if (maxScroll > 0 && ((event.deltaY < 0 && !atStart) || (event.deltaY > 0 && !atEnd))) {
+      event.preventDefault();
+      projectTrack.scrollLeft += event.deltaY;
+    }
+  }, { passive: false });
+
+  projectTrack?.addEventListener('keydown', (event) => {
+    if (!projectTrack) return;
+    if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+      event.preventDefault();
+      projectTrack.scrollBy({
+        left: event.key === 'ArrowRight' ? projectTrack.clientWidth * .72 : -projectTrack.clientWidth * .72,
+        behavior: reduceMotion ? 'auto' : 'smooth',
+      });
+    }
+  });
+
+  const cards = Array.from(
+    document.querySelectorAll<HTMLElement>('[data-service-card]')
+  );
+
+  const updateScrollEffects = () => {
+    const scrollTop = window.scrollY;
+    const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
+
+    if (progressFill && documentHeight > 0) {
+      progressFill.style.height = `${Math.min(100, Math.max(0, (scrollTop / documentHeight) * 100))}%`;
+    }
+
+    if (!reduceMotion) {
+      const viewportHeight = window.innerHeight;
+      cards.forEach((card) => {
+        const rect = card.getBoundingClientRect();
+        if (rect.bottom < 0 || rect.top > viewportHeight) return;
+        const center = rect.top + rect.height / 2;
+        const distance = (center - viewportHeight / 2) / viewportHeight;
+        const shift = Math.max(-6, Math.min(6, distance * -7));
+        card.style.setProperty('--card-shift', `${shift}px`);
+      });
+    }
+
+    ticking = false;
+  };
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(updateScrollEffects);
+      ticking = true;
+    }
+  }, { passive: true });
+
+  window.addEventListener('resize', updateScrollEffects, { passive: true });
+  updateScrollEffects();
+  updateProjectScroll();
+</script>
+
+<style>
+  .services-main {
+    position: relative;
+  }
+
+  .service-discipline-section {
+    position: relative;
+    border-bottom: 1px solid rgba(17, 17, 17, 0.08);
+  }
+
+  .services-discipline-shell {
+    display: grid;
+    grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+    gap: clamp(2.5rem, 5vw, 5rem);
+    align-items: start;
+  }
+
+  .discipline-panel {
+    min-width: 0;
+    align-self: stretch;
+    padding-left: 3.25rem;
+  }
+
+  .discipline-sticky {
+    position: sticky;
+    top: 7rem;
+    padding: 4rem 0 5rem;
+  }
+
+  .discipline-number-wrap {
+    display: flex;
+    align-items: center;
+    gap: .9rem;
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+
+  .discipline-number {
+    font-family: theme('fontFamily.mono');
+    font-size: 11px;
+    line-height: 1;
+    letter-spacing: .18em;
+    color: #1e6e64;
+  }
+
+  .discipline-number-line {
+    width: 60px;
+    height: 1px;
+    background: #1e6e64;
+  }
+
+  .discipline-label {
+    font-family: theme('fontFamily.mono');
+    font-size: 10px;
+    line-height: 1.4;
+    text-transform: uppercase;
+    letter-spacing: .2em;
+    color: rgba(0,0,0,.4);
+  }
+
+  .discipline-title {
+    margin-top: .7rem;
+    font-family: theme('fontFamily.serif');
+    font-size: clamp(2rem, 3.2vw, 3.25rem);
+    line-height: 1;
+    letter-spacing: -.035em;
+    color: #111;
+  }
+
+  .discipline-description {
+    max-width: 270px;
+    margin-top: 1.5rem;
+    font-size: .875rem;
+    line-height: 1.8;
+    color: rgba(0,0,0,.55);
+  }
+
+  .discipline-meta {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-top: 1.75rem;
+    font-family: theme('fontFamily.mono');
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .16em;
+    color: rgba(0,0,0,.4);
+  }
+
+  .discipline-meta strong {
+    color: #111;
+    font-weight: 600;
+  }
+
+  .discipline-meta-line {
+    width: 30px;
+    height: 1px;
+    background: #1e6e64;
+  }
+
+  .discipline-scroll-indicator {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-top: 3rem;
+  }
+
+  .discipline-scroll-track {
+    position: relative;
+    width: 34px;
+    height: 1px;
+    overflow: hidden;
+    background: rgba(0,0,0,.15);
+  }
+
+  .discipline-scroll-track span {
+    display: block;
+    width: 14px;
+    height: 1px;
+    background: #1e6e64;
+    animation: discipline-pulse 1.8s ease-in-out infinite;
+  }
+
+  .discipline-scroll-text {
+    font-family: theme('fontFamily.mono');
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .15em;
+    color: rgba(0,0,0,.32);
+  }
+
+  .service-categories-column {
+    min-width: 0;
+  }
+
+  .service-cards-column {
+    min-width: 0;
+    padding: 4rem 0 5rem;
+  }
+
+  .discipline-mobile-heading {
+    display: none;
+  }
+
+  @keyframes discipline-pulse {
+    0%, 100% { transform: translateX(-14px); }
+    50% { transform: translateX(34px); }
+  }
+
+  .service-cards-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  /* Wide horizontal rectangle */
+  .service-rectangle {
+    --card-shift: 0px;
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(210px, 36%) minmax(0, 1fr);
+    min-height: 225px;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid rgba(17,17,17,.1);
+    transform: translateY(var(--card-shift));
+    transition:
+      transform .55s cubic-bezier(.2,.65,.25,1),
+      box-shadow .45s ease,
+      border-color .35s ease;
+  }
+
+  .service-rectangle-image {
+    position: relative;
+    min-height: 225px;
+    overflow: hidden;
+    background: #ddd;
+  }
+
+  .service-rectangle-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.035);
+    transition: transform .8s cubic-bezier(.2,.65,.25,1);
+  }
+
+  .service-rectangle:hover .service-rectangle-image img {
+    transform: scale(1.09);
+  }
+
+  .service-image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(0,0,0,.08), transparent 75%);
+    pointer-events: none;
+  }
+
+  .service-rectangle-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.75rem 2rem;
+  }
+
+  .service-card-category {
+    margin: 0 0 .6rem;
+    font-family: theme('fontFamily.mono');
+    font-size: 9px;
+    line-height: 1.4;
+    text-transform: uppercase;
+    letter-spacing: .16em;
+    color: #1e6e64;
+  }
+
+  .service-card-title {
+    max-width: 440px;
+    margin: 0;
+    font-family: theme('fontFamily.serif');
+    font-size: clamp(1.45rem, 2.2vw, 2.1rem);
+    line-height: 1.05;
+    letter-spacing: -.025em;
+    color: #111;
+  }
+
+  .service-card-description {
+    max-width: 470px;
+    margin-top: .8rem;
+    font-size: .82rem;
+    line-height: 1.7;
+    color: rgba(0,0,0,.52);
+  }
+
+  .service-card-arrow {
+    display: inline-flex;
+    align-items: center;
+    gap: .7rem;
+    width: fit-content;
+    margin-top: 1.25rem;
+    font-family: theme('fontFamily.mono');
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .14em;
+    color: rgba(0,0,0,.48);
+    transition: color .3s ease;
+  }
+
+  .service-card-arrow .arrow {
+    font-size: 16px;
+    color: #1e6e64;
+    transition: transform .35s ease;
+  }
+
+  .service-card-arrow:hover {
+    color: #111;
+  }
+
+  .service-card-arrow:hover .arrow {
+    transform: translateX(6px);
+  }
+
+  .service-rectangle:hover {
+    transform: translateY(-5px);
+    border-color: rgba(30,110,100,.3);
+    box-shadow: 0 20px 50px rgba(0,0,0,.08);
+  }
+
+  .service-rectangle-number {
+    position: absolute;
+    z-index: 5;
+    top: .75rem;
+    left: .75rem;
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    background: rgba(17,17,17,.62);
+    backdrop-filter: blur(8px);
+    color: #fff;
+    font-family: theme('fontFamily.mono');
+    font-size: 8px;
+    letter-spacing: .08em;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: opacity .3s ease, transform .3s ease;
+  }
+
+  .service-rectangle:hover .service-rectangle-number {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .discipline-progress-line {
+    position: absolute;
+    z-index: 10;
+    left: 1.5rem;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: rgba(30,110,100,.08);
+    pointer-events: none;
+  }
+
+  .discipline-progress-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1px;
+    height: 0;
+    background: #1e6e64;
+  }
+
+  /* ===================================================== */
+  /* PROJECT SHOWCASE */
+  /* ===================================================== */
+
+  .project-showcase {
+    position: relative;
+    overflow: hidden;
+    background: #f4f1e9;
+    border-top: 1px solid rgba(17,17,17,.08);
+  }
+
+  .project-showcase::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: .45;
+    background-image: linear-gradient(rgba(17,17,17,.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(17,17,17,.035) 1px, transparent 1px);
+    background-size: 80px 80px;
+  }
+
+  .project-showcase > div {
+    position: relative;
+    z-index: 1;
+  }
+
+  .project-showcase-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(17,17,17,.12);
+  }
+
+  .project-showcase-kicker {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    margin-bottom: 1rem;
+    font-family: theme('fontFamily.mono');
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .2em;
+    color: #1e6e64;
+  }
+
+  .project-showcase-line {
+    width: 32px;
+    height: 1px;
+    background: #1e6e64;
+  }
+
+  .project-showcase-title {
+    max-width: 720px;
+    margin: 0;
+    font-family: theme('fontFamily.serif');
+    font-size: clamp(2.4rem, 5vw, 5rem);
+    line-height: .94;
+    letter-spacing: -.045em;
+    color: #111;
+  }
+
+  .project-showcase-title span {
+    display: block;
+  }
+
+  .project-showcase-link {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: .8rem;
+    padding-bottom: .25rem;
+    border-bottom: 1px solid rgba(17,17,17,.2);
+    font-family: theme('fontFamily.mono');
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .15em;
+    color: rgba(17,17,17,.55);
+    transition: border-color .3s ease, color .3s ease;
+  }
+
+  .project-showcase-link-arrow {
+    font-size: 15px;
+    color: #1e6e64;
+    transition: transform .3s ease;
+  }
+
+  .project-showcase-link:hover {
+    color: #111;
+    border-color: #1e6e64;
+  }
+
+  .project-showcase-link:hover .project-showcase-link-arrow {
+    transform: translate(3px, -3px);
+  }
+
+  .project-horizontal-showcase {
+    margin-top: 3rem;
+  }
+
+  .project-horizontal-topline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    font-family: theme('fontFamily.mono');
+    font-size: 9px;
+    line-height: 1.4;
+    text-transform: uppercase;
+    letter-spacing: .14em;
+  }
+
+  .project-horizontal-hint {
+    color: rgba(17,17,17,.38);
+  }
+
+  .project-horizontal-counter {
+    color: rgba(17,17,17,.38);
+  }
+
+  .project-horizontal-counter strong {
+    color: #1e6e64;
+    font-size: 12px;
+  }
+
+  .project-horizontal-track {
+    display: flex;
+    gap: 1.25rem;
+    overflow-x: auto;
+    padding: .25rem .25rem 1.5rem 0;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    cursor: grab;
+  }
+
+  .project-horizontal-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .project-horizontal-track:active {
+    cursor: grabbing;
+  }
+
+  .project-horizontal-card {
+    flex: 0 0 min(76vw, 520px);
+    display: grid;
+    grid-template-rows: 290px auto;
+    min-height: 470px;
+    overflow: hidden;
+    scroll-snap-align: start;
+    background: #fff;
+    border: 1px solid rgba(17,17,17,.1);
+    box-shadow: 0 18px 50px rgba(17,17,17,.06);
+    transition: transform .45s cubic-bezier(.2,.65,.25,1), box-shadow .45s ease;
+  }
+
+  .project-horizontal-image {
+    position: relative;
+    min-width: 0;
+    overflow: hidden;
+    background: #d8d5cd;
+  }
+
+  .project-horizontal-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.015);
+    transition: transform .9s cubic-bezier(.2,.65,.25,1);
+  }
+
+  .project-horizontal-image-shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,.02), rgba(0,0,0,.42));
+    pointer-events: none;
+  }
+
+  .project-horizontal-number {
+    position: absolute;
+    left: 1.25rem;
+    bottom: 1.25rem;
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    background: rgba(17,17,17,.72);
+    color: #fff;
+    font-family: theme('fontFamily.mono');
+    font-size: 10px;
+    letter-spacing: .08em;
+    backdrop-filter: blur(8px);
+  }
+
+  .project-horizontal-content {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    padding: 1.5rem 1.5rem 1.35rem;
+    background: #fff;
+  }
+
+  .project-horizontal-topline-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: .85rem;
+    border-bottom: 1px solid rgba(17,17,17,.1);
+    font-family: theme('fontFamily.mono');
+    font-size: 9px;
+    line-height: 1.4;
+    text-transform: uppercase;
+    letter-spacing: .14em;
+    color: rgba(17,17,17,.4);
+  }
+
+  .project-horizontal-topline-inner span:first-child {
+    color: #1e6e64;
+  }
+
+  .project-horizontal-title {
+    margin: 1.4rem 0 .9rem;
+    font-family: theme('fontFamily.serif');
+    font-size: clamp(2rem, 3.4vw, 3.1rem);
+    line-height: .98;
+    letter-spacing: -.045em;
+    color: #111;
+  }
+
+  .project-horizontal-meta {
+    font-family: theme('fontFamily.mono');
+    font-size: 9px;
+    line-height: 1.5;
+    text-transform: uppercase;
+    letter-spacing: .13em;
+    color: rgba(17,17,17,.42);
+  }
+
+  .project-horizontal-action {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 1rem;
+    font-family: theme('fontFamily.mono');
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .15em;
+    color: rgba(17,17,17,.55);
+  }
+
+  .project-horizontal-action span:last-child {
+    font-size: 18px;
+    color: #1e6e64;
+    transition: transform .3s ease;
+  }
+
+  .project-horizontal-card:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 28px 70px rgba(17,17,17,.12);
+  }
+
+  .project-horizontal-card:hover .project-horizontal-image img {
+    transform: scale(1.07);
+  }
+
+  .project-horizontal-card:hover .project-horizontal-action span:last-child {
+    transform: translate(4px, -4px);
+  }
+
+  .project-horizontal-progress {
+    height: 1px;
+    margin-top: .25rem;
+    background: rgba(17,17,17,.1);
+    overflow: hidden;
+  }
+
+  .project-horizontal-progress span {
+    display: block;
+    width: 0;
+    height: 100%;
+    background: #1e6e64;
+    transition: width .18s ease;
+  }
+
+  .project-showcase-footer {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr auto;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(17,17,17,.12);
+  }
+
+  .project-showcase-footer > div {
+    display: flex;
+    align-items: baseline;
+    gap: .6rem;
+    font-family: theme('fontFamily.mono');
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .14em;
+    color: rgba(17,17,17,.42);
+  }
+
+  .project-showcase-footer-number {
+    font-size: 24px;
+    color: #1e6e64;
+  }
+
+  .project-showcase-footer p {
+    max-width: 520px;
+    margin: 0;
+    font-size: .78rem;
+    line-height: 1.7;
+    color: rgba(17,17,17,.5);
+  }
+
+  .project-showcase-footer-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .7rem;
+    white-space: nowrap;
+    font-family: theme('fontFamily.mono');
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .14em;
+    color: #111;
+  }
+
+  .project-showcase-footer-link span {
+    color: #1e6e64;
+    transition: transform .3s ease;
+  }
+
+  .project-showcase-footer-link:hover span {
+    transform: translateX(5px);
+  }
+
+  .project-showcase-empty {
+    margin-top: 2rem;
+    padding: 5rem 2rem;
+    border: 1px dashed rgba(17,17,17,.15);
+    font-family: theme('fontFamily.mono');
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .15em;
+    color: rgba(17,17,17,.4);
+    text-align: center;
+  }
+
+  .process-layout {
+    display: grid;
+    grid-template-columns: minmax(240px, .8fr) minmax(0, 1.2fr);
+    gap: clamp(3rem, 6vw, 6rem);
+    align-items: start;
+  }
+
+  .process-panel {
+    min-width: 0;
+    align-self: stretch;
+    padding-left: 3.25rem;
+    border-left: 1px solid rgba(255,255,255,.08);
+  }
+
+  .process-sticky {
+    position: sticky;
+    top: 7rem;
+    padding: 4rem 0 5rem;
+  }
+
+  .process-number-wrap {
+    display: flex;
+    align-items: center;
+    gap: .9rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .process-number {
+    font-family: theme('fontFamily.mono');
+    font-size: 11px;
+    line-height: 1;
+    letter-spacing: .18em;
+    color: #1e6e64;
+  }
+
+  .process-number-line {
+    width: 60px;
+    height: 1px;
+    background: #1e6e64;
+  }
+
+  .process-label {
+    margin: 0;
+    font-family: theme('fontFamily.mono');
+    font-size: 10px;
+    line-height: 1.4;
+    text-transform: uppercase;
+    letter-spacing: .2em;
+    color: rgba(255,255,255,.4);
+  }
+
+  .process-title {
+    max-width: 390px;
+    margin: .8rem 0 0;
+    font-family: theme('fontFamily.serif');
+    font-size: clamp(2rem, 3.2vw, 3.25rem);
+    line-height: 1;
+    letter-spacing: -.035em;
+    color: #fff;
+  }
+
+  .process-title span {
+    display: block;
+  }
+
+  .process-intro {
+    max-width: 310px;
+    margin-top: 1.5rem;
+    font-size: .875rem;
+    line-height: 1.8;
+    color: rgba(255,255,255,.48);
+  }
+
+  .process-meta {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-top: 2rem;
+    font-family: theme('fontFamily.mono');
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .16em;
+    color: rgba(255,255,255,.38);
+  }
+
+  .process-meta-line {
+    width: 30px;
+    height: 1px;
+    background: #1e6e64;
+  }
+
+  .process-scroll-indicator {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-top: 3rem;
+    font-family: theme('fontFamily.mono');
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .15em;
+    color: rgba(255,255,255,.28);
+  }
+
+  .process-scroll-track {
+    position: relative;
+    width: 34px;
+    height: 1px;
+    overflow: hidden;
+    background: rgba(255,255,255,.15);
+  }
+
+  .process-scroll-track span {
+    display: block;
+    width: 14px;
+    height: 1px;
+    background: #1e6e64;
+    animation: process-pulse 1.8s ease-in-out infinite;
+  }
+
+  .process-steps {
+    min-width: 0;
+    border-top: 1px solid rgba(255,255,255,.1);
+  }
+
+  .process-row {
+    transition: transform .35s ease, padding-left .35s ease;
+  }
+
+  .process-row:hover {
+    transform: translateX(5px);
+  }
+
+  @keyframes process-pulse {
+    0%, 100% { transform: translateX(-14px); }
+    50% { transform: translateX(34px); }
+  }
+
+  @media (max-width: 1100px) {
+    .process-layout {
+      grid-template-columns: minmax(210px, 250px) minmax(0, 1fr);
+      gap: 2.5rem;
+    }
+
+    .process-panel {
+      padding-left: 2.75rem;
+    }
+  
+    .services-discipline-shell {
+      grid-template-columns: minmax(200px, 250px) minmax(0, 1fr);
+      gap: 2rem;
+    }
+
+    .discipline-panel {
+      padding-left: 2.75rem;
+    }
+
+    .service-rectangle {
+      grid-template-columns: minmax(180px, 40%) minmax(0, 1fr);
+      min-height: 210px;
+    }
+
+    .service-rectangle-image {
+      min-height: 210px;
+    }
+  }
+
+  @media (max-width: 1023px) {
+
+    .project-showcase-footer {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .project-showcase-footer-link {
+      justify-self: start;
+    }
+
+    .process-layout {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .process-panel {
+      padding-left: 0;
+      border-left: 0;
+    }
+
+    .process-sticky {
+      position: static;
+      padding: 0 0 2.5rem;
+    }
+
+    .process-scroll-indicator {
+      display: none;
+    }
+
+    .services-discipline-shell {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .discipline-panel {
+      display: none;
+      padding-left: 0;
+    }
+
+    .service-cards-column {
+      padding: 0;
+    }
+
+    .discipline-mobile-heading {
+      display: block;
+      padding-bottom: 2rem;
+    }
+
+    .discipline-scroll-indicator,
+    .discipline-progress-line {
+      display: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .project-showcase-header {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .project-showcase-title {
+      font-size: 2.65rem;
+    }
+
+    .project-horizontal-showcase {
+      margin-top: 2rem;
+    }
+
+    .project-horizontal-card {
+      flex-basis: min(78vw, 500px);
+    }
+
+    .project-showcase-footer {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+
+    .project-showcase-footer-link {
+      justify-self: start;
+    }
+
+    .service-cards-stack {
+      gap: 1rem;
+    }
+
+    .service-rectangle {
+      grid-template-columns: 1fr;
+      min-height: 0;
+      transform: none !important;
+    }
+
+    .service-rectangle-image {
+      height: 185px;
+      min-height: 185px;
+    }
+
+    .service-rectangle-content {
+      padding: 1.4rem;
+    }
+
+    .service-card-title {
+      font-size: 1.5rem;
+    }
+
+    .service-rectangle-number {
+      opacity: 1;
+      transform: none;
+    }
+
+    .service-rectangle:hover {
+      transform: none !important;
+      box-shadow: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .service-rectangle,
+    .service-rectangle-image img,
+    .service-card-arrow .arrow,
+    .discipline-number-line,
+    .discipline-meta-line {
+      transition: none !important;
+    }
+
+    .service-rectangle {
+      transform: none !important;
+    }
+
+    .discipline-scroll-indicator {
+      display: none;
+    }
+  }
+</style>

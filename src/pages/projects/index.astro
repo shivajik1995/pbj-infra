@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
 import PageShell from '../../components/PageShell.astro';
 import FinalCTA from '../../components/FinalCTA.astro';
 import { breadcrumbSchema } from '../../lib/schema';
@@ -21,7 +22,7 @@ const order = [
 
 const ordered = order
   .map((slug) => projects.find((p) => p.slug === slug))
-  .filter(Boolean);
+  .filter((p): p is NonNullable<typeof p> => p !== undefined);
 
 const crumbs = [
   { name: 'Home', url: '/' },
@@ -35,245 +36,220 @@ const publishedProjects = ordered.filter(
 
 <BaseLayout
   title="Construction Projects & Case Studies | PBJ Infra"
-  description="Explore PBJ Infra's construction projects across Maharashtra including waterparks, swimming pools, ferrocement structures, farmhouses and specialized construction."
+  description="Explore PBJ Infra's construction projects across Maharashtra including waterparks, swimming pools, ferrocement structures and farmhouses."
   path="/projects/"
   schema={[breadcrumbSchema(crumbs)]}
 >
 
   <!-- HERO -->
-  <section class="relative overflow-hidden bg-[#111111] text-white">
+  <PageHero
+    crumbs={crumbs}
+    tone="ink"
+    eyebrow="Projects / Case studies"
+    title="Projects"
+    titleMuted="we've built."
+    lead="Explore selected PBJ Infra projects across aquatic, hospitality, residential and specialised construction — completed case studies and work currently on site."
+    ctas={[
+      { label: 'Start a project', href: '/contact/', style: 'solid', event: 'click_start_project', params: { placement: 'projects_hero' } },
+      { label: 'See services', href: '/services/', style: 'lt' },
+    ]}
+  />
 
-    <!-- Architectural grid -->
-    <div
-      class="pointer-events-none absolute inset-0 opacity-[0.035]"
-      style="
-        background-image:
-          linear-gradient(rgba(255,255,255,.8) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255,255,255,.8) 1px, transparent 1px);
-        background-size: 80px 80px;
-      "
-    ></div>
-
-    <div class="relative mx-auto max-w-7xl px-6 pb-20 pt-8 lg:px-8 lg:pb-28">
-
-      <!-- Breadcrumb -->
-      <nav
-        aria-label="Breadcrumb"
-        class="mb-20 flex items-center gap-3 text-xs uppercase tracking-[0.16em] text-white/35"
-      >
-        <a href="/" class="transition-colors hover:text-white">
-          Home
-        </a>
-
-        <span>/</span>
-
-        <span class="text-white/70">
-          Projects
-        </span>
-      </nav>
-
-
-      <!-- Hero content -->
-      <div class="grid gap-12 lg:grid-cols-[1.25fr_0.75fr] lg:items-end">
-
-        <div>
-
-          <p class="text-xs uppercase tracking-[0.24em] text-[rgb(30_110_100)]">
-            PBJ Infra / Project Portfolio
-          </p>
-
-          <h1 class="mt-6 max-w-5xl text-5xl font-medium leading-[0.95] tracking-[-0.045em] sm:text-6xl lg:text-8xl">
-            Projects
-            <span class="block text-white/30">
-              we've built.
-            </span>
-          </h1>
-
-        </div>
-
-
-        <div>
-
-          <p class="max-w-md text-base leading-7 text-white/55 lg:text-lg">
-            Explore selected PBJ Infra projects across aquatic,
-            hospitality, residential and specialized construction.
-          </p>
-
-        </div>
-
+  <!-- HERO STATS -->
+  <section class="border-t border-paper/10 bg-ink text-paper" aria-label="Portfolio at a glance">
+    <div class="wrap grid grid-cols-2 py-10 sm:grid-cols-4" data-reveal-stagger>
+      <div class="border-r border-paper/10 pr-6">
+        <p class="font-serif text-3xl">{ordered.length}</p>
+        <p class="mt-2 font-mono text-[10px] uppercase tracking-[0.18em] text-paper/35">Total projects</p>
       </div>
 
-
-      <!-- Stats -->
-      <div class="mt-20 grid grid-cols-2 border-t border-white/10 sm:grid-cols-4">
-
-        <div class="border-r border-white/10 py-7 pr-6">
-          <p class="text-3xl font-medium">
-            {ordered.length}
-          </p>
-
-          <p class="mt-2 text-[10px] uppercase tracking-[0.18em] text-white/35">
-            Total projects
-          </p>
-        </div>
-
-
-        <div class="border-r border-white/10 py-7 pl-6 pr-6">
-          <p class="text-3xl font-medium">
-            {publishedProjects.length}
-          </p>
-
-          <p class="mt-2 text-[10px] uppercase tracking-[0.18em] text-white/35">
-            Case studies
-          </p>
-        </div>
-
-
-        <div class="border-r border-white/10 py-7 pr-6 sm:pl-6">
-          <p class="text-3xl font-medium">
-            04
-          </p>
-
-          <p class="mt-2 text-[10px] uppercase tracking-[0.18em] text-white/35">
-            Sectors
-          </p>
-        </div>
-
-
-        <div class="py-7 pl-6">
-          <p class="text-3xl font-medium">
-            2009
-          </p>
-
-          <p class="mt-2 text-[10px] uppercase tracking-[0.18em] text-white/35">
-            Operating since
-          </p>
-        </div>
-
+      <div class="border-r border-paper/10 pl-6 pr-6">
+        <p class="font-serif text-3xl">{publishedProjects.length}</p>
+        <p class="mt-2 font-mono text-[10px] uppercase tracking-[0.18em] text-paper/35">Case studies</p>
       </div>
 
+      <div class="border-r border-paper/10 pr-6 sm:border-r sm:pl-6">
+        <p class="font-serif text-3xl">04</p>
+        <p class="mt-2 font-mono text-[10px] uppercase tracking-[0.18em] text-paper/35">Sectors</p>
+      </div>
+
+      <div class="pl-6">
+        <p class="font-serif text-3xl">2009</p>
+        <p class="mt-2 font-mono text-[10px] uppercase tracking-[0.18em] text-paper/35">Operating since</p>
+      </div>
     </div>
-
   </section>
-
 
   <!-- PROJECTS -->
-  <section class="bg-[#f3f2ee] text-[#111111]">
-
-    <div class="mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-28">
-
-      <!-- Section header -->
-      <div class="mb-14 flex flex-col gap-6 border-b border-black/10 pb-8 sm:flex-row sm:items-end sm:justify-between">
-
-        <div>
-
-          <p class="text-[10px] uppercase tracking-[0.22em] text-[rgb(30_110_100)]">
-            01 / Portfolio
-          </p>
-
-          <h2 class="mt-3 text-3xl font-medium tracking-tight sm:text-4xl">
-            Project details
-          </h2>
-
-        </div>
-
-        <p class="max-w-sm text-sm leading-6 text-black/45">
-          Selected construction projects delivered by PBJ Infra.
-        </p>
-
-      </div>
-
-
-      <!-- Project cards -->
-      <div class="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-
-        {
-          ordered.map((project, index) => {
-            const data = project.data;
-            const inProgress = data.status === 'in-progress';
-            const hasPage = data.status !== 'draft';
-            const statusLabel = inProgress ? 'In progress' : data.status === 'published' ? 'Completed' : 'Coming soon';
-            const timeline = inProgress ? (data.duration ?? 'In progress') : (data.year ?? data.duration ?? statusLabel);
-            const Wrapper = hasPage ? 'a' : 'div';
-
-            return (
-              <Wrapper
-                href={hasPage ? `/projects/${project.slug}/` : undefined}
-                class:list={[
-                  "group flex flex-col overflow-hidden rounded-2xl border border-black/10 bg-white transition-all duration-500",
-                  hasPage && "hover:-translate-y-1 hover:border-black/20 hover:shadow-[0_18px_45px_rgba(0,0,0,0.09)]",
-                ]}
-              >
-
-                <!-- IMAGE -->
-                <div class="relative aspect-[16/9] overflow-hidden bg-black/5">
-
-                  <img
-                    src={data.heroImage.src}
-                    alt={data.heroImage.alt}
-                    width={data.heroImage.width}
-                    height={data.heroImage.height}
-                    class="h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.05]"
-                    loading={index < 3 ? 'eager' : 'lazy'}
-                    decoding="async"
-                  />
-
-                  <div class="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent"></div>
-
-                  <!-- Number -->
-                  <div class="absolute left-3.5 top-3.5 flex h-7 w-7 items-center justify-center rounded-full border border-white/25 bg-black/25 text-[9px] font-medium text-white backdrop-blur-md">
-                    {String(index + 1).padStart(2, '0')}
-                  </div>
-
-                  <!-- Status -->
-                  <div class="absolute right-3.5 top-3.5">
-                    <span class="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/30 px-2.5 py-1 text-[8.5px] uppercase tracking-[0.16em] text-white backdrop-blur-md">
-                      {hasPage && (
-                        <span class:list={["h-1 w-1 rounded-full", inProgress ? "bg-[rgb(245_200_110)]" : "bg-[rgb(110_210_180)]"]}></span>
-                      )}
-                      {statusLabel}
-                    </span>
-                  </div>
-
-                </div>
-
-
-                <!-- CARD CONTENT -->
-                <div class="flex flex-1 flex-col p-5">
-
-                  <div class="flex items-center justify-between gap-3 text-[9.5px] uppercase tracking-[0.16em]">
-                    <span class="font-medium text-[rgb(30_110_100)]">{data.projectType}</span>
-                    {data.category && <span class="text-black/35">{data.category}</span>}
-                  </div>
-
-                  <h3 class="mt-2.5 text-xl font-medium leading-snug tracking-[-0.02em]">
-                    {data.name}
-                  </h3>
-
-                  <div class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-black/55">
-                    <span>{data.location}</span>
-                    <span class="h-1 w-1 rounded-full bg-black/20"></span>
-                    <span>{timeline}</span>
-                  </div>
-
-                  <div class="mt-4 flex items-center justify-between border-t border-black/10 pt-3.5 text-[10.5px] font-medium uppercase tracking-[0.16em] text-black/45">
-                    <span>{hasPage ? (inProgress ? 'View progress' : 'View project') : 'Coming soon'}</span>
-                    <span class="text-sm transition-transform duration-300 group-hover:translate-x-1">→</span>
-                  </div>
-
-                </div>
-
-              </Wrapper>
-            );
-          })
-        }
-
-      </div>
-
+  <section class="projects-main bg-[#f3f2ee] text-[#111111]">
+    <div class="project-progress-line" aria-hidden="true">
+      <span class="project-progress-fill"></span>
     </div>
 
-  </section>
+    <div class="mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-28">
+      <!-- Section header -->
+      <div class="project-section-header" data-reveal>
+        <div class="project-section-kicker">
+          <span class="project-section-line"></span>
+          <span>01 / Portfolio</span>
+          <span class="project-section-line"></span>
+        </div>
 
+        <h2 class="project-section-title">
+          Project details
+          <span class="heading-accent">built to last.</span>
+        </h2>
+
+        <p class="project-section-lead">
+          Selected construction projects delivered by PBJ Infra across aquatic,
+          hospitality, residential and specialised environments.
+        </p>
+      </div>
+
+      <!-- Fixed discipline-style project navigator + scrolling cards -->
+      {publishedProjects.length > 0 ? (
+        <div class="projects-showcase">
+          <aside class="projects-panel" data-reveal aria-label="Project portfolio">
+            <div class="projects-sticky">
+              <div class="projects-number-wrap">
+                <span class="projects-number" data-project-number>01</span>
+                <span class="projects-number-line"></span>
+              </div>
+
+              <p class="projects-label">Selected project</p>
+
+              <h2 class="projects-title" data-project-title>
+                {publishedProjects[0].data.name}
+              </h2>
+
+              <p class="projects-description" data-project-description>
+                {publishedProjects[0].data.projectType}
+                {publishedProjects[0].data.location ? ` — ${publishedProjects[0].data.location}` : ''}
+              </p>
+
+              <div class="projects-meta">
+                <span class="projects-meta-line"></span>
+                <span>
+                  <strong data-project-count>{publishedProjects.length}</strong> projects
+                </span>
+              </div>
+
+              <div class="projects-current-meta">
+                <span data-project-location>{publishedProjects[0].data.location}</span>
+                <span data-project-year>
+                  {publishedProjects[0].data.year ?? publishedProjects[0].data.duration ?? ''}
+                </span>
+              </div>
+
+              <div class="projects-scroll-indicator">
+                <div class="projects-scroll-track"><span></span></div>
+                <span>Scroll to explore</span>
+              </div>
+            </div>
+          </aside>
+
+          <div class="projects-cards-column">
+            <div class="projects-cards-stack" data-project-stack>
+              {
+                publishedProjects.map((project, index) => {
+                  const data = project.data;
+                  const inProgress = data.status === 'in-progress';
+                  const statusLabel = inProgress
+                    ? 'In progress'
+                    : data.status === 'published'
+                      ? 'Completed'
+                      : 'Coming soon';
+                  const timeline = inProgress
+                    ? (data.duration ?? 'In progress')
+                    : (data.year ?? data.duration ?? statusLabel);
+
+                  return (
+                    <article
+                      class="project-rectangle"
+                      data-project-card
+                      data-project-index={index}
+                      data-project-number={String(index + 1).padStart(2, '0')}
+                      data-project-title={data.name}
+                      data-project-type={data.projectType}
+                      data-project-location={data.location}
+                      data-project-year={timeline}
+                      data-project-status={statusLabel}
+                      style={`--card-index:${index};`}
+                    >
+                      <div class="project-card-image">
+                        <img
+                          src={data.heroImage.src}
+                          alt={data.heroImage.alt}
+                          width={data.heroImage.width}
+                          height={data.heroImage.height}
+                          loading={index < 2 ? 'eager' : 'lazy'}
+                          decoding="async"
+                        />
+
+                        <div class="project-card-image-shade"></div>
+
+                        <div class="project-card-number">
+                          {String(index + 1).padStart(2, '0')}
+                        </div>
+
+                        <div class="project-card-status">
+                          <span class:list={[
+                            "project-status-dot",
+                            inProgress ? "project-status-progress" : "project-status-complete"
+                          ]}></span>
+                          {statusLabel}
+                        </div>
+                      </div>
+
+                      <div class="project-card-content">
+                        <div class="project-card-topline">
+                          <span>{data.projectType}</span>
+                          {data.category && <span>{data.category}</span>}
+                        </div>
+
+                        <h3 class="project-card-title">{data.name}</h3>
+
+                        <div class="project-card-meta">
+                          <span>{data.location}</span>
+                          <span class="project-card-dot"></span>
+                          <span>{timeline}</span>
+                        </div>
+
+                        <div class="project-card-footer">
+                          <span>{inProgress ? 'View progress' : 'View project'}</span>
+                          <span class="project-card-arrow">↗</span>
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })
+              }
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div class="project-showcase-empty">
+          <p>No published projects yet.</p>
+        </div>
+      )}
+
+      <div class="project-showcase-footer" data-reveal>
+        <div>
+          <span class="project-footer-number">{publishedProjects.length}</span>
+          <span>published projects</span>
+        </div>
+
+        <p>
+          Aquatic environments, leisure destinations, residences and specialised
+          structures — delivered with the same attention to site and detail.
+        </p>
+
+        <a href="/projects/" class="project-footer-link">
+          Explore portfolio <span>→</span>
+        </a>
+      </div>
+    </div>
+  </section>
 
   <!-- CAPABILITIES -->
   <section class="bg-[#111111] text-white">
@@ -374,4 +350,837 @@ const publishedProjects = ordered.filter(
     contact={true}
   />
 
-</BaseLayout>
+
+  <style>
+    .projects-main {
+      position: relative;
+      overflow: clip;
+    }
+
+    .project-progress-line {
+      position: absolute;
+      z-index: 2;
+      left: 1.5rem;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: rgba(30,110,100,.09);
+      pointer-events: none;
+    }
+
+    .project-progress-fill {
+      display: block;
+      width: 100%;
+      height: 0%;
+      transform-origin: top;
+      background: #1e6e64;
+      transition: height .2s ease-out;
+    }
+
+    .project-section-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 640px;
+      margin: 0 auto clamp(3rem, 6vw, 5rem);
+      padding-bottom: 2rem;
+      text-align: center;
+      border-bottom: 1px solid rgba(17,17,17,.1);
+    }
+
+    .project-section-kicker {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .75rem;
+      color: #1e6e64;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+
+    .project-section-line {
+      width: 2rem;
+      height: 1px;
+      background: #1e6e64;
+    }
+
+    .project-section-title {
+      max-width: 34rem;
+      margin: .9rem auto 0;
+      font-size: clamp(2.3rem, 4.5vw, 4rem);
+      font-weight: 500;
+      line-height: .98;
+      letter-spacing: -.045em;
+    }
+
+    .project-section-title span {
+      display: block;
+    }
+
+    .project-section-lead {
+      max-width: 30rem;
+      margin: 1.5rem auto 0;
+      color: rgba(17,17,17,.45);
+      font-size: .875rem;
+      line-height: 1.7;
+    }
+
+    .projects-showcase {
+      display: grid;
+      grid-template-columns: minmax(250px, .72fr) minmax(0, 1.28fr);
+      gap: clamp(3rem, 7vw, 7rem);
+      align-items: stretch;
+    }
+
+    .projects-panel {
+      min-width: 0;
+      align-self: stretch;
+      padding-left: 3.25rem;
+      border-left: 1px solid rgba(17,17,17,.09);
+    }
+
+    .projects-sticky {
+      position: sticky;
+      top: 7rem;
+      min-height: calc(100vh - 7rem);
+      padding: 4rem 0 5rem;
+    }
+
+    .projects-number-wrap {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .projects-number {
+      color: #1e6e64;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .16em;
+    }
+
+    .projects-number-line {
+      width: 3rem;
+      height: 1px;
+      background: rgba(30,110,100,.35);
+    }
+
+    .projects-label {
+      margin-top: 3.25rem;
+      color: rgba(17,17,17,.35);
+      font-size: 10px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+
+    .projects-title {
+      max-width: 23rem;
+      margin-top: .9rem;
+      font-size: clamp(2rem, 3.8vw, 3.5rem);
+      font-weight: 500;
+      line-height: .98;
+      letter-spacing: -.045em;
+      transition: opacity .25s ease, transform .35s cubic-bezier(.2,.65,.25,1);
+    }
+
+    .projects-description {
+      max-width: 20rem;
+      margin-top: 1.25rem;
+      color: rgba(17,17,17,.48);
+      font-size: .9rem;
+      line-height: 1.7;
+      transition: opacity .25s ease, transform .35s cubic-bezier(.2,.65,.25,1);
+    }
+
+    .projects-meta {
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+      margin-top: 2rem;
+      color: rgba(17,17,17,.4);
+      font-size: 10px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .projects-meta strong {
+      color: #111;
+      font-weight: 600;
+    }
+
+    .projects-meta-line {
+      width: 2rem;
+      height: 1px;
+      background: rgba(17,17,17,.2);
+    }
+
+    .projects-current-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .7rem;
+      margin-top: 1.4rem;
+      color: rgba(17,17,17,.42);
+      font-size: .75rem;
+    }
+
+    .projects-current-meta span + span {
+      padding-left: .7rem;
+      border-left: 1px solid rgba(17,17,17,.12);
+    }
+
+    .projects-scroll-indicator {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin-top: 5rem;
+      color: rgba(17,17,17,.3);
+      font-size: 9px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .projects-scroll-track {
+      position: relative;
+      width: 2rem;
+      height: 1px;
+      overflow: hidden;
+      background: rgba(17,17,17,.15);
+    }
+
+    .projects-scroll-track span {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 50%;
+      background: #1e6e64;
+      animation: projectScrollPulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes projectScrollPulse {
+      0%, 100% { transform: translateX(-100%); }
+      50% { transform: translateX(100%); }
+    }
+
+    .projects-cards-column {
+      min-width: 0;
+    }
+
+    .projects-cards-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .project-rectangle {
+      --card-shift: 0px;
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(260px, .8fr);
+      min-height: 330px;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid rgba(17,17,17,.1);
+      box-shadow: 0 18px 50px rgba(17,17,17,.055);
+      transform: translateY(var(--card-shift));
+      transition:
+        transform .55s cubic-bezier(.2,.65,.25,1),
+        box-shadow .45s ease,
+        border-color .35s ease;
+      scroll-margin-top: 7rem;
+    }
+
+    .project-rectangle.is-active {
+      border-color: rgba(30,110,100,.24);
+      box-shadow: 0 22px 60px rgba(17,17,17,.08);
+    }
+
+    .project-card-image {
+      position: relative;
+      min-height: 330px;
+      overflow: hidden;
+      background: #d8d5cd;
+    }
+
+    .project-card-image img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.015);
+      transition: transform 1s cubic-bezier(.2,.65,.25,1);
+    }
+
+    .project-rectangle:hover .project-card-image img {
+      transform: scale(1.065);
+    }
+
+    .project-card-image-shade {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,.04), rgba(0,0,0,.45));
+      pointer-events: none;
+    }
+
+    .project-card-number {
+      position: absolute;
+      left: 1rem;
+      top: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.15rem;
+      height: 2.15rem;
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: 999px;
+      background: rgba(0,0,0,.24);
+      color: #fff;
+      font-size: 9px;
+      font-weight: 500;
+      backdrop-filter: blur(12px);
+    }
+
+    .project-card-status {
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      padding: .45rem .7rem;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 999px;
+      background: rgba(0,0,0,.25);
+      color: #fff;
+      font-size: 8.5px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      backdrop-filter: blur(12px);
+    }
+
+    .project-status-dot {
+      width: .28rem;
+      height: .28rem;
+      border-radius: 999px;
+    }
+
+    .project-status-complete { background: #6ed2b4; }
+    .project-status-progress { background: #f5c86e; }
+
+    .project-card-content {
+      display: flex;
+      min-width: 0;
+      flex-direction: column;
+      padding: clamp(1.5rem, 3vw, 2.5rem);
+    }
+
+    .project-card-topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      color: #1e6e64;
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .project-card-topline span:last-child {
+      color: rgba(17,17,17,.3);
+      text-align: right;
+    }
+
+    .project-card-title {
+      margin-top: 1rem;
+      font-size: clamp(1.8rem, 3vw, 2.65rem);
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: -.04em;
+    }
+
+    .project-card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: .65rem;
+      margin-top: 1.1rem;
+      color: rgba(17,17,17,.48);
+      font-size: .75rem;
+    }
+
+    .project-card-dot {
+      width: .25rem;
+      height: .25rem;
+      border-radius: 999px;
+      background: rgba(17,17,17,.2);
+    }
+
+    .project-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: auto;
+      padding-top: 1.2rem;
+      border-top: 1px solid rgba(17,17,17,.1);
+      color: rgba(17,17,17,.42);
+      font-size: 10.5px;
+      font-weight: 500;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .project-card-arrow {
+      color: #1e6e64;
+      font-size: 1.05rem;
+      transition: transform .3s ease;
+    }
+
+    .project-rectangle:hover .project-card-arrow {
+      transform: translate(3px, -3px);
+    }
+
+    .project-showcase-footer {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 2rem;
+      margin-top: 4rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(17,17,17,.1);
+    }
+
+    .project-showcase-footer > div {
+      display: flex;
+      align-items: baseline;
+      gap: .6rem;
+      color: rgba(17,17,17,.38);
+      font-size: 9px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .project-footer-number {
+      color: #111;
+      font-size: 1.35rem;
+      letter-spacing: -.03em;
+    }
+
+    .project-showcase-footer p {
+      max-width: 32rem;
+      color: rgba(17,17,17,.4);
+      font-size: .75rem;
+      line-height: 1.65;
+    }
+
+    .project-footer-link {
+      color: #111;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      transition: color .25s ease;
+    }
+
+    .project-footer-link:hover {
+      color: #1e6e64;
+    }
+
+    .project-footer-link span {
+      margin-left: .4rem;
+      color: #1e6e64;
+    }
+
+    .project-showcase-empty {
+      padding: 4rem 0;
+      color: rgba(17,17,17,.4);
+    }
+
+    @media (max-width: 1100px) {
+      .projects-panel {
+        padding-left: 2.75rem;
+      }
+
+      .projects-showcase {
+        gap: 3.5rem;
+      }
+
+      .project-rectangle {
+        grid-template-columns: minmax(0, 1.1fr) minmax(230px, .9fr);
+      }
+    }
+
+    @media (max-width: 1023px) {
+      .project-progress-line {
+        left: 1rem;
+      }
+
+      .projects-showcase {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      /* The sticky project navigator is desktop-only.
+         On mobile it becomes an unwanted duplicate block before the cards. */
+      .projects-panel {
+        display: none;
+      }
+
+      .projects-sticky {
+        display: none;
+      }
+
+      .projects-scroll-indicator {
+        display: none;
+      }
+
+      .projects-label {
+        margin-top: 2rem;
+      }
+
+      .projects-title {
+        max-width: 38rem;
+      }
+
+      .projects-description {
+        max-width: 34rem;
+      }
+
+      .project-rectangle {
+        grid-template-columns: minmax(0, 1.15fr) minmax(220px, .85fr);
+      }
+
+      .project-showcase-footer {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .project-footer-link {
+        justify-self: start;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .project-progress-line {
+        display: none;
+      }
+
+      .project-section-header {
+        margin-bottom: 2.5rem;
+        padding-bottom: 1.5rem;
+      }
+
+      .project-section-title {
+        font-size: clamp(2.2rem, 11vw, 2.7rem);
+      }
+
+      .project-section-lead {
+        max-width: none;
+        font-size: .82rem;
+        line-height: 1.65;
+      }
+
+      .projects-sticky {
+        padding: 0 0 2rem;
+      }
+
+      .projects-number-wrap {
+        gap: .75rem;
+      }
+
+      .projects-number-line {
+        width: 2rem;
+      }
+
+      .projects-label {
+        margin-top: 1.5rem;
+      }
+
+      .projects-title {
+        max-width: 100%;
+        margin-top: .65rem;
+        font-size: clamp(1.9rem, 9vw, 2.35rem);
+      }
+
+      .projects-description {
+        max-width: none;
+        margin-top: .85rem;
+        font-size: .8rem;
+        line-height: 1.55;
+      }
+
+      .projects-meta {
+        margin-top: 1.25rem;
+      }
+
+      .projects-current-meta {
+        margin-top: 1rem;
+        font-size: .7rem;
+      }
+
+      .projects-cards-stack {
+        gap: 1rem;
+      }
+
+      .project-rectangle {
+        display: block;
+        min-height: 0;
+        transform: none !important;
+        box-shadow: 0 10px 30px rgba(17,17,17,.06);
+      }
+
+      .project-card-image {
+        min-height: 0;
+        aspect-ratio: 16 / 10;
+      }
+
+      .project-card-number {
+        left: .75rem;
+        top: .75rem;
+        width: 2rem;
+        height: 2rem;
+      }
+
+      .project-card-status {
+        right: .75rem;
+        top: .75rem;
+        max-width: calc(100% - 4rem);
+        padding: .4rem .55rem;
+        font-size: 7.5px;
+      }
+
+      .project-card-content {
+        min-height: 0;
+        padding: 1.15rem;
+      }
+
+      .project-card-topline {
+        align-items: flex-start;
+        font-size: 8px;
+      }
+
+      .project-card-topline span {
+        min-width: 0;
+      }
+
+      .project-card-topline span:last-child {
+        max-width: 45%;
+      }
+
+      .project-card-title {
+        margin-top: .75rem;
+        font-size: clamp(1.75rem, 8vw, 2.15rem);
+        line-height: 1.02;
+      }
+
+      .project-card-meta {
+        gap: .5rem;
+        margin-top: .85rem;
+        font-size: .7rem;
+      }
+
+      .project-card-footer {
+        margin-top: 1.75rem;
+        padding-top: .9rem;
+        font-size: 9px;
+      }
+
+      .project-showcase-footer {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-top: 2.5rem;
+      }
+
+      .project-showcase-footer > div {
+        white-space: normal;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .project-card-image {
+        aspect-ratio: 4 / 3;
+      }
+
+      .project-card-topline {
+        flex-direction: column;
+        gap: .35rem;
+      }
+
+      .project-card-topline span:last-child {
+        max-width: 100%;
+        text-align: left;
+      }
+
+      .project-card-meta {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .project-card-dot {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .project-rectangle,
+      .project-card-image img,
+      .projects-title,
+      .projects-description,
+      .project-card-arrow {
+        transition: none !important;
+      }
+
+      .projects-scroll-track span {
+        animation: none;
+      }
+    }
+  </style>
+
+  <script>
+    const projectCards = Array.from(
+      document.querySelectorAll<HTMLElement>('[data-project-card]')
+    );
+
+    const projectNumber = document.querySelector<HTMLElement>('[data-project-number]');
+    const projectTitle = document.querySelector<HTMLElement>('[data-project-title]');
+    const projectDescription = document.querySelector<HTMLElement>('[data-project-description]');
+    const projectCount = document.querySelector<HTMLElement>('[data-project-count]');
+    const projectLocation = document.querySelector<HTMLElement>('[data-project-location]');
+    const projectYear = document.querySelector<HTMLElement>('[data-project-year]');
+    const projectProgressFill = document.querySelector<HTMLElement>('.project-progress-fill');
+
+    const reduceProjectMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+
+    let activeProjectIndex = -1;
+    let projectTicking = false;
+
+    const setActiveProject = (card: HTMLElement) => {
+      const index = Number(card.dataset.projectIndex || 0);
+      if (index === activeProjectIndex) return;
+
+      activeProjectIndex = index;
+
+      if (projectNumber) {
+        projectNumber.textContent = card.dataset.projectNumber || '01';
+      }
+
+      if (projectTitle) {
+        projectTitle.textContent = card.dataset.projectTitle || '';
+      }
+
+      if (projectDescription) {
+        projectDescription.textContent =
+          `${card.dataset.projectType || ''}${card.dataset.projectLocation ? ` — ${card.dataset.projectLocation}` : ''}`;
+      }
+
+      if (projectCount) {
+        projectCount.textContent = String(projectCards.length);
+      }
+
+      if (projectLocation) {
+        projectLocation.textContent = card.dataset.projectLocation || '';
+      }
+
+      if (projectYear) {
+        projectYear.textContent = card.dataset.projectYear || '';
+      }
+
+      projectCards.forEach((item, i) => {
+        item.classList.toggle('is-active', i === index);
+      });
+
+      if (!reduceProjectMotion) {
+        [projectNumber, projectTitle, projectDescription, projectLocation, projectYear]
+          .forEach((el) => {
+            if (!el) return;
+            el.animate(
+              [
+                { opacity: 0.25, transform: 'translateY(7px)' },
+                { opacity: 1, transform: 'translateY(0)' }
+              ],
+              {
+                duration: 320,
+                easing: 'cubic-bezier(.2,.65,.25,1)'
+              }
+            );
+          });
+      }
+    };
+
+    const updateProjectScrollEffects = () => {
+      const viewportHeight = window.innerHeight;
+      const documentHeight =
+        document.documentElement.scrollHeight - viewportHeight;
+
+      if (projectProgressFill && documentHeight > 0) {
+        projectProgressFill.style.height =
+          `${Math.min(100, Math.max(0, (window.scrollY / documentHeight) * 100))}%`;
+      }
+
+      if (!reduceProjectMotion) {
+        projectCards.forEach((card) => {
+          const rect = card.getBoundingClientRect();
+
+          if (rect.bottom < 0 || rect.top > viewportHeight) return;
+
+          const center = rect.top + rect.height / 2;
+          const distance =
+            (center - viewportHeight / 2) / viewportHeight;
+
+          const shift = Math.max(
+            -6,
+            Math.min(6, distance * -7)
+          );
+
+          card.style.setProperty('--card-shift', `${shift}px`);
+        });
+      }
+
+      projectTicking = false;
+    };
+
+    if (projectCards.length) {
+      const projectObserver = new IntersectionObserver(
+        (entries) => {
+          const visible = entries
+            .filter((entry) => entry.isIntersecting)
+            .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+          if (visible.length) {
+            setActiveProject(visible[0].target as HTMLElement);
+          }
+        },
+        {
+          threshold: [0.08, 0.2, 0.45, 0.65],
+          rootMargin: '-22% 0px -55% 0px'
+        }
+      );
+
+      projectCards.forEach((card) => projectObserver.observe(card));
+      setActiveProject(projectCards[0]);
+    }
+
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (!projectTicking) {
+          window.requestAnimationFrame(updateProjectScrollEffects);
+          projectTicking = true;
+        }
+      },
+      { passive: true }
+    );
+
+    window.addEventListener(
+      'resize',
+      updateProjectScrollEffects,
+      { passive: true }
+    );
+
+    updateProjectScrollEffects();
+  </script>
+
+  </BaseLayout>

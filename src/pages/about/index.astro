@@ -7,24 +7,37 @@ import SectionHeader from '../../components/SectionHeader.astro';
 import FinalCTA from '../../components/FinalCTA.astro';
 import FAQAccordion from '../../components/FAQAccordion.astro';
 import { breadcrumbSchema, faqSchema } from '../../lib/schema';
-import { SITE } from '../../lib/site';
 
 const team = await getCollection('team');
+const founder = team.find(
+  (member) =>
+    member.data.name?.toLowerCase().includes('padmasinha') ||
+    member.data.name?.toLowerCase().includes('jadhav')
+);
+const otherTeamMembers = team.filter((member) => member !== founder);
 const faqSlugs = ['permits', 'design-and-build', 'warranty', 'locations-served'];
 const faqs = (await Promise.all(faqSlugs.map((id) => getEntry('faq', id)))).map((f) => f!.data);
 const crumbs = [{ name: 'Home', url: '/' }, { name: 'About', url: '/about/' }];
 
-const stats = [
-  ['2009', 'Operating continuously since'],
-  ['5 / 2 Yrs', 'Structural / equipment warranty'],
-  [SITE.gst, 'GST registration'],
-  [SITE.udyam, 'UDYAM registration'],
+
+
+// These are presented as restrained client wordmarks until official logo assets
+// are added to /public/images/clients/.
+const clients = [
+  ['Panchshil Realty', 'Real estate development'],
+  ['Godrej Properties', 'Real estate development'],
+  ['Nyati Group', 'Real estate development'],
+  ['Kolte Patil Developers', 'Real estate development'],
+  ['Majestique Landmarks', 'Real estate development'],
+  ['Ajmera Group', 'Real estate development'],
+  ['Mahindra Lifespaces', 'Real estate development'],
+  ['D.Y. Patil', 'Institutional / development'],
 ];
-const developers = ['Panchshil Realty', 'Godrej Properties', 'Nyati Group', 'Kolte Patil Developers', 'Majestique Landmarks', 'Ajmera Group', 'Mahindra Lifespaces', 'D.Y. Patil'];
+
 ---
 <BaseLayout
   title="About PBJ Infra | Construction Company Since 2009"
-  description="PBJ Infra is a Pune-headquartered construction company operating since 2009, led by founder Padmasinha Bapurao Jadhav. GST and UDYAM registered, 5-year structural warranty."
+  description="PBJ Infra is a Pune-headquartered construction company operating since 2009, led by founder Padmasinha Bapurao Jadhav, with a 5-year structural warranty."
   path="/about/"
   schema={[breadcrumbSchema(crumbs), faqSchema(faqs)]}
 >
@@ -34,72 +47,322 @@ const developers = ['Panchshil Realty', 'Godrej Properties', 'Nyati Group', 'Kol
     eyebrow="About / PBJ Infra"
     title="Built on-site,"
     titleMuted="not on adjectives."
-    lead={SITE.description}
+    lead="PBJ Infra has been building in Pune and across Maharashtra since 2009 — swimming pools, waterparks, resorts, farmhouses and specialised structures, delivered by one in-house team from first idea to finished site."
     ctas={[
       { label: 'Start a project', href: '/contact/', style: 'solid', event: 'click_start_project', params: { placement: 'about_hero' } },
       { label: 'See projects', href: '/projects/', style: 'lt' },
     ]}
   />
 
-  <PageShell tone="ink">
-    <div class="flex items-center gap-3" data-reveal>
-      <span class="h-px w-8 bg-accent"></span>
-      <span class="font-mono text-[9px] uppercase tracking-[.2em] text-paper/45">01 / On the record</span>
-    </div>
-    <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-paper/[.14] border border-paper/[.14]" data-reveal-stagger>
-      {stats.map(([v, l]) => (
-        <div class="bg-ink p-7">
-          <div class="font-serif text-2xl">{v}</div>
-          <div class="font-mono text-[10.5px] tracking-wide uppercase text-paper/50 mt-2">{l}</div>
-        </div>
-      ))}
-    </div>
-  </PageShell>
+  <!-- HOW PBJ WORKS -->
+  <section class="about-method-section" aria-labelledby="about-how">
+    <div class="about-method-shell">
+      <div class="about-method-layout">
 
-  <PageShell tone="paper" labelledby="about-how">
-    <SectionHeader id="about-how" num="02" label="Method" title="How PBJ works" tone="paper" />
-    <div class="mt-12 max-w-[74ch]" data-reveal>
-      <p class="text-ink-soft mb-4 leading-relaxed">PBJ Infra handles design, structural engineering, construction and finishing under one in-house team — 3D visualisation and transparent cost estimation before ground is broken, then site preparation, structural work, systems (filtration, waterproofing, mechanical) and finishing carried out and checked in sequence, with regular progress updates back to the client. The work spans <a href="/services/swimming-pool-construction/" class="text-accent underline">swimming pools</a>, <a href="/services/waterpark-construction/" class="text-accent underline">waterparks</a>, <a href="/services/resort-construction/" class="text-accent underline">resorts</a>, <a href="/services/farmhouse-construction/" class="text-accent underline">farmhouses</a> and <a href="/services/ferrocement-dome/" class="text-accent underline">specialised structures</a> — see all <a href="/services/" class="text-accent underline">services</a>.</p>
-      <p class="text-ink-soft leading-relaxed">Permits, approvals and regulatory compliance with local building authorities are handled directly by PBJ, and every build carries a 5-year structural warranty and 2-year equipment warranty covering defects in materials or workmanship under normal use.</p>
-    </div>
-  </PageShell>
-
-  <PageShell tone="paper-dim" labelledby="about-clients">
-    <SectionHeader id="about-clients" num="03" label="Track record" title="Who PBJ has built for" intro="Alongside private clients, PBJ Infra has worked on projects for established Pune-region property developers. The names below are listed in PBJ's own client section on pbjinfra.com." tone="paper" />
-    <ul class="mt-12 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-4" data-reveal-stagger>
-      {developers.map((name) => (
-        <li class="border-l-2 border-accent pl-4 font-serif text-lg">{name}</li>
-      ))}
-    </ul>
-    <p class="font-mono text-[11px] text-ink/45 mt-6">Written project references and completion dates for these engagements would strengthen this section — a content item for the PBJ team.</p>
-  </PageShell>
-
-  <PageShell tone="paper" labelledby="about-team">
-    <SectionHeader id="about-team" num="04" label="People" title="Behind every build," titleMuted="there's a team." tone="paper" />
-    <div class="mt-14 flex flex-col gap-16" data-reveal>
-      {team.map((member) => (
-        <div class="grid md:grid-cols-[.7fr_1.3fr] gap-12 items-center">
-          <div class="spec-frame aspect-[4/5]">
-            <span class="cA"></span><span class="cB"></span>
-            <img src={member.data.photo.src} alt={member.data.photo.alt} width={member.data.photo.width} height={member.data.photo.height} class="w-full h-full object-cover" loading="lazy" decoding="async" />
-          </div>
-          <div>
-            <span class="font-mono text-[11px] text-accent tracking-wide uppercase">{member.data.role}</span>
-            <h3 class="font-serif text-3xl md:text-4xl mt-3 mb-5">{member.data.name}</h3>
-            <p class="text-ink-soft max-w-[52ch] mb-6">{member.data.bio}</p>
-            <div class="flex gap-6 flex-wrap font-mono text-xs">
-              {member.data.email && <a href={`mailto:${member.data.email}`} data-analytics-event="click_email" class="hover:text-accent">{member.data.email}</a>}
-              {member.data.phone && <a href={`tel:${member.data.phone.replace(/\s/g, '')}`} data-analytics-event="click_phone" class="hover:text-accent">{member.data.phone}</a>}
+        <!-- Sticky left panel -->
+        <aside class="about-method-panel" aria-label="How PBJ works">
+          <div class="about-method-sticky">
+            <div class="about-method-number">
+              <span data-method-number>01</span>
+              <i></i>
             </div>
-            <div class="mt-9 pt-6 border-t border-dashed border-ink/[.14] font-mono text-[11.5px] text-warn">Content requirement: additional team/site-engineer profiles aren't published yet. Adding 2–3 more names and roles would strengthen this section further.</div>
+
+            <p class="about-method-label">Method</p>
+
+            <h2 id="about-how" class="about-method-title">
+              How PBJ
+              <span class="heading-accent">works.</span>
+            </h2>
+
+            <p class="about-method-intro">
+              From understanding the requirement to completing the site,
+              every stage stays connected.
+            </p>
+
+            <div class="about-method-meta">
+              <span></span>
+              <strong>04</strong>
+              <small>stages</small>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Scrolling right -->
+        <div class="about-method-content">
+
+          <article class="about-method-step" data-method-step data-step="01">
+            <div class="about-method-step-no">01</div>
+            <div>
+              <p class="about-method-kicker">Understand</p>
+              <h3>
+                Start with the requirement
+                <span class="heading-accent">and the site.</span>
+              </h3>
+              <p>
+                PBJ begins by understanding what needs to be built, where it
+                needs to be built and how the finished space is expected to
+                work. Site conditions, requirements and scope are considered
+                before construction begins.
+              </p>
+            </div>
+          </article>
+
+          <article class="about-method-step" data-method-step data-step="02">
+            <div class="about-method-step-no">02</div>
+            <div>
+              <p class="about-method-kicker">Plan</p>
+              <h3>
+                Visualise, coordinate
+                <span class="heading-accent">and estimate.</span>
+              </h3>
+              <p>
+                Design coordination, 3D visualisation and transparent cost
+                estimation establish a clearer direction before ground is
+                broken. This gives the client a better understanding of the
+                proposed work before execution begins.
+              </p>
+            </div>
+          </article>
+
+          <article class="about-method-step" data-method-step data-step="03">
+            <div class="about-method-step-no">03</div>
+            <div>
+              <p class="about-method-kicker">Build</p>
+              <h3>
+                Construction moves
+                <span class="heading-accent">in sequence.</span>
+              </h3>
+              <p>
+                Site preparation, structural work and project systems are
+                carried out and checked through the build. Filtration,
+                waterproofing, mechanical systems and finishing are coordinated
+                as part of the overall construction process.
+              </p>
+            </div>
+          </article>
+
+          <article class="about-method-step" data-method-step data-step="04">
+            <div class="about-method-step-no">04</div>
+            <div>
+              <p class="about-method-kicker">Complete</p>
+              <h3>
+                Keep the client informed
+                <span class="heading-accent">through completion.</span>
+              </h3>
+              <p>
+                Regular progress updates keep the client connected to what is
+                happening on site and what comes next. Permits, approvals and
+                regulatory compliance with local building authorities are
+                handled directly by PBJ where applicable.
+              </p>
+            </div>
+          </article>
+
+          <div class="about-method-detail" data-reveal>
+            <div>
+              <span>Project scope</span>
+              <strong>One connected workflow</strong>
+            </div>
+            <p>
+              PBJ Infra brings design coordination, structural engineering,
+              construction and finishing together. The work spans
+              <a href="/services/swimming-pool-construction/">swimming pools</a>,
+              <a href="/services/waterpark-construction/">waterparks</a>,
+              <a href="/services/resort-construction/">resorts</a>,
+              <a href="/services/farmhouse-construction/">farmhouses</a> and
+              <a href="/services/ferrocement-dome/">specialised structures</a>.
+            </p>
+          </div>
+
+          <div class="about-method-warranty" data-reveal>
+            <div>
+              <span>Warranty</span>
+              <strong>5 + 2 Years</strong>
+            </div>
+            <p>
+              Every build carries a 5-year structural warranty and 2-year
+              equipment warranty covering defects in materials or workmanship
+              under normal use.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLIENTS -->
+  <PageShell tone="paper-dim" labelledby="about-clients">
+    <div class="clients-heading">
+      <SectionHeader id="about-clients" num="02" label="Track record" title="Built with established names." intro="Alongside private clients, PBJ Infra has worked on projects for established Pune-region property developers. The names below are listed in PBJ's own client section on pbjinfra.com." tone="paper" />
+    </div>
+
+    <div class="client-marquee" aria-label="PBJ Infra client names">
+      <div class="client-marquee-track">
+        {[...clients, ...clients].map(([name, type], index) => (
+          <div class="client-logo-card" aria-label={`${name} — ${type}`}>
+            <div class="client-logo-mark" aria-hidden="true">
+              <span>{String((index % clients.length) + 1).padStart(2, '0')}</span>
+              <i></i>
+            </div>
+            <div class="client-logo-name">{name}</div>
+            <div class="client-logo-type">{type}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <p class="client-note">Client names are retained as supplied in PBJ Infra's own client section.</p>
+  </PageShell>
+
+  <!-- PEOPLE -->
+  <PageShell tone="paper" labelledby="about-team">
+    <div class="people-section-header" data-reveal>
+      <div class="people-section-kicker">03 / People</div>
+      <SectionHeader
+        id="about-team"
+        num="03"
+        label="People"
+        title="The people behind the build."
+        intro="Ideas become real places through judgement, coordination and thousands of decisions made close to the work."
+        tone="paper"
+      />
+    </div>
+
+    <!-- FOUNDER -->
+    <div class="founder-feature" data-reveal>
+      <div class="founder-feature-top">
+        <span>FOUNDER / PBJ INFRA</span>
+        <span>01 / 01</span>
+      </div>
+
+      <div class="founder-feature-grid">
+        <div class="founder-feature-media">
+          {founder?.data.photo ? (
+            <img
+              src={founder.data.photo.src}
+              alt={founder.data.photo.alt || 'Founder of PBJ Infra'}
+              width={founder.data.photo.width}
+              height={founder.data.photo.height}
+              loading="lazy"
+              decoding="async"
+            />
+          ) : (
+            <div class="founder-photo-placeholder" aria-hidden="true">
+              <span>PBJ</span>
+              <small>FOUNDER</small>
+            </div>
+          )}
+
+          <div class="founder-feature-media-label">
+            <span>PBJ INFRA</span>
+            <span>FOUNDER</span>
           </div>
         </div>
+
+        <div class="founder-feature-content">
+          <div class="founder-identity">
+            <p class="founder-role">Founder / PBJ Infra</p>
+
+            <h3>
+              Padmasinha
+              <span>Bapurao Jadhav</span>
+            </h3>
+
+            <p class="founder-bio">
+              {founder?.data.bio ||
+                'Founder of PBJ Infra, with a hands-on approach to construction, design coordination and site execution. His work reflects a belief that good construction begins with understanding the site, the purpose of the space and the details that make it work for years.'}
+            </p>
+          </div>
+
+          <div class="founder-philosophy">
+            <span class="founder-philosophy-label">FOUNDER'S PERSPECTIVE</span>
+            <span class="founder-quote-mark" aria-hidden="true">“</span>
+
+            <blockquote>
+              Good construction is not only about how a structure looks when it
+              is finished. It is about how thoughtfully it is designed, how
+              honestly it is estimated, how carefully it is built and how well
+              it performs after we leave the site.
+            </blockquote>
+
+            <div class="founder-comment-signature">
+              <span>Founder / PBJ Infra</span>
+              <i></i>
+            </div>
+          </div>
+
+          <div class="founder-feature-footer">
+            <div>
+              <span>DESIGN</span>
+              <span>BUILD</span>
+              <span>DETAIL</span>
+            </div>
+
+            <p>
+              A practical approach to turning ideas into places that can be
+              built, used and maintained.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="people-editorial-grid" data-reveal>
+      <div class="people-editorial-intro">
+        <span>BEHIND EVERY PROJECT</span>
+        <h3>Not a headcount.<br /><em>A working team.</em></h3>
+        <p>PBJ's people sit close to the decisions that shape a project — from interpreting the brief and coordinating drawings to solving site conditions and checking the finished work.</p>
+      </div>
+
+      <div class="people-principles">
+        <div class="people-principle">
+          <span>01</span><div><strong>See it before building it.</strong><p>Visualisation and design coordination help turn an idea into something the team can discuss, price and execute.</p></div>
+        </div>
+        <div class="people-principle">
+          <span>02</span><div><strong>Stay close to the site.</strong><p>Real construction problems are solved through observation, coordination and decisions made at the right time.</p></div>
+        </div>
+        <div class="people-principle">
+          <span>03</span><div><strong>Respect the detail.</strong><p>Waterproofing, filtration, structure, finishing and interfaces between systems can determine how a project performs over time.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="people-team-grid" data-reveal>
+      {otherTeamMembers.map((member, index) => (
+        <article class="people-card">
+          <div class="people-card-media">
+            <span class="people-card-index">{String(index + 1).padStart(2, '0')}</span>
+            <span class="people-card-rule"></span>
+            <img src={member.data.photo.src} alt={member.data.photo.alt} width={member.data.photo.width} height={member.data.photo.height} loading="lazy" decoding="async" />
+          </div>
+          <div class="people-card-body">
+            <div class="people-card-role">{member.data.role}</div>
+            <h3>{member.data.name}</h3>
+            <p>{member.data.bio}</p>
+            <div class="people-card-footer">
+              <span>PBJ INFRA / {String(index + 1).padStart(2, '0')}</span>
+              {member.data.email && <a href={`mailto:${member.data.email}`} data-analytics-event="click_email">Contact</a>}
+            </div>
+          </div>
+        </article>
       ))}
+    </div>
+
+    <div class="people-future" data-reveal>
+      <div>
+        <span>DETAILS WE CAN ADD</span>
+        <h3>Give every profile a connection to the work.</h3>
+      </div>
+      <div class="people-future-items">
+        <span>Years of experience</span><span>Core expertise</span><span>Site responsibilities</span><span>Selected projects</span><span>Design philosophy</span><span>Professional credentials</span>
+      </div>
     </div>
   </PageShell>
 
+  <!-- FAQ -->
   <PageShell tone="paper-dim" labelledby="about-faq">
-    <SectionHeader id="about-faq" label="Common questions" title="FAQ" tone="paper" />
+    <SectionHeader id="about-faq" num="04" label="Common questions" title="FAQ" tone="paper" />
     <div class="mt-12 max-w-[880px]" data-reveal>
       <FAQAccordion items={faqs} idPrefix="about-faq" />
     </div>
@@ -112,4 +375,760 @@ const developers = ['Panchshil Realty', 'Godrej Properties', 'Nyati Group', 'Kol
     primary={{ label: 'Start your project', href: '/contact/', event: 'click_start_project', params: { placement: 'about_cta' } }}
     contact={true}
   />
+
+
+<script>
+  const methodSteps = Array.from(document.querySelectorAll<HTMLElement>('[data-method-step]'));
+  const methodNumber = document.querySelector<HTMLElement>('[data-method-number]');
+  if (methodSteps.length && methodNumber) {
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.filter((entry) => entry.isIntersecting).sort((a,b) => b.intersectionRatio-a.intersectionRatio);
+      if (!visible.length) return;
+      const active = visible[0].target as HTMLElement;
+      methodSteps.forEach((step) => step.classList.toggle('is-active', step === active));
+      methodNumber.textContent = active.dataset.step || '01';
+    }, { rootMargin:'-35% 0px -45% 0px', threshold:[.15,.4,.7] });
+    methodSteps.forEach((step) => observer.observe(step));
+  }
+</script>
+
 </BaseLayout>
+
+<style>
+  .about-story-grid,
+  .clients-heading {
+    max-width: 850px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .clients-heading :global(h2),
+  .clients-heading :global(p) {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .client-marquee {
+    position: relative;
+    width: 100vw;
+    margin: 4rem 0 0 calc(50% - 50vw);
+    overflow: hidden;
+    border-top: 1px solid rgba(17,17,17,.1);
+    border-bottom: 1px solid rgba(17,17,17,.1);
+    background: #f3f0e8;
+  }
+
+  .client-marquee::before,
+  .client-marquee::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 12vw;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .client-marquee::before {
+    left: 0;
+    background: linear-gradient(90deg, #f3f0e8, transparent);
+  }
+
+  .client-marquee::after {
+    right: 0;
+    background: linear-gradient(270deg, #f3f0e8, transparent);
+  }
+
+  .client-marquee-track {
+    display: flex;
+    width: max-content;
+    animation: client-marquee-left 34s linear infinite;
+    will-change: transform;
+  }
+
+  .client-marquee:hover .client-marquee-track {
+    animation-play-state: paused;
+  }
+
+  .client-logo-card {
+    flex: 0 0 260px;
+    min-height: 175px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.5rem;
+    border-right: 1px solid rgba(17,17,17,.1);
+    background: #f3f0e8;
+  }
+
+  .client-logo-mark { display: flex; align-items: center; gap: .55rem; color: #1e6e64; }
+  .client-logo-mark span { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 9px; letter-spacing: .14em; }
+  .client-logo-mark i { display: block; width: 28px; height: 1px; background: #1e6e64; }
+  .client-logo-name { font-family: Georgia, 'Times New Roman', serif; font-size: 1.35rem; line-height: 1.1; font-weight: 400; }
+  .client-logo-type { color: rgba(17,17,17,.42); font-size: 10px; line-height: 1.5; text-transform: uppercase; letter-spacing: .12em; }
+
+  .client-note { margin-top: 1.5rem; color: rgba(17,17,17,.4); font-size: 11px; text-align: center; }
+
+  @keyframes client-marquee-left {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .client-note { margin-top: 1.2rem; color: rgba(17,17,17,.38); letter-spacing: .08em; text-transform: none; text-align: center; font-size: 11px; }
+
+  .people-section-header {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .people-section-kicker {
+    margin-bottom: 1.25rem;
+    color: #1e6e64;
+    font: 10px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    letter-spacing: .18em;
+  }
+
+  .people-section-header :global(h2),
+  .people-section-header :global(p) { margin-inline: auto; }
+
+  .founder-feature {
+    max-width: 1100px;
+    margin: 5rem auto 0;
+    border-top: 1px solid rgba(17,17,17,.14);
+    border-bottom: 1px solid rgba(17,17,17,.14);
+    background: #f3f0e8;
+  }
+
+  .founder-feature-top {
+    display:flex;
+    justify-content:space-between;
+    padding:1.15rem 1.5rem;
+    color:rgba(17,17,17,.4);
+    font:9px ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+    letter-spacing:.14em;
+  }
+
+  .founder-feature-grid {
+    display:grid;
+    grid-template-columns:minmax(280px,38%) minmax(0,1fr);
+    border-top:1px solid rgba(17,17,17,.1);
+  }
+
+  .founder-feature-media {
+    position:relative;
+    min-height:560px;
+    overflow:hidden;
+    background:#e7e2d8;
+    border-right:1px solid rgba(17,17,17,.1);
+  }
+
+  .founder-feature-media img {
+    width:100%;
+    height:100%;
+    min-height:560px;
+    display:block;
+    object-fit:cover;
+    filter:saturate(.82);
+    transition:transform .8s cubic-bezier(.2,.65,.25,1);
+  }
+
+  .founder-feature:hover .founder-feature-media img { transform:scale(1.025); }
+
+  .founder-photo-placeholder {
+    min-height:560px;
+    display:grid;
+    place-items:center;
+    align-content:center;
+    color:#1e6e64;
+  }
+
+  .founder-photo-placeholder span {
+    font:700 4rem Georgia,serif;
+    letter-spacing:-.05em;
+  }
+
+  .founder-photo-placeholder small {
+    margin-top:.5rem;
+    font:9px ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+    letter-spacing:.16em;
+  }
+
+  .founder-feature-media-label {
+    position:absolute;
+    left:1rem;
+    right:1rem;
+    bottom:1rem;
+    display:flex;
+    justify-content:space-between;
+    gap:1rem;
+    padding:.65rem .75rem;
+    background:rgba(243,240,232,.9);
+    color:rgba(17,17,17,.55);
+    font:9px ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+    letter-spacing:.12em;
+  }
+
+  .founder-feature-content { padding:clamp(2rem,5vw,4.5rem); }
+
+  .founder-role,
+  .founder-philosophy-label,
+  .founder-comment-signature,
+  .founder-feature-footer span {
+    color:rgba(17,17,17,.42);
+    font:9px ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+    letter-spacing:.13em;
+    text-transform:uppercase;
+  }
+
+  .founder-identity h3 {
+    margin-top:.7rem;
+    font:400 clamp(2.3rem,5vw,4.4rem)/.96 Georgia,'Times New Roman',serif;
+    letter-spacing:-.035em;
+  }
+
+  .founder-identity h3 span { display:block; color:rgba(17,17,17,.32); }
+
+  .founder-bio {
+    max-width:58ch;
+    margin-top:1.6rem;
+    color:rgba(17,17,17,.6);
+    font-size:14px;
+    line-height:1.85;
+  }
+
+  .founder-philosophy {
+    position:relative;
+    margin-top:3rem;
+    padding:2.2rem 0 0;
+    border-top:1px solid rgba(17,17,17,.1);
+  }
+
+  .founder-quote-mark {
+    position:absolute;
+    top:.65rem;
+    left:-.15rem;
+    color:#1e6e64;
+    font:4.5rem Georgia,serif;
+    line-height:1;
+  }
+
+  .founder-philosophy blockquote {
+    margin:1rem 0 0;
+    padding-left:2.5rem;
+    max-width:700px;
+    font:400 clamp(1.45rem,2.5vw,2.25rem)/1.18 Georgia,'Times New Roman',serif;
+    letter-spacing:-.02em;
+  }
+
+  .founder-comment-signature {
+    display:flex;
+    align-items:center;
+    gap:.7rem;
+    margin:1.4rem 0 0 2.5rem;
+  }
+
+  .founder-comment-signature i { width:30px; height:1px; background:#1e6e64; }
+
+  .founder-feature-footer {
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:2rem;
+    align-items:start;
+    margin-top:3rem;
+    padding-top:1.4rem;
+    border-top:1px solid rgba(17,17,17,.1);
+  }
+
+  .founder-feature-footer > div { display:flex; gap:.9rem; flex-wrap:wrap; }
+  .founder-feature-footer > div span { color:#1e6e64; }
+  .founder-feature-footer p { margin:0; max-width:34ch; color:rgba(17,17,17,.42); font-size:12px; line-height:1.7; }
+
+  .people-editorial-grid { display:grid; grid-template-columns:minmax(260px,.75fr) minmax(0,1.25fr); gap:clamp(3rem,8vw,8rem); max-width:1040px; margin:5rem auto 0; padding-top:3rem; border-top:1px solid rgba(17,17,17,.12); }
+  .people-editorial-intro > span { color:#1e6e64; font:9px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; letter-spacing:.16em; }
+  .people-editorial-intro h3 { margin:.8rem 0 1.2rem; font:400 clamp(2rem,4vw,3.2rem)/.98 Georgia,serif; letter-spacing:-.03em; }
+  .people-editorial-intro h3 em { color:#1e6e64; font-style:normal; }
+  .people-editorial-intro p { max-width:38ch; color:rgba(17,17,17,.54); font-size:13px; line-height:1.8; }
+  .people-principles { border-top:1px solid rgba(17,17,17,.12); }
+  .people-principle { display:grid; grid-template-columns:45px 1fr; gap:1rem; padding:1.35rem 0; border-bottom:1px solid rgba(17,17,17,.12); }
+  .people-principle > span { color:#1e6e64; font:10px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+  .people-principle strong { font:400 1.2rem Georgia,serif; }
+  .people-principle p { margin-top:.45rem; color:rgba(17,17,17,.5); font-size:12px; line-height:1.65; }
+
+  .people-future { display:grid; grid-template-columns:.8fr 1.2fr; gap:3rem; max-width:1040px; margin:4rem auto 0; padding:2rem 0 0; border-top:1px solid rgba(17,17,17,.12); }
+  .people-future > div:first-child span { color:#1e6e64; font:9px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; letter-spacing:.14em; }
+  .people-future h3 { margin-top:.7rem; font:400 1.6rem/1.05 Georgia,serif; }
+  .people-future-items { display:flex; flex-wrap:wrap; align-content:flex-start; gap:.5rem; }
+  .people-future-items span { padding:.65rem .8rem; border:1px solid rgba(17,17,17,.13); color:rgba(17,17,17,.55); font-size:10px; letter-spacing:.05em; }
+
+  .people-intro-grid {
+    display: grid;
+    grid-template-columns: minmax(0,1.15fr) minmax(280px,.85fr);
+    gap: clamp(3rem, 8vw, 8rem);
+    align-items: end;
+  }
+
+  .people-intro-note {
+    border-left: 1px solid rgba(17,17,17,.16);
+    padding: 1rem 0 1rem 1.5rem;
+  }
+
+  .people-intro-note span,
+  .people-detail-intro > span {
+    color: #1e6e64;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 10px;
+    letter-spacing: .16em;
+  }
+
+  .people-intro-note p {
+    max-width: 40ch;
+    margin-top: 1rem;
+    color: rgba(17,17,17,.55);
+    font-size: 13px;
+    line-height: 1.75;
+  }
+
+  .people-team-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 1px;
+    margin-top: 5rem;
+    background: rgba(17,17,17,.12);
+    border-top: 1px solid rgba(17,17,17,.12);
+    border-left: 1px solid rgba(17,17,17,.12);
+  }
+
+  .people-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(150px,.62fr) minmax(0,1fr);
+    min-height: 330px;
+    background: #f3f0e8;
+    overflow: hidden;
+    transition: transform .45s ease, background .35s ease;
+  }
+
+  .people-card:hover { transform: translateY(-5px); background: #ebe7dd; }
+
+  .people-card-media {
+    position: relative;
+    min-height: 330px;
+    overflow: hidden;
+    background: #dedbd2;
+  }
+
+  .people-card-media img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    filter: saturate(.8);
+    transition: transform .7s cubic-bezier(.2,.65,.25,1), filter .5s ease;
+  }
+
+  .people-card:hover .people-card-media img { transform: scale(1.045); filter: saturate(1); }
+
+  .people-card-index {
+    position: absolute;
+    z-index: 2;
+    top: 1rem;
+    left: 1rem;
+    color: white;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 9px;
+    letter-spacing: .14em;
+    text-shadow: 0 1px 8px rgba(0,0,0,.45);
+  }
+
+  .people-card-rule { position: absolute; z-index: 2; top: 1.45rem; left: 2.6rem; width: 30px; height: 1px; background: #1e6e64; }
+
+  .people-card-body {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1.75rem 1.5rem;
+  }
+
+  .people-card-role {
+    color: #1e6e64;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 10px;
+    line-height: 1.4;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+
+  .people-card h3 {
+    margin: .7rem 0 1rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(1.7rem, 3vw, 2.5rem);
+    line-height: .98;
+    font-weight: 400;
+  }
+
+  .people-card-body > p {
+    color: rgba(17,17,17,.57);
+    font-size: 13px;
+    line-height: 1.75;
+  }
+
+  .people-card-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: auto;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(17,17,17,.1);
+    color: rgba(17,17,17,.36);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 9px;
+    letter-spacing: .08em;
+  }
+
+  .people-card-footer a { color: #1e6e64; text-decoration: underline; text-underline-offset: 3px; }
+
+  .people-details {
+    display: grid;
+    grid-template-columns: minmax(240px,.7fr) minmax(0,1.3fr);
+    gap: clamp(2rem, 7vw, 7rem);
+    margin-top: 5rem;
+    padding-top: 3rem;
+    border-top: 1px solid rgba(17,17,17,.14);
+  }
+
+  .people-detail-intro h3 {
+    max-width: 16ch;
+    margin-top: .8rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(1.7rem, 3vw, 2.5rem);
+    font-weight: 400;
+    line-height: 1.05;
+  }
+
+  .people-detail-list { border-top: 1px solid rgba(17,17,17,.12); }
+  .people-detail-list div {
+    display: grid;
+    grid-template-columns: 35px minmax(160px,.7fr) minmax(0,1.3fr);
+    gap: 1rem;
+    align-items: center;
+    padding: 1.15rem 0;
+    border-bottom: 1px solid rgba(17,17,17,.12);
+  }
+  .people-detail-list b { color: #1e6e64; font: 10px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+  .people-detail-list span { font-size: 12px; font-weight: 600; }
+  .people-detail-list small { color: rgba(17,17,17,.5); font-size: 11px; line-height: 1.55; }
+
+  @media (max-width: 640px) {
+    .founder-feature { margin-top:3rem; }
+    .founder-feature-grid { grid-template-columns:1fr; }
+    .founder-feature-media { min-height:420px; border-right:0; border-bottom:1px solid rgba(17,17,17,.1); }
+    .founder-feature-media img { min-height:420px; }
+    .founder-photo-placeholder { min-height:420px; }
+    .founder-feature-content { padding:2rem 1.25rem 2.5rem; }
+    .founder-identity h3 { font-size:2.5rem; }
+    .founder-feature-footer { grid-template-columns:1fr; gap:1rem; }
+    .founder-philosophy blockquote { padding-left:1.8rem; }
+    .founder-comment-signature { margin-left:1.8rem; }
+
+    .people-editorial-grid,.people-future { grid-template-columns:1fr; gap:2rem; margin-top:3rem; }
+
+    .about-stats,
+    .principles-grid,
+    .client-logo-grid { grid-template-columns: 1fr; }
+    .about-stat { min-height: 120px; }
+    .principle-card { min-height: 210px; }
+    .principle-card h3 { margin-top: 2.5rem; }
+    .people-team-grid { margin-top: 3rem; }
+    .people-card { grid-template-columns: 1fr; }
+    .people-card-media { min-height: 360px; aspect-ratio: 4 / 5; }
+    .people-card-body { min-height: 270px; }
+    .people-details { margin-top: 3rem; }
+    .people-detail-list div { grid-template-columns: 28px 1fr; }
+    .people-detail-list small { grid-column: 2; }
+    .client-logo-card { min-height: 155px; }
+    .client-logo-card { flex-basis: 220px; min-height: 155px; }
+    .client-marquee-track { animation-duration: 28s; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .client-logo-card { transition: none; }
+  }
+
+
+  .about-method-section {
+    position: relative;
+    background: #f3f0e8;
+    color: #111;
+    overflow: visible;
+  }
+
+  .about-method-shell {
+    width: min(100% - 3rem, 80rem);
+    margin-inline: auto;
+    padding-block: 6rem;
+  }
+
+  .about-method-layout {
+    display: grid;
+    grid-template-columns: minmax(240px, .72fr) minmax(0, 1.28fr);
+    gap: clamp(4rem, 8vw, 8rem);
+    align-items: start;
+  }
+
+  .about-method-panel {
+    min-width: 0;
+    align-self: stretch;
+    padding-left: 3.25rem;
+    border-left: 1px solid rgba(17,17,17,.1);
+  }
+
+  .about-method-sticky {
+    position: sticky;
+    top: 7rem;
+    align-self: start;
+    padding: 3rem 0 5rem;
+    z-index: 5;
+  }
+
+  .about-method-number {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .about-method-number span {
+    color: #1e6e64;
+    font: 600 .72rem/1 monospace;
+    letter-spacing: .14em;
+  }
+
+  .about-method-number i {
+    display: block;
+    width: 42px;
+    height: 1px;
+    background: rgba(17,17,17,.2);
+  }
+
+  .about-method-label {
+    margin: 0 0 1rem;
+    color: rgba(17,17,17,.42);
+    font: 600 .68rem/1 sans-serif;
+    text-transform: uppercase;
+    letter-spacing: .18em;
+  }
+
+  .about-method-title {
+    max-width: 420px;
+    margin: 0;
+    font-size: clamp(2.5rem, 4vw, 4.5rem);
+    line-height: .95;
+    letter-spacing: -.045em;
+    font-weight: 500;
+  }
+
+  .about-method-title span {
+    display: block;
+  }
+
+  .about-method-intro {
+    max-width: 390px;
+    margin: 2rem 0 0;
+    color: rgba(17,17,17,.55);
+    font-size: .92rem;
+    line-height: 1.75;
+  }
+
+  .about-method-meta {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-top: 2.5rem;
+    color: rgba(17,17,17,.45);
+    font: .7rem/1 sans-serif;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+  }
+
+  .about-method-meta span {
+    width: 32px;
+    height: 1px;
+    background: #1e6e64;
+  }
+
+  .about-method-meta strong {
+    color: #111;
+    font-weight: 500;
+  }
+
+  .about-method-meta small {
+    font-size: inherit;
+  }
+
+  .about-method-content {
+    min-width: 0;
+  }
+
+  .about-method-step {
+    display: grid;
+    grid-template-columns: 52px minmax(0,1fr);
+    gap: 2rem;
+    min-height: 390px;
+    padding: 4rem 0;
+    border-top: 1px solid rgba(17,17,17,.1);
+    opacity: .42;
+    transition: opacity .45s ease, transform .45s ease;
+  }
+
+  .about-method-step:last-of-type {
+    border-bottom: 1px solid rgba(17,17,17,.1);
+  }
+
+  .about-method-step.is-active {
+    opacity: 1;
+  }
+
+  .about-method-step-no {
+    padding-top: .35rem;
+    color: #1e6e64;
+    font: 600 .7rem/1 monospace;
+    letter-spacing: .12em;
+  }
+
+  .about-method-kicker {
+    margin: 0 0 1.25rem;
+    color: rgba(17,17,17,.38);
+    font: 600 .66rem/1 sans-serif;
+    text-transform: uppercase;
+    letter-spacing: .18em;
+  }
+
+  .about-method-step h3 {
+    max-width: 650px;
+    margin: 0;
+    font-size: clamp(2rem, 3.3vw, 3.5rem);
+    line-height: .98;
+    letter-spacing: -.04em;
+    font-weight: 500;
+  }
+
+  .about-method-step h3 span {
+    display: block;
+  }
+
+  .about-method-step p:not(.about-method-kicker) {
+    max-width: 570px;
+    margin: 2rem 0 0;
+    color: rgba(17,17,17,.55);
+    font-size: .94rem;
+    line-height: 1.8;
+  }
+
+  .about-method-detail,
+  .about-method-warranty {
+    display: grid;
+    grid-template-columns: 190px minmax(0,1fr);
+    gap: 2rem;
+    padding: 2rem 0;
+    border-top: 1px solid rgba(30,110,100,.35);
+  }
+
+  .about-method-detail span,
+  .about-method-warranty span {
+    display: block;
+    margin-bottom: .5rem;
+    color: rgba(17,17,17,.38);
+    font: .64rem/1 sans-serif;
+    text-transform: uppercase;
+    letter-spacing: .16em;
+  }
+
+  .about-method-detail strong,
+  .about-method-warranty strong {
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+
+  .about-method-detail p,
+  .about-method-warranty p {
+    margin: 0;
+    max-width: 570px;
+    color: rgba(17,17,17,.55);
+    font-size: .88rem;
+    line-height: 1.7;
+  }
+
+  .about-method-detail a {
+    color: #1e6e64;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .about-method-warranty {
+    margin-bottom: 1rem;
+    border-bottom: 1px solid rgba(30,110,100,.35);
+  }
+
+  @media (max-width: 1023px) {
+    .about-method-shell {
+      width: min(100% - 3rem, 48rem);
+      padding-block: 4rem;
+    }
+
+    .about-method-layout {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .about-method-panel {
+      padding-left: 0;
+      border-left: 0;
+    }
+
+    .about-method-sticky {
+      position: static;
+      padding: 0 0 3rem;
+    }
+
+    .about-method-step {
+      min-height: auto;
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .founder-feature { margin-top:3rem; }
+    .founder-feature-grid { grid-template-columns:1fr; }
+    .founder-feature-media { min-height:420px; border-right:0; border-bottom:1px solid rgba(17,17,17,.1); }
+    .founder-feature-media img { min-height:420px; }
+    .founder-photo-placeholder { min-height:420px; }
+    .founder-feature-content { padding:2rem 1.25rem 2.5rem; }
+    .founder-identity h3 { font-size:2.5rem; }
+    .founder-feature-footer { grid-template-columns:1fr; gap:1rem; }
+    .founder-philosophy blockquote { padding-left:1.8rem; }
+    .founder-comment-signature { margin-left:1.8rem; }
+
+    .people-editorial-grid,.people-future { grid-template-columns:1fr; gap:2rem; margin-top:3rem; }
+
+    .about-method-shell {
+      width: min(100% - 2.5rem, 42rem);
+      padding-block: 3rem;
+    }
+
+    .about-method-step {
+      grid-template-columns: 38px minmax(0,1fr);
+      gap: 1rem;
+      padding: 2.75rem 0;
+    }
+
+    .about-method-step h3 {
+      font-size: 2rem;
+    }
+
+    .about-method-detail,
+    .about-method-warranty {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+  }
+</style>

@@ -1,3 +1,4 @@
+
 ---
 import { getCollection, getEntry, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -11,25 +12,45 @@ import { breadcrumbSchema, serviceSchema, faqSchema } from '../../lib/schema';
 import { whatsappLink } from '../../lib/site';
 
 export async function getStaticPaths() {
-  const services = await getCollection('services', ({ data }) => data.status === 'published');
-  return services.map((s) => ({ params: { slug: s.slug }, props: { entry: s } }));
+  const services = await getCollection(
+    'services',
+    ({ data }) => data.status === 'published'
+  );
+
+  return services.map((s) => ({
+    params: { slug: s.slug },
+    props: { entry: s },
+  }));
 }
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 const d = entry.data;
 
-const relatedServices = d.relatedServices ? await Promise.all(d.relatedServices.map((r) => getEntry(r))) : [];
-const relatedProjects = d.relatedProjects ? await Promise.all(d.relatedProjects.map((r) => getEntry(r))) : [];
-const faqs = d.faq ? (await Promise.all(d.faq.map((r) => getEntry(r)))).map((f) => f!.data) : [];
+const relatedProjects = d.relatedProjects
+  ? await Promise.all(
+      d.relatedProjects.map((r) => getEntry(r))
+    )
+  : [];
+
+const faqs = d.faq
+  ? (await Promise.all(d.faq.map((r) => getEntry(r))))
+      .filter(Boolean)
+      .map((f) => f!.data)
+  : [];
 
 const crumbs = [
   { name: 'Home', url: '/' },
   { name: 'Services', url: '/services/' },
-  { name: d.name, url: `/services/${entry.slug}/` },
+  {
+    name: d.name,
+    url: `/services/${entry.slug}/`,
+  },
 ];
+
 const svc = d.name.toLowerCase();
 ---
+
 <BaseLayout
   title={d.seo.title}
   description={d.seo.description}
@@ -37,125 +58,754 @@ const svc = d.name.toLowerCase();
   ogImage={d.heroImage.src}
   schema={[
     breadcrumbSchema(crumbs),
-    serviceSchema({ name: d.name, description: d.shortDescription, url: `/services/${entry.slug}/`, solutions: d.solutions }),
+    serviceSchema({
+      name: d.name,
+      description: d.shortDescription,
+      url: `/services/${entry.slug}/`,
+      solutions: d.solutions,
+    }),
     ...(faqs.length ? [faqSchema(faqs)] : []),
   ]}
 >
+  <!-- =========================================================
+       HERO
+  ========================================================== -->
+
   <PageHero
     crumbs={crumbs}
     tone="ink"
     eyebrow={`Services / ${d.category}`}
     title={d.h1 ?? `${d.name} in Pune & Maharashtra`}
     lead={d.shortDescription}
-    bgImage={{ src: d.heroImage.src, alt: d.heroImage.alt }}
+    bgImage={{
+      src: d.heroImage.src,
+      alt: d.heroImage.alt,
+    }}
     ctas={[
-      { label: d.ctaLabel, href: `/contact/?project=${entry.slug}`, style: 'solid', event: 'click_start_project', params: { placement: 'service_hero', service: entry.slug } },
-      { label: 'View projects', href: '/projects/', style: 'lt' },
+      {
+        label: d.ctaLabel,
+        href: `/contact/?project=${entry.slug}`,
+        style: 'solid',
+        event: 'click_start_project',
+        params: {
+          placement: 'service_hero',
+          service: entry.slug,
+        },
+      },
+      {
+        label: 'View projects',
+        href: '/projects/',
+        style: 'lt',
+      },
     ]}
   />
 
-  <!-- OVERVIEW (markdown body) -->
+  <!-- =========================================================
+       OVERVIEW / SERVICE INTRODUCTION
+  ========================================================== -->
+
   <PageShell tone="paper">
-    <div class="prose-content max-w-[74ch]" data-reveal>
-      <Content />
+    <div
+      class="service-intro-grid"
+      data-reveal
+    >
+      <div class="service-intro-label">
+        <span class="section-kicker">01 / Overview</span>
+      </div>
+
+      <div class="prose-content">
+        <Content />
+      </div>
     </div>
   </PageShell>
 
-  <!-- SOLUTIONS -->
-  <PageShell tone="paper-dim" labelledby="svc-solutions">
-    <SectionHeader id="svc-solutions" num="02" label="Scope" title={`What ${svc} covers`} tone="paper" />
-    <div class="mt-14 grid gap-6 sm:grid-cols-2" data-reveal-stagger>
-      {d.solutions.map((sol) => (
-        <div class="border-l-2 border-accent pl-5 py-1">
-          <h3 class="font-serif text-lg mb-1.5">{sol.name}</h3>
-          <p class="text-[14px] text-ink-soft">{sol.description}</p>
-        </div>
+  <!-- =========================================================
+       SOLUTIONS / SCOPE
+  ========================================================== -->
+
+  <PageShell
+    tone="paper-dim"
+    labelledby="svc-solutions"
+  >
+    <SectionHeader
+      id="svc-solutions"
+      num="02"
+      label="Scope"
+      title={`What ${svc} covers`}
+      tone="paper"
+    />
+
+    <div
+      class="solutions-grid"
+      data-reveal-stagger
+    >
+      {d.solutions.map((sol, i) => (
+        <article class="solution-card">
+          <div class="solution-number">
+            {String(i + 1).padStart(2, '0')}
+          </div>
+
+          <div class="solution-content">
+            <h3>{sol.name}</h3>
+            <p>{sol.description}</p>
+          </div>
+
+          <span class="solution-arrow" aria-hidden="true">
+            ↗
+          </span>
+        </article>
       ))}
     </div>
   </PageShell>
 
-  <!-- WHY PBJ -->
-  <PageShell tone="paper" labelledby="svc-why">
-    <SectionHeader id="svc-why" num="03" label="Advantage" title={`Why PBJ for ${svc}`} tone="paper" />
-    <ul class="mt-14 grid gap-5 sm:grid-cols-2" data-reveal-stagger>
-      {d.whyPbj.map((w) => (
-        <li class="flex gap-3 text-[14.5px] text-ink-soft"><span class="text-accent font-mono">—</span>{w}</li>
+  <!-- =========================================================
+       WHY PBJ
+  ========================================================== -->
+
+  <PageShell
+    tone="paper"
+    labelledby="svc-why"
+  >
+    <SectionHeader
+      id="svc-why"
+      num="03"
+      label="Advantage"
+      title={`Why PBJ for ${svc}`}
+      tone="paper"
+    />
+
+    <div
+      class="why-grid"
+      data-reveal-stagger
+    >
+      {d.whyPbj.map((w, i) => (
+        <article class="why-card">
+          <span class="why-number">
+            {String(i + 1).padStart(2, '0')}
+          </span>
+
+          <div class="why-line"></div>
+
+          <p>{w}</p>
+        </article>
       ))}
-    </ul>
+    </div>
   </PageShell>
 
-  <!-- PROCESS -->
-  <PageShell tone="ink" labelledby="svc-process">
-    <SectionHeader id="svc-process" num="04" label="Process" title={`How PBJ delivers ${svc}`} tone="ink" />
-    <div class="mt-14 grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-paper/[.18] border border-paper/[.18]" data-reveal>
+  <!-- =========================================================
+       PROCESS
+  ========================================================== -->
+
+  <PageShell
+    tone="ink"
+    labelledby="svc-process"
+  >
+    <SectionHeader
+      id="svc-process"
+      num="04"
+      label="Process"
+      title={`How PBJ delivers ${svc}`}
+      tone="ink"
+    />
+
+    <div
+      class="process-grid"
+      data-reveal
+    >
       {d.process.map((step, i) => (
-        <div class="bg-ink p-6">
-          <span class="font-mono text-accent text-sm">{String(i + 1).padStart(2, '0')}</span>
-          <h3 class="font-serif text-lg mt-3 mb-2">{step.step}</h3>
-          <p class="text-[13.5px] text-paper/65">{step.description}</p>
-        </div>
+        <article class="process-step">
+          <div class="process-top">
+            <span class="process-number">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+
+            {i < d.process.length - 1 && (
+              <span class="process-connector" aria-hidden="true">
+                →
+              </span>
+            )}
+          </div>
+
+          <h3>{step.step}</h3>
+
+          <p>{step.description}</p>
+        </article>
       ))}
     </div>
   </PageShell>
+
+  <!-- =========================================================
+       FAQ
+  ========================================================== -->
 
   {faqs.length > 0 && (
-    <PageShell tone="paper" labelledby="svc-faq">
-      <SectionHeader id="svc-faq" num="05" label="Common questions" title="FAQ" tone="paper" />
-      <div class="mt-12 max-w-[880px]" data-reveal>
-        <FAQAccordion items={faqs} idPrefix={`svc-${entry.slug}`} />
+    <PageShell
+      tone="paper"
+      labelledby="svc-faq"
+    >
+      <SectionHeader
+        id="svc-faq"
+        num="05"
+        label="Common questions"
+        title="FAQ"
+        tone="paper"
+      />
+
+      <div
+        class="faq-wrap"
+        data-reveal
+      >
+        <FAQAccordion
+          items={faqs}
+          idPrefix={`svc-${entry.slug}`}
+        />
       </div>
     </PageShell>
   )}
 
-  {(relatedServices.length > 0 || relatedProjects.length > 0) && (
-    <PageShell tone="paper-dim">
-      <div class="grid md:grid-cols-2 gap-12" data-reveal>
-        {relatedServices.length > 0 && (
-          <div>
-            <h2 class="font-serif text-2xl mb-6">Related services</h2>
-            <ul class="flex flex-col gap-3">
-              {relatedServices.map((s) => s && (
-                <li><a href={s.data.status === 'published' ? `/services/${s.slug}/` : '/services/'} class="font-mono text-sm text-accent hover:underline">{s.data.name} →</a></li>
-              ))}
-            </ul>
-          </div>
-        )}
-        {relatedProjects.length > 0 && (
-          <div>
-            <h2 class="font-serif text-2xl mb-6">Related projects</h2>
-            <div class="grid gap-5">
-              {relatedProjects.map((p) => p && (
-                <ProjectCard
-                  name={p.data.name}
-                  projectType={p.data.projectType}
-                  location={p.data.location}
-                  href={p.data.status !== 'draft' ? `/projects/${p.slug}/` : null}
-                  image={p.data.heroImage}
-                />
-              ))}
-            </div>
-          </div>
-        )}
+  <!-- =========================================================
+       RELATED PROJECTS
+  ========================================================== -->
+
+  {relatedProjects.length > 0 && (
+    <PageShell
+      tone="paper-dim"
+      labelledby="svc-projects"
+    >
+      <div class="projects-heading">
+        <SectionHeader
+          id="svc-projects"
+          num="06"
+          label="Built examples"
+          title="Related projects"
+          tone="paper"
+        />
+
+        <a
+          href="/projects/"
+          class="projects-link"
+        >
+          View all projects
+          <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+
+      <div
+        class="related-projects-grid"
+        data-reveal-stagger
+      >
+        {relatedProjects.map((p) => p && (
+          <ProjectCard
+            name={p.data.name}
+            projectType={p.data.projectType}
+            location={p.data.location}
+            href={
+              p.data.status !== 'draft'
+                ? `/projects/${p.slug}/`
+                : null
+            }
+            image={p.data.heroImage}
+          />
+        ))}
       </div>
     </PageShell>
   )}
+
+  <!-- =========================================================
+       FINAL CTA
+  ========================================================== -->
 
   <FinalCTA
     eyebrow="Start a project"
     title={`Planning a ${svc} project`}
     titleMuted="in Pune, Latur or elsewhere in Maharashtra?"
-    primary={{ label: d.ctaLabel, href: `/contact/?project=${entry.slug}`, event: 'click_start_project', params: { placement: 'service_cta', service: entry.slug } }}
-    secondary={{ label: 'WhatsApp us', href: whatsappLink(d.whatsappMessage), external: true, event: 'click_whatsapp', params: { placement: 'service_cta', service: entry.slug } }}
+    primary={{
+      label: d.ctaLabel,
+      href: `/contact/?project=${entry.slug}`,
+      event: 'click_start_project',
+      params: {
+        placement: 'service_cta',
+        service: entry.slug,
+      },
+    }}
+    secondary={{
+      label: 'WhatsApp us',
+      href: whatsappLink(d.whatsappMessage),
+      external: true,
+      event: 'click_whatsapp',
+      params: {
+        placement: 'service_cta',
+        service: entry.slug,
+      },
+    }}
   />
 </BaseLayout>
 
 <style>
-  .prose-content :global(h2) { font-family: theme('fontFamily.serif'); font-size: clamp(26px, 3vw, 34px); margin: 2.4rem 0 1rem; letter-spacing: -0.02em; }
-  .prose-content :global(h2:first-child) { margin-top: 0; }
-  .prose-content :global(p) { color: theme('colors.ink-soft'); margin-bottom: 1rem; line-height: 1.75; }
-  .prose-content :global(ul) { margin: 0 0 1.25rem 1.1rem; list-style: disc; color: theme('colors.ink-soft'); }
-  .prose-content :global(li) { margin-bottom: 0.4rem; line-height: 1.7; }
-  .prose-content :global(a) { color: theme('colors.accent'); text-decoration: underline; }
-  .prose-content :global(strong) { color: theme('colors.ink'); }
-  .prose-content :global(em) { color: theme('colors.warn'); font-style: italic; }
+  /* =========================================================
+     OVERVIEW
+  ========================================================== */
+
+  .service-intro-grid {
+    display: grid;
+    grid-template-columns: minmax(150px, 0.35fr) minmax(0, 1fr);
+    gap: clamp(2rem, 7vw, 7rem);
+    max-width: 1180px;
+    margin-inline: auto;
+  }
+
+  .service-intro-label {
+    padding-top: 0.35rem;
+  }
+
+  .section-kicker {
+    display: inline-block;
+    font-family: theme('fontFamily.mono');
+    font-size: 0.68rem;
+    line-height: 1.4;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: theme('colors.accent');
+  }
+
+  /* =========================================================
+     PROSE
+  ========================================================== */
+
+  .prose-content {
+    max-width: 76ch;
+  }
+
+  .prose-content :global(h1) {
+    font-family: theme('fontFamily.serif');
+    font-size: clamp(34px, 4vw, 54px);
+    line-height: 1;
+    margin: 0 0 1.5rem;
+    letter-spacing: -0.035em;
+    color: theme('colors.ink');
+  }
+
+  .prose-content :global(h2) {
+    position: relative;
+    font-family: theme('fontFamily.serif');
+    font-size: clamp(28px, 3vw, 40px);
+    line-height: 1.05;
+    margin: 3.5rem 0 1rem;
+    padding-bottom: 0.7rem;
+    letter-spacing: -0.03em;
+    color: theme('colors.ink');
+  }
+
+  .prose-content :global(h2:first-child) {
+    margin-top: 0;
+  }
+
+  .prose-content :global(h2)::after {
+    content: '';
+    display: block;
+    width: 42px;
+    height: 2px;
+    margin-top: 0.75rem;
+    background: theme('colors.accent');
+  }
+
+  .prose-content :global(h3) {
+    font-family: theme('fontFamily.serif');
+    font-size: clamp(21px, 2.2vw, 28px);
+    line-height: 1.15;
+    margin: 2.25rem 0 0.8rem;
+    letter-spacing: -0.02em;
+    color: theme('colors.ink');
+  }
+
+  .prose-content :global(h4) {
+    margin: 1.75rem 0 0.65rem;
+    font-family: theme('fontFamily.sans');
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.4;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: theme('colors.accent');
+  }
+
+  .prose-content :global(p) {
+    color: theme('colors.ink-soft');
+    margin-bottom: 1.15rem;
+    line-height: 1.8;
+  }
+
+  .prose-content :global(ul) {
+    margin: 1.25rem 0 1.5rem;
+    padding-left: 1.5rem;
+    list-style: none;
+  }
+
+  .prose-content :global(ul li) {
+    position: relative;
+    padding-left: 0.75rem;
+  }
+
+  .prose-content :global(ul li)::before {
+    content: '';
+    position: absolute;
+    left: -0.8rem;
+    top: 0.78em;
+    width: 5px;
+    height: 5px;
+    border-radius: 9999px;
+    background: theme('colors.accent');
+  }
+
+  .prose-content :global(ol) {
+    margin: 1.25rem 0 1.5rem;
+    padding-left: 1.75rem;
+    list-style: decimal;
+  }
+
+  .prose-content :global(ol li) {
+    padding-left: 0.4rem;
+  }
+
+  .prose-content :global(li) {
+    color: theme('colors.ink-soft');
+    margin-bottom: 0.65rem;
+    line-height: 1.7;
+  }
+
+  .prose-content :global(li strong) {
+    color: theme('colors.ink');
+  }
+
+  .prose-content :global(a) {
+    color: theme('colors.accent');
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .prose-content :global(strong) {
+    color: theme('colors.ink');
+  }
+
+  .prose-content :global(em) {
+    color: theme('colors.warn');
+    font-style: italic;
+  }
+
+  .prose-content :global(hr) {
+    margin: 2.5rem 0;
+    border: 0;
+    border-top: 1px solid rgba(17, 17, 17, 0.1);
+  }
+
+  /* =========================================================
+     SOLUTIONS
+  ========================================================== */
+
+  .solutions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    margin-top: clamp(3rem, 6vw, 5rem);
+    background: rgba(17, 17, 17, 0.12);
+    border: 1px solid rgba(17, 17, 17, 0.12);
+  }
+
+  .solution-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1.25rem;
+    min-height: 190px;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    background: theme('colors.paper');
+    transition:
+      transform 220ms ease,
+      background-color 220ms ease;
+  }
+
+  .solution-card:hover {
+    transform: translateY(-3px);
+    background: #fff;
+    z-index: 1;
+  }
+
+  .solution-number {
+    font-family: theme('fontFamily.mono');
+    font-size: 0.7rem;
+    color: theme('colors.accent');
+    padding-top: 0.2rem;
+  }
+
+  .solution-content h3 {
+    margin: 0 2rem 0.7rem 0;
+    font-family: theme('fontFamily.serif');
+    font-size: clamp(21px, 2vw, 28px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: theme('colors.ink');
+  }
+
+  .solution-content p {
+    max-width: 52ch;
+    margin: 0;
+    color: theme('colors.ink-soft');
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .solution-arrow {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    font-size: 1.2rem;
+    color: theme('colors.accent');
+    opacity: 0.65;
+    transition:
+      transform 220ms ease,
+      opacity 220ms ease;
+  }
+
+  .solution-card:hover .solution-arrow {
+    transform: translate(3px, -3px);
+    opacity: 1;
+  }
+
+  /* =========================================================
+     WHY PBJ
+  ========================================================== */
+
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-top: clamp(3rem, 6vw, 5rem);
+  }
+
+  .why-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1.25rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid rgba(17, 17, 17, 0.14);
+  }
+
+  .why-number {
+    font-family: theme('fontFamily.mono');
+    font-size: 0.68rem;
+    color: theme('colors.accent');
+  }
+
+  .why-line {
+    position: absolute;
+    left: 0;
+    top: -1px;
+    width: 38px;
+    height: 2px;
+    background: theme('colors.accent');
+    transform-origin: left;
+    transition: width 250ms ease;
+  }
+
+  .why-card:hover .why-line {
+    width: 72px;
+  }
+
+  .why-card p {
+    max-width: 52ch;
+    margin: 0;
+    color: theme('colors.ink-soft');
+    font-size: 0.94rem;
+    line-height: 1.75;
+  }
+
+  /* =========================================================
+     PROCESS
+  ========================================================== */
+
+  .process-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
+    margin-top: clamp(3rem, 6vw, 5rem);
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+  }
+
+  .process-step {
+    position: relative;
+    min-height: 250px;
+    padding: 1.75rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.16);
+  }
+
+  .process-step:last-child {
+    border-right: 0;
+  }
+
+  .process-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2.5rem;
+  }
+
+  .process-number {
+    font-family: theme('fontFamily.mono');
+    font-size: 0.72rem;
+    color: theme('colors.accent');
+  }
+
+  .process-connector {
+    font-family: theme('fontFamily.mono');
+    color: rgba(255, 255, 255, 0.35);
+  }
+
+  .process-step h3 {
+    margin: 0 0 0.7rem;
+    font-family: theme('fontFamily.serif');
+    font-size: clamp(22px, 2vw, 30px);
+    line-height: 1.1;
+    color: theme('colors.paper');
+  }
+
+  .process-step p {
+    margin: 0;
+    max-width: 32ch;
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 0.88rem;
+    line-height: 1.7;
+  }
+
+  /* =========================================================
+     FAQ
+  ========================================================== */
+
+  .faq-wrap {
+    max-width: 900px;
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  /* =========================================================
+     RELATED PROJECTS
+  ========================================================== */
+
+  .projects-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .projects-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    margin-bottom: 0.3rem;
+    font-family: theme('fontFamily.mono');
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: theme('colors.accent');
+  }
+
+  .projects-link span {
+    transition: transform 180ms ease;
+  }
+
+  .projects-link:hover span {
+    transform: translate(3px, -3px);
+  }
+
+  .related-projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-top: clamp(3rem, 6vw, 5rem);
+  }
+
+  /* =========================================================
+     RESPONSIVE
+  ========================================================== */
+
+  @media (max-width: 900px) {
+    .service-intro-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .solutions-grid,
+    .why-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .process-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .process-step:nth-child(2) {
+      border-right: 0;
+    }
+
+    .process-step:nth-child(-n + 2) {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .related-projects-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .service-intro-grid {
+      gap: 1rem;
+    }
+
+    .solutions-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .solution-card {
+      min-height: 160px;
+    }
+
+    .process-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .process-step {
+      min-height: auto;
+      border-right: 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .process-step:nth-child(2) {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .process-step:last-child {
+      border-bottom: 0;
+    }
+
+    .projects-heading {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .projects-link {
+      margin-bottom: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .solution-card,
+    .solution-arrow,
+    .why-line,
+    .projects-link span {
+      transition: none;
+    }
+  }
 </style>

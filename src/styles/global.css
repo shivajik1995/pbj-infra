@@ -149,6 +149,19 @@
     transform: translateY(0);
   }
 
+  /* Sitewide heading accent — the highlighted portion of a two-part
+     heading (hero titles, section h2s): solid teal on top of the
+     heading's own solid white/black colour, with a soft glow hugging
+     the letterforms. A text-shadow (not an absolutely-positioned
+     ::after box) so it never gets hard-clipped by an ancestor's
+     `overflow: hidden` — e.g. the hero's `.mask-line` reveal wrapper. */
+  .heading-accent {
+    color: theme('colors.accent');
+    text-shadow:
+      0 0 22px rgba(30, 110, 100, 0.55),
+      0 0 52px rgba(30, 110, 100, 0.3);
+  }
+
   .section-num {
     font-family: theme('fontFamily.mono');
     font-size: 12px;
